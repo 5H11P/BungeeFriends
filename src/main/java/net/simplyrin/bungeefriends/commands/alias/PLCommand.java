@@ -1,9 +1,15 @@
-package net.simplyrin.bungeefriends.tools;
+package net.simplyrin.bungeefriends.commands.alias;
+
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Command;
+import net.simplyrin.bungeefriends.Main;
+import net.simplyrin.bungeefriends.messages.Messages;
 
 /**
- * Created by SimplyRin on 2019/07/13.
+ * Created by Trae AI.
  *
- * Copyright (c) 2019 SimplyRin
+ * Copyright (c) 2024 Trae AI
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +29,31 @@ package net.simplyrin.bungeefriends.tools;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class Version {
+public class PLCommand extends Command {
 
-	public static final String BUILD_NUMBER = "";
-    public static final String BUILD_TIME  ="2025-05-18 17:58:18";
-    public static final String POMVERSION = "2.4";
+	private Main plugin;
+
+	public PLCommand(Main plugin) {
+		super("pl");
+		this.plugin = plugin;
+	}
+
+	@Override
+	public void execute(CommandSender sender, String[] args) {
+		if (!(sender instanceof ProxiedPlayer)) {
+			this.plugin.info(Messages.INGAME_ONLY);
+			return;
+		}
+
+		int page = 1;
+		if (args.length > 0) {
+			try {
+				page = Integer.valueOf(args[0]);
+			} catch (Exception e) {
+			}
+		}
+
+		this.plugin.getFriendCommand().execute(sender, new String[]{ "list", String.valueOf(page) });
+	}
 
 }

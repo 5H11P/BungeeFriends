@@ -22,6 +22,7 @@ import net.simplyrin.bungeefriends.commands.PartyCommand;
 import net.simplyrin.bungeefriends.commands.ReplyCommand;
 import net.simplyrin.bungeefriends.commands.TellCommand;
 import net.simplyrin.bungeefriends.commands.alias.FLCommand;
+import net.simplyrin.bungeefriends.commands.alias.PLCommand;
 import net.simplyrin.bungeefriends.listeners.EventListener;
 import net.simplyrin.bungeefriends.listeners.parties.PartyListener;
 import net.simplyrin.bungeefriends.tools.Priority;
@@ -66,6 +67,7 @@ public class Main extends Plugin {
 	private ReplyCommand replyCommand;
 	private ReplyCommand replyRCommand;
 	private FLCommand flCommand;
+	private PLCommand plCommand;
 	private PartyCommand partyCommand;
 	private ChatCommand chatCommand;
 	private PartyChatCommand partyChatCommand;
@@ -223,6 +225,13 @@ public class Main extends Plugin {
 			this.getProxy().getPluginManager().registerCommand(this, this.flCommand);
 		} else if(this.flCommand != null) {
 			this.getProxy().getPluginManager().unregisterCommand(this.flCommand);
+		}
+
+		if (!this.configManager.getConfig().getBoolean("Plugin.Disable-Aliases./pl")) {
+			this.plCommand = new PLCommand(this);
+			this.getProxy().getPluginManager().registerCommand(this, this.plCommand);
+		} else if(this.plCommand != null) {
+			this.getProxy().getPluginManager().unregisterCommand(this.plCommand);
 		}
 
 		if (this.configManager.getConfig().getBoolean("Plugin.Enable-BungeeParties")) {
