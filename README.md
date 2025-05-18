@@ -1,7 +1,9 @@
+#添加的功能
+添加/pl指令，/pl等价于/p list
 # BungeeFriends
-某サーバーっぽいフレンドシステム
+适用于Bungeecord的好友&组队系统
 
-# スクリーンショット
+# 截图
 ![40cac0c3318775e8050ac84c54cca0f1](https://i.gyazo.com/40cac0c3318775e8050ac84c54cca0f1.png "40cac0c3318775e8050ac84c54cca0f1")
 
 
