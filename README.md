@@ -1,4 +1,4 @@
-#添加的功能
+# 添加的功能
 添加/pl指令，/pl等价于/p list
 # BungeeFriends
 适用于Bungeecord的好友&组队系统
