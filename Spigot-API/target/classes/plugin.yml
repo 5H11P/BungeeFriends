@@ -1,0 +1,15 @@
+name: BungeeFriendsAPI-Spigot
+main: net.simplyrin.bungeefriends.api.spigot.BungeeFriendsAPISpigot
+version: 1.0.0
+api-version: 1.13
+author: Trae AI
+description: BungeeFriends API for Spigot servers
+commands:
+  bfspigot:
+    description: BungeeFriends API Spigot command
+    usage: /bfspigot <subcommand>
+    permission: bungeefriends.api.use
+permissions:
+  bungeefriends.api.use:
+    description: Allows using BungeeFriends API
+    default: true
