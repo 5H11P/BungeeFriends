@@ -1,6 +1,0 @@
-name: BungeeFriendsAPI-Bungee
-main: net.simplyrin.bungeefriends.api.bungee.BungeeFriendsAPIBungee
-version: 1.0.0
-author: Trae AI
-description: BungeeFriends API for Spigot servers
-depends: [BungeeFriends]
