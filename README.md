@@ -1,4 +1,7 @@
 # BungeeFriends
+
+当前 Fork 的分阶段迁移进度及六模块构建说明见 [迁移计划](docs/MIGRATION_PLAN.md) 和 [P2 构建说明](docs/P2_BUILD.md)。双端 API 与三个示例目前只是可构建骨架，功能将在后续阶段迁入。
+
 某サーバーっぽいフレンドシステム
 
 # スクリーンショット

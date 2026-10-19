@@ -1,0 +1,6 @@
+name: PartyCmdSenderSpigotExample
+main: net.simplyrin.bungeefriends.api.spigot.example.PartyCmdSenderSpigot
+version: 2.4
+api-version: 1.13
+author: 5H11P
+depend: [BungeeFriend-SpigotAPI]

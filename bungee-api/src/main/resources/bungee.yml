@@ -1,0 +1,5 @@
+name: BungeeFriends-BungeeAPI
+main: net.simplyrin.bungeefriends.api.bungee.BungeeFriendsAPIBungee
+version: 2.4
+author: 5H11P
+depends: [BungeeFriends]

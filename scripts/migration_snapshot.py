@@ -89,9 +89,9 @@ def file_kind(relative):
     return "other"
 
 
-def license_header(path):
+def license_header(data):
     try:
-        head = path.read_text(encoding="utf-8-sig").splitlines()[:48]
+        head = data.decode("utf-8-sig").splitlines()[:48]
     except UnicodeDecodeError:
         return "unreadable", "", ""
     text = "\n".join(head)
@@ -114,12 +114,14 @@ def main():
     if not SOURCE.is_dir():
         raise SystemExit(f"Missing source tree: {SOURCE}")
     OUTPUT.mkdir(parents=True, exist_ok=True)
-    source_files, fork_files = files(SOURCE), files(FORK)
+    source_files = files(SOURCE)
     source_records = [record(p, SOURCE) for p in source_files]
     baseline_paths = git(FORK, "ls-tree", "-r", "--name-only", FORK_BASELINE).splitlines()
+    baseline_data = {}
     fork_records = []
     for relative in baseline_paths:
         data = subprocess.check_output(["git", "-C", str(FORK), "show", f"{FORK_BASELINE}:{relative}"])
+        baseline_data[relative] = data
         fork_records.append((relative, len(data), sha256(data).hexdigest()))
     write_tsv("source_manifest.tsv", ["path", "bytes", "sha256"], source_records)
     write_tsv("fork_baseline_manifest.tsv", ["path", "bytes", "sha256"], fork_records)
@@ -128,19 +130,18 @@ def main():
         + git(SOURCE, "status", "--porcelain=v1", "--untracked-files=all"),
         encoding="utf-8", newline="\n",
     )
-    fork_by_path = {p.relative_to(FORK).as_posix(): p for p in fork_files}
     source_head_paths = set(git(SOURCE, "ls-tree", "-r", "--name-only", "HEAD").splitlines())
     rows = []
     for source_path in source_files:
         relative = source_path.relative_to(SOURCE).as_posix()
         candidate = baseline_candidate(relative)
-        target = fork_by_path.get(candidate)
+        target_data = baseline_data.get(candidate)
         source_data = source_path.read_bytes()
-        if target is None:
+        if target_data is None:
             category = "new-vs-fork"
-        elif source_data == target.read_bytes():
+        elif source_data == target_data:
             category = "identical-to-fork"
-        elif source_path.suffix == ".java" and normalize_java(source_data) == target.read_bytes().replace(b"\r\n", b"\n"):
+        elif source_path.suffix == ".java" and normalize_java(source_data) == target_data.replace(b"\r\n", b"\n"):
             category = "mechanical-rename-vs-fork"
         else:
             category = "changed-or-restructured"
@@ -161,7 +162,7 @@ def main():
             lineage = "generated-ignore"
         elif kind == "license-text":
             lineage = "license-review"
-        elif target is not None:
+        elif target_data is not None:
             lineage = "inherited-fork-candidate"
         elif head_candidate != "-":
             lineage = "source-extension-or-relocated"
@@ -170,11 +171,13 @@ def main():
         rows.append((relative, kind, lineage, candidate or "-", category, head_candidate, source_delta))
     write_tsv("file_comparison.tsv", ["source_path", "kind", "lineage", "fork_candidate", "fork_relation", "source_head_candidate", "source_worktree_change"], rows)
     license_rows = []
-    for label, root, tree in (("fork", FORK, fork_files), ("source", SOURCE, source_files)):
-        for path in tree:
-            relative = path.relative_to(root).as_posix()
-            if path.suffix == ".java" or path.name in {"LICENSE.md", "GPL-3.0.txt"}:
-                license_rows.append((label, relative, *license_header(path)))
+    for relative, data in baseline_data.items():
+        if relative.endswith(".java") or Path(relative).name in {"LICENSE.md", "GPL-3.0.txt"}:
+            license_rows.append(("fork", relative, *license_header(data)))
+    for path in source_files:
+        relative = path.relative_to(SOURCE).as_posix()
+        if path.suffix == ".java" or path.name in {"LICENSE.md", "GPL-3.0.txt"}:
+            license_rows.append(("source", relative, *license_header(path.read_bytes())))
     write_tsv("license_headers.tsv", ["tree", "path", "detected_header", "author_field", "copyright_field"], license_rows)
     print("source files:", len(source_records), "fork files:", len(fork_records))
     print("lineage:", dict(Counter(row[2] for row in rows)))

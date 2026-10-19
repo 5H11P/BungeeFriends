@@ -64,7 +64,7 @@ def write(surface, old, new, disposition, test):
 
 
 rows = []
-fork_root = FORK
+fork_root = FORK / "core" if (FORK / "core/src/main/java").is_dir() else FORK
 source_root = SOURCE / "core"
 command_pattern = r'new\s+(\w+Command)\s*\(this(?:,\s*"([^"]+)")?'
 
@@ -77,21 +77,21 @@ def commands(path):
     return result
 
 
-write("command", commands(FORK / "src/main/java/net/simplyrin/bungeefriends/Main.java"),
+write("command", commands(fork_root / "src/main/java/net/simplyrin/bungeefriends/Main.java"),
       commands(source_root / "src/main/java/net/_5h11p/bungeefriends/CorePlugin.java"),
       lambda relation, key: "P4: migrate and regression check" if relation != "fork-only" else "P4: retain baseline", "command permission and alias smoke test")
 
 permission_pattern = r'"((?:friends|bungeefriends\.api)\.[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*)"'
-write("permission", scan_java(FORK, permission_pattern), scan_java(source_root, permission_pattern),
+write("permission", scan_java(fork_root, permission_pattern), scan_java(source_root, permission_pattern),
       lambda relation, key: "P4: preserve" if relation == "shared" else "P4/P5: add and check defaults" if relation == "source-only" else "P4: retain baseline", "allowed and denied player test")
 
 config_pattern = r'"((?:Plugin|BungeeParties|Player|Parties)\.[A-Za-z0-9_./-]+)"'
-write("config-key", scan_java(FORK, config_pattern), scan_java(source_root, config_pattern),
+write("config-key", scan_java(fork_root, config_pattern), scan_java(source_root, config_pattern),
       lambda relation, key: "P3/P4: map and check default" if relation != "fork-only" else "P4: retain or document retirement", "default, reload and YAML/MySQL mode test")
 
 for name in ("English", "Chinese"):
     write("message-key-" + name.lower(),
-          language_keys(FORK / f"src/main/resources/{name}.yml"),
+          language_keys(fork_root / f"src/main/resources/{name}.yml"),
           language_keys(source_root / f"src/main/resources/{name}.yml"),
           lambda relation, key: "P4: migrate/check translation" if relation != "fork-only" else "P4: retain if still referenced", "compare locale keys and render message")
 
