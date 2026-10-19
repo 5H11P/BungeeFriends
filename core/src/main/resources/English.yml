@@ -96,8 +96,23 @@ List:
     Busy: "&e%targetDisplayName &cis busy &7- &e%server"
     AppearOffline: "&e%targetDisplayName &7is offline"
   Offline: "&e%targetDisplayName &cis currently offline"
-  Page: "&6Friends (Page %%currentPage%% of %%maxPage%%)"
+  Hover-Online: "&eFriend: %targetDisplayName\n&7Status: &f%status\n&7Server: &f%server\n&7Friends since: &f%friendSince\n&7Last online: &f%lastOnline\n&7Last seen: &f%lastOnlineAgo"
+  Hover-Offline: "&eFriend: %targetDisplayName\n&7UUID: &f%targetUUID\n&7Friends since: &f%friendSince\n&7Last online: &f%lastOnline\n&7Last seen: &f%lastOnlineAgo"
+  Unknown: "Unknown"
+  Now: "Online now"
+  None: "No other members"
+  TimeAgo:
+    Seconds: "%time% seconds ago"
+    Minutes: "%time% minutes ago"
+    Hours: "%time% hours ago"
+    Days: "%time% days ago"
+    Months: "%time% months ago"
+    Years: "%time% years ago"
+  Page: "%%previousPage%% &6Friends (Page %%currentPage%% of %%maxPage%%) %%nextPage%%"
   Party-List: "&aParty members (%size):"
+  Party-Header: "&6Party members (%size)"
+  Party-Leader: "&eLeader: %leader"
+  Party-Members: "&eMembers: %members"
 
 Lang:
   Usage: "&cInvalid usage! '/friend lang <language>'"
@@ -159,10 +174,17 @@ Note:
   Cleared: "&aFriend note cleared."
   Confirm: "&eUse /friend note resetall confirm to clear all notes."
   TooLong: "&cThe note prefix must be at most 255 characters."
+Pagination:
+  Previous: "&aPrevious"
+  Next: "&aNext"
+  Previous-Hover: "&eGo to page %%previousPage%%"
+  Next-Hover: "&eGo to page %%nextPage%%"
 Party-Mute:
   Enabled: "&e%displayName enabled party chat mute."
   Disabled: "&e%displayName disabled party chat mute."
   Muted-1: "&cParty chat is muted."
+  Restricted-Chat-Info: "&eOnly the party leader can send party messages while muted."
+  Send-Denied: "&cYou cannot send party messages right now."
 Party-AllInvite:
   Enabled: "&e%displayName enabled invitations for all members."
   Disabled: "&e%displayName restricted invitations to the leader."
@@ -226,6 +248,7 @@ Tell-Command:
   MustBeFriends: "&cYou must be friends with %targetDisplayName!"
   Offline: "&c%targetDisplayName &cis not online!"
   CantSend: "&cYou can't send a message to yourself!"
+  AppearOffline-CantSend: "&cYou cannot send private messages while appearing offline."
 
 # Reply Command
 Reply-Command:
@@ -233,14 +256,16 @@ Reply-Command:
   Target: "&cReply target: %targetDisplayName"
 
 Chat:
-  Usage: "&cUsage: /chat <default|party>"
+  Usage: "&cUsage: /chat <default|party|staff|admin>"
   ChatUsage: "&cUsage: /partychat <message>"
+  No-Permission: "&cYou cannot use that chat channel."
   Update: "&aYou are now in the %CHANNEL% &achannel"
   NeedInAParty: "&cYou need to be in a party to chat."
   Channels:
     All: "&6All"
     Party: "&6Party"
     Staff: "&6Staff"
+    Admin: "&cAdmin"
 
 Invite:
   Usage: "&cInvalid usage! '/party invite <player>'"
@@ -306,8 +331,13 @@ Hijack:
 
 Logout:
   One: "%displayName &ehas logged out the server."
-  Two: "&eAfter five minutes, random players will be promoted."
+  Two: "&eAn online member will become leader after %time% minutes."
+  Disband-When-Empty: "&eIf no members are online, the party will disband after %time% minutes."
   Become: "%displayName &ehas become the party leader."
+Party-Connection:
+  Offline: "%displayName &edisconnected and will be removed in %time% minutes unless they return."
+  Offline-No-Auto-Kick: "%displayName &edisconnected from the party."
+  Rejoin: "%displayName &areconnected to the party."
 
 Help-Party:
   Setting: "&e/party setting &7- &bChange party settings"
@@ -326,3 +356,8 @@ Help-Party:
   Promote: "&e/party promote &7- &bPromote party leader"
   KickOffline: "&e/party kickoffline &7- &bKick offline player(s)."
   Hijack: "&e/party hijack &7- &bHijack the party"
+Help-Party-Setting:
+  Command: "&aParty settings:"
+  AllInvite: "&e/party setting allinvite &7- &bAllow all members to invite players"
+  Mute: "&e/party setting mute &7- &bRestrict party chat to the leader"
+  Private: "&e/party setting private &7- &bToggle private party mode"

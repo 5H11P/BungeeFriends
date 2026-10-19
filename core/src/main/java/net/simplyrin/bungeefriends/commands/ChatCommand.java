@@ -53,7 +53,7 @@ public class ChatCommand extends Command {
 	}
 
 	public enum Channel {
-		ALL, PARTY, STAFF
+		ALL, PARTY, STAFF, ADMIN
 	}
 
 	@Override
@@ -86,12 +86,24 @@ public class ChatCommand extends Command {
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 				return;
 			}
-			if ((args[0].equalsIgnoreCase("staff") || args[0].equalsIgnoreCase("s"))
-					&& (player.hasPermission(Permissions.STAFF_CHAT) || player.hasPermission(Permissions.ADMIN))) {
+			if (args[0].equalsIgnoreCase("staff") || args[0].equalsIgnoreCase("s")) {
+				if (!player.hasPermission(Permissions.STAFF_CHAT) && !player.hasPermission(Permissions.ADMIN)) {
+					this.plugin.info(player, langUtils.getString("Chat.No-Permission"));
+					return;
+				}
 				this.channels.put(player.getUniqueId(), Channel.STAFF);
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 				this.plugin.info(player, langUtils.getString("Chat.Update").replace("%CHANNEL%", langUtils.getString("Chat.Channels.Staff")));
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				return;
+			}
+			if (args[0].equalsIgnoreCase("admin")) {
+				if (!player.hasPermission(Permissions.ADMIN)) {
+					this.plugin.info(player, langUtils.getString("Chat.No-Permission"));
+					return;
+				}
+				this.channels.put(player.getUniqueId(), Channel.ADMIN);
+				this.plugin.info(player, langUtils.getString("Chat.Update").replace("%CHANNEL%", langUtils.getString("Chat.Channels.Admin")));
 				return;
 			}
 		}

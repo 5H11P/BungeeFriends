@@ -40,6 +40,7 @@ public class PartyListener implements Listener {
 	public void onLogin(PostLoginEvent event) {
 		ProxiedPlayer player = event.getPlayer();
 		this.plugin.cancelExpiry("party-logout:" + player.getUniqueId());
+		this.plugin.cancelExpiry("party-offline-member:" + player.getUniqueId());
 
 		this.plugin.getPartyManager().getPlayer(player);
 
@@ -47,6 +48,7 @@ public class PartyListener implements Listener {
 
 		this.plugin.set("Name." + player.getName().toLowerCase(), player.getUniqueId().toString());
 		this.plugin.set("UUID." + player.getUniqueId().toString(), player.getName().toLowerCase());
+		this.notifyConnection(player.getUniqueId(), "Party-Connection.Rejoin");
 	}
 
 	@EventHandler
@@ -147,27 +149,31 @@ public class PartyListener implements Listener {
 			return;
 		}
 
-		if (myParties.getParties().size() == 0) {
-			return;
-		}
-
 		try {
 			if (!myParties.isPartyOwner()) {
+				int minutes = this.plugin.getConfigManager().getConfig().getInt("Plugin.Party-Offline-Member-Kick-Delay-Minutes", 5);
+				this.notifyConnection(player.getUniqueId(), minutes == 0 ? "Party-Connection.Offline-No-Auto-Kick" : "Party-Connection.Offline");
+				this.scheduleOfflineMemberKick(player.getUniqueId(), myParties);
 				return;
 			}
 		} catch (NotJoinedException e) {
 			return;
 		}
+		if (myParties.getParties().isEmpty()) return;
+		final int disbandMinutes = this.plugin.getConfigManager().getConfig().getInt("Plugin.Party-Disband-Delay-Minutes", 5);
 
 		ThreadPool.run(() -> {
 			for (String partyPlayerUniqueId : myParties.getParties()) {
 				PartyUtils targetPlayer = this.plugin.getPartyManager().getPlayer(partyPlayerUniqueId);
 				LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(partyPlayerUniqueId);
 
+				if (targetPlayer.getPlayer() == null) continue;
 				this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString(Messages.HYPHEN));
 
 				this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString("Logout.One").replace("%displayName", myParties.getDisplayName()));
-				this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString("Logout.Two"));
+				this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString("Logout.Two").replace("%time%", String.valueOf(disbandMinutes)).replace("%time", String.valueOf(disbandMinutes)));
+				if (myParties.getOnlinePlayers() <= 1)
+					this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString("Logout.Disband-When-Empty").replace("%time%", String.valueOf(disbandMinutes)).replace("%time", String.valueOf(disbandMinutes)));
 				this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString(Messages.HYPHEN));
 			}
 
@@ -218,7 +224,53 @@ public class PartyListener implements Listener {
 				}
 				myParties.disband();
 			}
-		}, 5, TimeUnit.MINUTES);
+		}, disbandMinutes, TimeUnit.MINUTES);
+	}
+
+	private void notifyConnection(UUID playerId, String key) {
+		PartyUtils member = this.plugin.getPartyManager().getPlayer(playerId);
+		if (!member.isJoinedParty()) return;
+		PartyUtils leader;
+		try { leader = member.getPartyLeader(); } catch (NotJoinedException e) { return; }
+		if (leader.getUniqueId().equals(playerId)) return;
+		List<String> recipients = new ArrayList<>(leader.getParties());
+		recipients.add(leader.getUniqueId().toString());
+		for (String recipient : recipients) {
+			UUID recipientId = UUID.fromString(recipient);
+			if (recipientId.equals(playerId) || this.plugin.getProxy().getPlayer(recipientId) == null) continue;
+			LanguageUtils language = this.plugin.getLanguageManager().getPlayer(recipientId);
+			this.plugin.info(recipientId, language.getString(key)
+					.replace("%displayName", this.plugin.getFriendManager().getPlayer(playerId).getDisplayNameFor(recipientId))
+					.replace("%time%", String.valueOf(this.plugin.getConfigManager().getConfig().getInt("Plugin.Party-Offline-Member-Kick-Delay-Minutes", 5))));
+		}
+	}
+
+	private void scheduleOfflineMemberKick(UUID playerId, PartyUtils member) {
+		int minutes = this.plugin.getConfigManager().getConfig().getInt("Plugin.Party-Offline-Member-Kick-Delay-Minutes", 5);
+		if (minutes == 0) return;
+		PartyUtils leader;
+		try { leader = member.getPartyLeader(); } catch (NotJoinedException e) { return; }
+		UUID leaderId = leader.getUniqueId();
+		this.plugin.scheduleExpiry("party-offline-member:" + playerId, () -> {
+			if (this.plugin.getProxy().getPlayer(playerId) != null) return;
+			PartyUtils current = this.plugin.getPartyManager().getPlayer(playerId);
+			if (!current.isJoinedParty()) return;
+			try {
+				PartyUtils currentLeader = current.getPartyLeader();
+				if (!currentLeader.getUniqueId().equals(leaderId)) return;
+				currentLeader.remove(playerId);
+				List<String> recipients = new ArrayList<>(currentLeader.getParties());
+				recipients.add(currentLeader.getUniqueId().toString());
+				for (String recipient : recipients) {
+					UUID recipientId = UUID.fromString(recipient);
+					if (this.plugin.getProxy().getPlayer(recipientId) != null) {
+						LanguageUtils language = this.plugin.getLanguageManager().getPlayer(recipientId);
+						this.plugin.info(recipientId, language.getString("Remove-Party.Member-Removed")
+								.replace("%targetDisplayName", this.plugin.getFriendManager().getPlayer(playerId).getDisplayNameFor(recipientId)));
+					}
+				}
+			} catch (NotJoinedException ignored) { }
+		}, minutes, TimeUnit.MINUTES);
 	}
 
 	@EventHandler

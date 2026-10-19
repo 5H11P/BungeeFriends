@@ -16,6 +16,7 @@ import net.simplyrin.bungeefriends.messages.Messages;
 import net.simplyrin.bungeefriends.tools.ThreadPool;
 import net.simplyrin.bungeefriends.utils.FriendManager.FriendUtils;
 import net.simplyrin.bungeefriends.utils.LanguageManager.LanguageUtils;
+import net.simplyrin.bungeefriends.utils.PaginationMessage;
 
 public class BlockCommand extends Command implements TabExecutor {
 	private final Main plugin;
@@ -55,9 +56,7 @@ public class BlockCommand extends Command implements TabExecutor {
 			}
 			int total = (blocked.size() + 7) / 8;
 			page = Math.max(1, Math.min(page, total));
-			plugin.info(player, language.getString("Block.List-Page")
-					.replace("%%currentPage%%", String.valueOf(page))
-					.replace("%%maxPage%%", String.valueOf(total)));
+			player.sendMessage(PaginationMessage.build(language, language.getString("Block.List-Page"), "/block list ", page, total));
 			for (int index = (page - 1) * 8; index < Math.min(page * 8, blocked.size()); index++) {
 				FriendUtils target = plugin.getFriendManager().getPlayer(UUID.fromString(blocked.get(index)));
 				plugin.info(player, language.getString("Block.List-Format")

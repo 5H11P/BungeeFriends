@@ -3,9 +3,12 @@ package net.simplyrin.bungeefriends.commands;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -33,6 +36,7 @@ import net.simplyrin.bungeefriends.tools.ThreadPool;
 import net.simplyrin.bungeefriends.utils.FriendManager.FriendUtils;
 import net.simplyrin.bungeefriends.utils.LanguageManager.LanguageUtils;
 import net.simplyrin.bungeefriends.utils.MessageBuilder;
+import net.simplyrin.bungeefriends.utils.PaginationMessage;
 
 /**
  * Created by SimplyRin on 2018/07/03.
@@ -154,9 +158,11 @@ public class FriendCommand extends Command implements TabExecutor {
 					this.plugin.info(player, langUtils.getString("Remove.YourSelf").replace("%targetDisplayName", targetFriends.getDisplayName()));
 					this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 
-					this.plugin.info(target, targetLangUtils.getString(Messages.HYPHEN));
-					this.plugin.info(target, targetLangUtils.getString("Remove.Target").replace("%displayName", myFriends.getDisplayName()));
-					this.plugin.info(target, targetLangUtils.getString(Messages.HYPHEN));
+					if (this.plugin.getBoolean("Plugin.Notify-Removed-Friend")) {
+						this.plugin.info(target, targetLangUtils.getString(Messages.HYPHEN));
+						this.plugin.info(target, targetLangUtils.getString("Remove.Target").replace("%displayName", myFriends.getDisplayName()));
+						this.plugin.info(target, targetLangUtils.getString(Messages.HYPHEN));
+					}
 					return;
 				}
 				this.plugin.info(player, langUtils.getString("Remove.Usage"));
@@ -323,8 +329,8 @@ public class FriendCommand extends Command implements TabExecutor {
 					return;
 				}
 
-				List<String> online = new ArrayList<>();
-				List<String> offline = new ArrayList<>();
+				List<TextComponent> online = new ArrayList<>();
+				List<TextComponent> offline = new ArrayList<>();
 
 				boolean colorOnly = this.plugin.getBoolean("Plugin.FriendList-NoPrefix");
 
@@ -348,9 +354,9 @@ public class FriendCommand extends Command implements TabExecutor {
 							added.add(uuid);
 
 							if (target != null && (!this.plugin.getBoolean("Plugin.Enable-Status") || this.plugin.getStatusManager().getStatus(target.getUniqueId()) != net.simplyrin.bungeefriends.utils.StatusManager.Status.APPEAR_OFFLINE)) {
-								online.add(this.friendListLine(target, langUtils, displayName));
+								online.add(this.friendListLine(player, target, langUtils, displayName));
 							} else {
-								offline.add(langUtils.getString("List.Offline").replace("%targetDisplayName", displayName));
+								offline.add(this.friendListLine(player, null, UUID.fromString(uuid), langUtils, displayName));
 							}
 						}
 					}
@@ -372,13 +378,13 @@ public class FriendCommand extends Command implements TabExecutor {
 					added.add(uuid);
 
 					if (target != null && (!this.plugin.getBoolean("Plugin.Enable-Status") || this.plugin.getStatusManager().getStatus(target.getUniqueId()) != net.simplyrin.bungeefriends.utils.StatusManager.Status.APPEAR_OFFLINE)) {
-						online.add(this.friendListLine(target, langUtils, displayName));
+						online.add(this.friendListLine(player, target, langUtils, displayName));
 					} else {
-						offline.add(langUtils.getString("List.Offline").replace("%targetDisplayName", displayName));
+						offline.add(this.friendListLine(player, null, UUID.fromString(uuid), langUtils, displayName));
 					}
 				}
 
-				List<String> all = new ArrayList<>();
+				List<TextComponent> all = new ArrayList<>();
 				all.addAll(online);
 				all.addAll(offline);
 
@@ -393,33 +399,12 @@ public class FriendCommand extends Command implements TabExecutor {
 					}
 				}
 
-				if (all.size() <= 7) {
-					this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-					this.plugin.info(player, "               " + langUtils.getString("List.Page").replace("%%currentPage%%", String.valueOf(page == 0 ? 1 : page)).replace("%%maxPage%%", "1"));
-
-					for (String message : all) {
-						this.plugin.info(player, message);
-					}
-
-					this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-					return;
-				}
-
-				List<List<String>> divide = this.divide(all, 7);
+				List<List<TextComponent>> divide = this.divide(all, 7);
 				page = Math.min(page, divide.size());
 
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-				this.plugin.info(player, "               " + langUtils.getString("List.Page").replace("%%currentPage%%", String.valueOf(page == 0 ? 1 : page)).replace("%%maxPage%%", String.valueOf(divide.size())));
-
-				try {
-					List<String> pages = divide.get(page - 1);
-					if (pages != null && pages.size() >= 1) {
-						for (String message : pages) {
-							this.plugin.info(player, message);
-						}
-					}
-				} catch (Exception e) {
-				}
+				player.sendMessage(PaginationMessage.build(langUtils, langUtils.getString("List.Page"), "/friend list ", page, divide.size()));
+				for (TextComponent message : divide.get(page - 1)) player.sendMessage(message);
 
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 				return;
@@ -698,15 +683,56 @@ public class FriendCommand extends Command implements TabExecutor {
 		this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 	}
 
-	private String friendListLine(ProxiedPlayer target, LanguageUtils lang, String displayName) {
-		if (target.getServer() == null || target.getServer().getInfo() == null)
-			return lang.getString("List.Offline").replace("%targetDisplayName", displayName);
-		String server = this.plugin.getServerName(target.getServer().getInfo().getName());
-		net.simplyrin.bungeefriends.utils.StatusManager.Status status =
-				this.plugin.getStatusManager().getStatus(target.getUniqueId());
-		String key = status == net.simplyrin.bungeefriends.utils.StatusManager.Status.ONLINE
-				? "List.Online" : "List.Status." + status.getKey();
-		return lang.getString(key).replace("%targetDisplayName", displayName).replace("%server", server);
+	private TextComponent friendListLine(ProxiedPlayer viewer, ProxiedPlayer target, LanguageUtils lang, String displayName) {
+		return this.friendListLine(viewer, target, target.getUniqueId(), lang, displayName);
+	}
+
+	private TextComponent friendListLine(ProxiedPlayer viewer, ProxiedPlayer target, UUID targetId, LanguageUtils lang, String displayName) {
+		boolean visible = target != null && target.getServer() != null && target.getServer().getInfo() != null;
+		String server = visible ? this.plugin.getServerName(target.getServer().getInfo().getName()) : lang.getString("List.Unknown");
+		String status = lang.getString("List.Unknown");
+		String line = lang.getString("List.Offline");
+		if (visible) {
+			net.simplyrin.bungeefriends.utils.StatusManager.Status state = this.plugin.getStatusManager().getStatus(targetId);
+			String key = state == net.simplyrin.bungeefriends.utils.StatusManager.Status.ONLINE ? "List.Online" : "List.Status." + state.getKey();
+			line = lang.getString(key);
+			status = lang.getString("Status.ChatBar." + state.getKey()).replace("%targetDisplayName", "").trim();
+		}
+		String lastOnline = visible ? lang.getString("List.Now") : this.formatTime(this.plugin.getString("Player." + targetId + ".LastOnline"), lang);
+		String lastOnlineAgo = visible ? lang.getString("List.Now") : this.timeAgo(this.plugin.getString("Player." + targetId + ".LastOnline"), lang);
+		String hover = lang.getString(visible ? "List.Hover-Online" : "List.Hover-Offline")
+				.replace("%targetDisplayName", displayName).replace("%targetUUID", targetId.toString())
+				.replace("%status", status).replace("%server", server)
+				.replace("%friendSince", this.formatTime(this.plugin.getFriendSince(viewer.getUniqueId(), targetId), lang))
+				.replace("%lastOnlineAgo", lastOnlineAgo).replace("%lastOnline", lastOnline);
+		return MessageBuilder.get(line.replace("%targetDisplayName", displayName).replace("%server", server), null, null, hover, false);
+	}
+
+	private String formatTime(String raw, LanguageUtils lang) {
+		try {
+			long timestamp = Long.parseLong(raw);
+			if (timestamp <= 0) return lang.getString("List.Unknown");
+			String pattern = this.plugin.getConfigManager().getConfig().getString("Plugin.FriendList-Time.Format");
+			if (pattern == null || pattern.isEmpty()) pattern = "yyyy-MM-dd HH:mm:ss";
+			try { return new SimpleDateFormat(pattern, Locale.ROOT).format(new Date(timestamp)); }
+			catch (IllegalArgumentException invalid) { return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).format(new Date(timestamp)); }
+		} catch (NumberFormatException invalid) { return lang.getString("List.Unknown"); }
+	}
+
+	private String timeAgo(String raw, LanguageUtils lang) {
+		try {
+			long timestamp = Long.parseLong(raw);
+			if (timestamp <= 0) return lang.getString("List.Unknown");
+			long seconds = Math.max(0, (System.currentTimeMillis() - timestamp) / 1000);
+			String unit = "Seconds";
+			long amount = seconds;
+			if (seconds >= 31536000) { unit = "Years"; amount = seconds / 31536000; }
+			else if (seconds >= 2592000) { unit = "Months"; amount = seconds / 2592000; }
+			else if (seconds >= 86400) { unit = "Days"; amount = seconds / 86400; }
+			else if (seconds >= 3600) { unit = "Hours"; amount = seconds / 3600; }
+			else if (seconds >= 60) { unit = "Minutes"; amount = seconds / 60; }
+			return lang.getString("List.TimeAgo." + unit).replace("%time%", String.valueOf(amount));
+		} catch (NumberFormatException invalid) { return lang.getString("List.Unknown"); }
 	}
 
 	public void add(ProxiedPlayer player, FriendUtils myFriends, LanguageUtils langUtils, String name) {

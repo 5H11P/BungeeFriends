@@ -60,6 +60,11 @@ public class TellCommand extends Command implements TabExecutor {
 		LanguageUtils langUtils = this.plugin.getLanguageManager().getPlayer(player);
 
 		if (args.length > 0) {
+			if (this.plugin.getBoolean("Plugin.Enable-Status") && this.plugin.getStatusManager().getStatus(player.getUniqueId())
+					== net.simplyrin.bungeefriends.utils.StatusManager.Status.APPEAR_OFFLINE) {
+				this.plugin.info(player, langUtils.getString("Tell-Command.AppearOffline-CantSend"));
+				return;
+			}
 			UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[0]);
 			if (target == null) {
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
@@ -84,7 +89,8 @@ public class TellCommand extends Command implements TabExecutor {
 				return;
 			}
 
-			if (targetFriends.getPlayer() == null) {
+			if (targetFriends.getPlayer() == null || (this.plugin.getBoolean("Plugin.Enable-Status")
+					&& this.plugin.getStatusManager().getStatus(target) == net.simplyrin.bungeefriends.utils.StatusManager.Status.APPEAR_OFFLINE)) {
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 				this.plugin.info(player, langUtils.getString("Tell-Command.Offline").replace("%targetDisplayName", targetFriends.getDisplayName()));
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));

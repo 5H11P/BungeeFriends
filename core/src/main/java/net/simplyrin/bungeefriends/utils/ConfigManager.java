@@ -2,6 +2,8 @@ package net.simplyrin.bungeefriends.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.common.base.Charsets;
 
@@ -42,6 +44,7 @@ public class ConfigManager {
 		File config = new File(this.plugin.getDataFolder(), "config.yml");
 		this.config = Config.getConfig(config, Charsets.UTF_8);
 		this.ensureP4Defaults();
+		this.ensureFeatureDefaults();
 		this.save();
 
 		this.plugin.reloadCommandAliases();
@@ -117,6 +120,7 @@ public class ConfigManager {
 		this.resetValue("Plugin.Disable-PartyCmdSender");
 		this.resetValue("Plugin.Enable-BungeeParties");
 		this.ensureP4Defaults();
+		this.ensureFeatureDefaults();
 		this.resetValue("Plugin.Enable-Deprecated-PrefixYml");
 		this.resetValue("Plugin.FriendList-NoPrefix");
 
@@ -177,6 +181,51 @@ public class ConfigManager {
 		if (!this.config.contains("Plugin.PartyWarp.Game-Servers")) this.config.set("Plugin.PartyWarp.Game-Servers", new java.util.ArrayList<String>());
 		this.resetStringValue("Plugin.PartyWarp.Initial-Delay", "0.5");
 		this.resetStringValue("Plugin.PartyWarp.Member-Interval", "0.1");
+	}
+
+	private void ensureFeatureDefaults() {
+		for (String invalid : applyFeatureDefaults(this.config))
+			this.plugin.getLogger().warning("Invalid " + invalid + "; using default");
+	}
+
+	static List<String> applyFeatureDefaults(Configuration config) {
+		migrateKey(config, "Plugin.Party-Disband-Time", "Plugin.Party-Disband-Delay-Minutes");
+		migrateKey(config, "Plugin.Party-Kick-Offline-Time", "Plugin.Party-Offline-Member-Kick-Delay-Minutes");
+		migrateKey(config, "Plugin.Send-Remove-Target-Message", "Plugin.Notify-Removed-Friend");
+		defaultValue(config, "Plugin.Party-Disband-Delay-Minutes", 5);
+		defaultValue(config, "Plugin.Party-Offline-Member-Kick-Delay-Minutes", 5);
+		defaultValue(config, "Plugin.Notify-Removed-Friend", true);
+		defaultValue(config, "Plugin.FriendList-Time.Format", "yyyy-MM-dd HH:mm:ss");
+		defaultValue(config, "Plugin.LuckPerms.OfflinePrefixCacheMinutes", 30);
+		defaultValue(config, "Plugin.LuckPerms.OfflinePrefixLoadTimeoutSeconds", 2);
+		List<String> invalid = new ArrayList<>();
+		validInt(config, "Plugin.Party-Disband-Delay-Minutes", 5, 0, invalid);
+		validInt(config, "Plugin.Party-Offline-Member-Kick-Delay-Minutes", 5, 0, invalid);
+		validInt(config, "Plugin.LuckPerms.OfflinePrefixCacheMinutes", 30, 0, invalid);
+		validInt(config, "Plugin.LuckPerms.OfflinePrefixLoadTimeoutSeconds", 2, 1, invalid);
+		return invalid;
+	}
+
+	private static void migrateKey(Configuration config, String oldKey, String newKey) {
+		if (!config.contains(newKey) && config.contains(oldKey)) config.set(newKey, config.get(oldKey));
+		config.set(oldKey, null);
+	}
+
+	private static void defaultValue(Configuration config, String key, Object value) {
+		if (!config.contains(key)) config.set(key, value);
+	}
+
+	private static void validInt(Configuration config, String key, int fallback, int minimum, List<String> invalid) {
+		try {
+			Object raw = config.get(key);
+			int value = Integer.parseInt(String.valueOf(raw));
+			if (value >= minimum) {
+				config.set(key, value);
+				return;
+			}
+		} catch (NumberFormatException ignored) { }
+		invalid.add(key);
+		config.set(key, fallback);
 	}
 
 	public void resetStringValue(String key, int value) {

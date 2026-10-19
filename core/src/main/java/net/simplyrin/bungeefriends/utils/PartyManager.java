@@ -118,6 +118,7 @@ public class PartyManager {
 			if (plugin.getBoolean("Parties." + myParties.uuid + ".Mute")
 					&& !player.getUniqueId().equals(myParties.uuid)) {
 				plugin.info(player, plugin.getLanguageManager().getPlayer(player).getString("Party-Mute.Muted-1"));
+				plugin.info(player, plugin.getLanguageManager().getPlayer(player).getString("Party-Mute.Send-Denied"));
 				return;
 			}
 

@@ -84,8 +84,23 @@ List:
     Busy: "&e%targetDisplayName &c正忙 &7- &e%server"
     AppearOffline: "&e%targetDisplayName &7已离线"
   Offline: "&e%targetDisplayName &c此时离线"
-  Page: "&6好友列表 (页数 %%currentPage%% / %%maxPage%%)"
+  Hover-Online: "&e好友: %targetDisplayName\n&7状态: &f%status\n&7服务器: &f%server\n&7成为好友: &f%friendSince\n&7最后在线: &f%lastOnline\n&7距上次在线: &f%lastOnlineAgo"
+  Hover-Offline: "&e好友: %targetDisplayName\n&7UUID: &f%targetUUID\n&7成为好友: &f%friendSince\n&7最后在线: &f%lastOnline\n&7距上次在线: &f%lastOnlineAgo"
+  Unknown: "未知"
+  Now: "当前在线"
+  None: "暂无其他成员"
+  TimeAgo:
+    Seconds: "%time% 秒前"
+    Minutes: "%time% 分钟前"
+    Hours: "%time% 小时前"
+    Days: "%time% 天前"
+    Months: "%time% 个月前"
+    Years: "%time% 年前"
+  Page: "%%previousPage%% &6好友列表 (第 %%currentPage%% / %%maxPage%% 页) %%nextPage%%"
   Party-List: "&a组队成员 (%size):"
+  Party-Header: "&6队伍成员 (%size)"
+  Party-Leader: "&e队长: %leader"
+  Party-Members: "&e队员: %members"
 Lang:
   Usage: "&c用法: /friend lang <语言>"
   Available: "&b可用语言:"
@@ -142,10 +157,17 @@ Note:
   Cleared: "&a已清除好友备注。"
   Confirm: "&e输入 /friend note resetall confirm 清除全部备注。"
   TooLong: "&c备注前缀不能超过 255 个字符。"
+Pagination:
+  Previous: "&a上一页"
+  Next: "&a下一页"
+  Previous-Hover: "&e查看第 %%previousPage%% 页"
+  Next-Hover: "&e查看第 %%nextPage%% 页"
 Party-Mute:
   Enabled: "&e%displayName 开启了队伍聊天静音。"
   Disabled: "&e%displayName 关闭了队伍聊天静音。"
   Muted-1: "&c队伍聊天已被静音。"
+  Restricted-Chat-Info: "&e静音期间只有队长可以在队伍频道发言。"
+  Send-Denied: "&c你现在无法发送队伍消息。"
 Party-AllInvite:
   Enabled: "&e%displayName 允许所有队员邀请玩家。"
   Disabled: "&e%displayName 只允许队长邀请玩家。"
@@ -204,19 +226,22 @@ Tell-Command:
   MustBeFriends: "&c你与 %targetDisplayName &c必须先成为好友!"
   Offline: "&c%targetDisplayName &c当前离线!"
   CantSend: "&cYou can't send a message to yourself!"
+  AppearOffline-CantSend: "&c隐身时无法发送私聊消息。"
 #Reply Command
 Reply-Command:
   Usage: "&c用法: /reply <消息>"
   Target: "&c回复目标: %targetDisplayName"
 Chat:
-  Usage: "&c无效指令! 用法: '/party chat <消息>'或'/pc <消息>'"
+  Usage: "&c用法: /chat <default|party|staff|admin>"
   ChatUsage: "&c用法: /partychat <消息> 或 /pc <消息>"
+  No-Permission: "&c你无权使用该聊天频道。"
   Update: "&a你现在处于 %CHANNEL% &a频道"
   NeedInAParty: "&c你需要进入组队才能聊天."
   Channels:
     All: "&6全体"
     Party: "&6组队"
     Staff: "&6员工"
+    Admin: "&c管理"
 Invite:
   Usage: "&c无效指令! 用法: '/party invite <玩家>'"
   All-Left: "&e该组队被解散, 因为所有邀请已到期, 所有成员已离开."
@@ -271,8 +296,13 @@ Hijack:
   Other: "%displayName &c劫持了你的队伍!"
 Logout:
   One: "%displayName &e离开了服务器."
-  Two: "&e五分钟后，随机一名队伍成员将成为队长."
+  Two: "&e%time% 分钟后，一名在线队员将成为队长。"
+  Disband-When-Empty: "&e如果没有在线队员，队伍将在 %time% 分钟后解散。"
   Become: "%displayName &e成为了队长."
+Party-Connection:
+  Offline: "%displayName &e已断开连接；若 %time% 分钟内未返回，将被移出队伍。"
+  Offline-No-Auto-Kick: "%displayName &e已断开连接。"
+  Rejoin: "%displayName &a已重新连接。"
 Help-Party:
   Setting: "&e/party setting &7- &b修改队伍设置"
   Command: "&a组队命令:"
@@ -290,3 +320,8 @@ Help-Party:
   Promote: "&e/party promote &7- &b提权为队长"
   KickOffline: "&e/party kickoffline &7- &bKick offline player(s)."
   Hijack: "&e/party hijack &7- &b劫持队伍"
+Help-Party-Setting:
+  Command: "&a队伍设置:"
+  AllInvite: "&e/party setting allinvite &7- &b允许所有队员邀请玩家"
+  Mute: "&e/party setting mute &7- &b只允许队长在队伍频道发言"
+  Private: "&e/party setting private &7- &b切换私有队伍模式"

@@ -2,6 +2,7 @@ package net.simplyrin.bungeefriends.utils;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import com.google.common.base.Charsets;
@@ -19,6 +20,13 @@ import net.simplyrin.bungeefriends.tools.Config;
  * copyright: Copyright (c) 2021 SimplyRin
  */
 public class LanguageManager {
+	private static final Map<String, String> LEGACY_KEYS = new HashMap<>();
+	static {
+		LEGACY_KEYS.put("Logout.Disband-When-Empty", "Logout.Three");
+		LEGACY_KEYS.put("Party-Mute.Restricted-Chat-Info", "Party-Mute.Info-Enabled");
+		LEGACY_KEYS.put("Party-Mute.Send-Denied", "Party-Mute.Muted-2");
+		LEGACY_KEYS.put("Chat.No-Permission", "Chat.Chat-NoPermission");
+	}
 
 	private Main plugin;
 
@@ -28,6 +36,18 @@ public class LanguageManager {
 	private Configuration latestChineseConfig;
 
 	private HashMap<String, String> localLangMap = new HashMap<>();
+
+	static String resolveMessage(Configuration selected, Configuration bundled, Configuration english, String key) {
+		String result = selected.getString(key);
+		if (result != null && !result.isEmpty()) return result;
+		String legacyKey = LEGACY_KEYS.get(key);
+		if (legacyKey != null) {
+			String legacy = selected.getString(legacyKey);
+			if (legacy != null && !legacy.isEmpty()) return legacy;
+		}
+		result = bundled.getString(key);
+		return result == null || result.isEmpty() ? english.getString(key) : result;
+	}
 
 	public LanguageManager(Main plugin) {
 		this.plugin = plugin;
@@ -143,19 +163,8 @@ public class LanguageManager {
 				configMap.put(this.getLanguage().toLowerCase(), file.exists() ? Config.getConfig(file, Charsets.UTF_8) : latestEnglishConfig);
 			}
 
-			String result = configMap.get(this.getLanguage().toLowerCase()).getString(configKey);
-			if (result == null || result.equals("")) {
-				try {
-					Configuration bundled = "Chinese".equalsIgnoreCase(this.getLanguage()) ? latestChineseConfig : latestEnglishConfig;
-					String value = bundled.getString(configKey);
-					if (value == null || value.isEmpty()) value = latestEnglishConfig.getString(configKey);
-					return value;
-				} catch (Exception e) {
-					plugin.info("&cAn error occured! You need remove 'english.yml' or set '" + configKey + "'!");
-					e.printStackTrace();
-				}
-			}
-			return result;
+			Configuration bundled = "Chinese".equalsIgnoreCase(this.getLanguage()) ? latestChineseConfig : latestEnglishConfig;
+			return resolveMessage(configMap.get(this.getLanguage().toLowerCase()), bundled, latestEnglishConfig, configKey);
 		}
 
 		public File getLanguagesFolder() {

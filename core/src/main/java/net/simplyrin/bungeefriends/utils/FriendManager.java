@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import net.luckperms.api.LuckPerms;
@@ -20,6 +21,7 @@ import net.simplyrin.bungeefriends.exceptions.NotAddedException;
 import net.simplyrin.bungeefriends.exceptions.RequestDenyException;
 import net.simplyrin.bungeefriends.exceptions.SelfException;
 import net.simplyrin.bungeefriends.messages.Permissions;
+import net.simplyrin.bungeefriends.tools.ThreadPool;
 
 /**
  * Created by SimplyRin on 2018/07/03.
@@ -31,6 +33,17 @@ import net.simplyrin.bungeefriends.messages.Permissions;
 public class FriendManager {
 
 	private Main plugin;
+	private final ConcurrentHashMap<UUID, PrefixCacheEntry> offlinePrefixCache = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<UUID, Boolean> offlinePrefixRefresh = new ConcurrentHashMap<>();
+
+	private static final class PrefixCacheEntry {
+		final String prefix;
+		final long expiresAt;
+		PrefixCacheEntry(String prefix, long expiresAt) {
+			this.prefix = prefix;
+			this.expiresAt = expiresAt;
+		}
+	}
 
 	public FriendManager(Main plugin) {
 		this.plugin = plugin;
@@ -127,11 +140,34 @@ public class FriendManager {
 			if (api != null) {
 				String prefix = null;
 				if (player == null) {
-					try {
-						prefix = api.getUserManager().loadUser(this.uuid).get(3, TimeUnit.SECONDS)
-								.getCachedData().getMetaData().getPrefix();
-					} catch (Exception e) {
-						// e.printStackTrace();
+					long now = System.currentTimeMillis();
+					PrefixCacheEntry cached = offlinePrefixCache.get(this.uuid);
+					if (cached != null && cached.expiresAt > now) prefix = cached.prefix;
+					else {
+						prefix = plugin.getString("Player." + this.uuid + ".Prefix");
+						final UUID targetId = this.uuid;
+						final int cacheMinutes = plugin.getConfigManager().getConfig().getInt("Plugin.LuckPerms.OfflinePrefixCacheMinutes", 30);
+						final int timeoutSeconds = plugin.getConfigManager().getConfig().getInt("Plugin.LuckPerms.OfflinePrefixLoadTimeoutSeconds", 2);
+						if (offlinePrefixRefresh.putIfAbsent(targetId, Boolean.TRUE) == null) {
+							try {
+								ThreadPool.run(() -> {
+									try {
+										String loaded = api.getUserManager().loadUser(targetId).get(timeoutSeconds, TimeUnit.SECONDS)
+												.getCachedData().getMetaData().getPrefix();
+										if (loaded != null) {
+											plugin.set("Player." + targetId + ".Prefix", loaded);
+											if (cacheMinutes > 0) offlinePrefixCache.put(targetId,
+													new PrefixCacheEntry(loaded, System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(cacheMinutes)));
+										}
+									} catch (Exception ignored) {
+									} finally {
+										offlinePrefixRefresh.remove(targetId);
+									}
+								});
+							} catch (RuntimeException e) {
+								offlinePrefixRefresh.remove(targetId);
+							}
+						}
 					}
 				} else {
 					CachedMetaData meta = api.getPlayerAdapter(ProxiedPlayer.class).getMetaData(player);

@@ -51,10 +51,16 @@ public class ReplyCommand extends Command {
 		}
 
 		if (args.length > 0) {
+			if (this.plugin.getBoolean("Plugin.Enable-Status") && this.plugin.getStatusManager().getStatus(player.getUniqueId())
+					== net.simplyrin.bungeefriends.utils.StatusManager.Status.APPEAR_OFFLINE) {
+				this.plugin.info(player, langUtils.getString("Tell-Command.AppearOffline-CantSend"));
+				return;
+			}
 			FriendUtils targetFriends = this.plugin.getFriendManager().getPlayer(targetUniqueId);
 			LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(targetUniqueId);
 
-			if (targetFriends.getPlayer() == null) {
+			if (targetFriends.getPlayer() == null || (this.plugin.getBoolean("Plugin.Enable-Status")
+					&& this.plugin.getStatusManager().getStatus(targetUniqueId) == net.simplyrin.bungeefriends.utils.StatusManager.Status.APPEAR_OFFLINE)) {
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 				this.plugin.info(player, langUtils.getString("Tell-Command.Offline").replace("%targetDisplayName", targetFriends.getDisplayName()));
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));

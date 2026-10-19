@@ -55,6 +55,50 @@ public class LanguageResourcesTest {
 	}
 
 	@Test
+	public void newMessagesAndPlaceholdersMatchAcrossLanguages() {
+		Configuration english = Config.getConfig(getClass().getResourceAsStream("/English.yml"));
+		Configuration chinese = Config.getConfig(getClass().getResourceAsStream("/Chinese.yml"));
+		for (String key : Arrays.asList("List.Hover-Online", "List.Hover-Offline", "List.Now", "List.None",
+				"List.Party-Header", "List.Party-Leader", "List.Party-Members", "List.Page",
+				"Pagination.Previous", "Pagination.Next", "Party-Mute.Restricted-Chat-Info",
+				"Party-Mute.Send-Denied", "Chat.No-Permission", "Chat.Channels.Admin",
+				"Party-Connection.Offline", "Party-Connection.Offline-No-Auto-Kick",
+				"Logout.Disband-When-Empty", "Help-Party-Setting.Command")) {
+			assertFalse("English: " + key, english.getString(key).isEmpty());
+			assertFalse("Chinese: " + key, chinese.getString(key).isEmpty());
+			assertEquals("Placeholders differ for " + key, placeholders(english.getString(key)), placeholders(chinese.getString(key)));
+		}
+	}
+
+	@Test
+	public void legacyCustomMessagesTakePrecedenceOverBundledDefaults() {
+		Configuration custom = new Configuration();
+		Configuration bundled = new Configuration();
+		bundled.set("Party-Mute.Send-Denied", "bundled");
+		custom.set("Party-Mute.Muted-2", "custom old");
+		assertEquals("custom old", LanguageManager.resolveMessage(custom, bundled, bundled, "Party-Mute.Send-Denied"));
+		custom.set("Party-Mute.Send-Denied", "custom new");
+		assertEquals("custom new", LanguageManager.resolveMessage(custom, bundled, bundled, "Party-Mute.Send-Denied"));
+		custom.set("Party-Mute.Send-Denied", null);
+		assertEquals("bundled", LanguageManager.resolveMessage(new Configuration(), bundled, bundled, "Party-Mute.Send-Denied"));
+		for (String[] keys : new String[][] {
+				{"Logout.Disband-When-Empty", "Logout.Three"},
+				{"Party-Mute.Restricted-Chat-Info", "Party-Mute.Info-Enabled"},
+				{"Chat.No-Permission", "Chat.Chat-NoPermission"}}) {
+			Configuration oldFile = new Configuration();
+			oldFile.set(keys[1], "older translation");
+			assertEquals(keys[0], "older translation", LanguageManager.resolveMessage(oldFile, bundled, bundled, keys[0]));
+		}
+	}
+
+	private Set<String> placeholders(String message) {
+		Set<String> values = new HashSet<>();
+		Matcher matcher = Pattern.compile("%{1,2}[A-Za-z][A-Za-z0-9]*%{0,2}").matcher(message);
+		while (matcher.find()) values.add(matcher.group());
+		return values;
+	}
+
+	@Test
 	public void fixedLanguageKeysUsedByCoreExist() throws Exception {
 		Configuration english;
 		try (InputStream stream = getClass().getResourceAsStream("/English.yml")) {

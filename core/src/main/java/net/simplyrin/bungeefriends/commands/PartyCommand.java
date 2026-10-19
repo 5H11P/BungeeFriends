@@ -121,16 +121,17 @@ public class PartyCommand extends Command {
 
 				List<String> parties = partyLeader.getParties();
 
-				String raw = "";
-				raw += partyLeader.getDisplayName() + (partyLeader.getPlayer() != null ? " &a● " : " &c● ");
-
+				StringBuilder members = new StringBuilder();
 				for (String partyPlayerUniqueId : parties) {
 					PartyUtils member = this.plugin.getPartyManager().getPlayer(partyPlayerUniqueId);
-					raw += member.getDisplayName() + (member.getPlayer() != null ? " &a● " : " &c● ");
+					if (members.length() > 0) members.append("&7, ");
+					members.append(member.getDisplayName()).append(member.getPlayer() != null ? " &a●" : " &c●");
 				}
 
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-				this.plugin.info(player, langUtils.getString("List.Party-List").replace("%size", String.valueOf(parties.size() + 1)).trim() + " " + raw);
+				this.plugin.info(player, langUtils.getString("List.Party-Header").replace("%size", String.valueOf(parties.size() + 1)));
+				this.plugin.info(player, langUtils.getString("List.Party-Leader").replace("%leader", partyLeader.getDisplayName() + (partyLeader.getPlayer() != null ? " &a●" : " &c●")));
+				this.plugin.info(player, langUtils.getString("List.Party-Members").replace("%members", members.length() == 0 ? langUtils.getString("List.None") : members.toString()));
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 				return;
 			}
@@ -421,6 +422,11 @@ public class PartyCommand extends Command {
 			}
 
 			if (args[0].equalsIgnoreCase("setting")) {
+				if (args.length == 1 || args[1].equalsIgnoreCase("help")) {
+					for (String key : new String[] {"Command", "AllInvite", "Mute", "Private"})
+						this.plugin.info(player, langUtils.getString("Help-Party-Setting." + key));
+					return;
+				}
 				if (args.length != 2 || !(args[1].equalsIgnoreCase("allinvite")
 						|| args[1].equalsIgnoreCase("mute") || args[1].equalsIgnoreCase("private"))) {
 					this.plugin.info(player, langUtils.getString("Party-Setting.Usage"));
@@ -448,6 +454,8 @@ public class PartyCommand extends Command {
 				if (!this.plugin.isEnabledMySQL()) this.plugin.getDataManager().save();
 				myParties.broadcast(langUtils.getString("Party-" + field + "." + (enabled ? "Enabled" : "Disabled"))
 						.replace("%displayName", myParties.getDisplayName()));
+				if (field.equals("Mute") && enabled)
+					myParties.broadcast(langUtils.getString("Party-Mute.Restricted-Chat-Info"));
 				return;
 			}
 

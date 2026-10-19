@@ -73,6 +73,7 @@ public class EventListener implements Listener {
 	@EventHandler
 	public void onDisconnect(PlayerDisconnectEvent event) {
 		ProxiedPlayer player = event.getPlayer();
+		this.plugin.set("Player." + player.getUniqueId() + ".LastOnline", String.valueOf(System.currentTimeMillis()));
 		this.plugin.getStatusCommand().cancel(player.getUniqueId());
 		FriendUtils myFriends = this.plugin.getFriendManager().getPlayer(player);
 		boolean hidden = this.plugin.getBoolean("Plugin.Enable-Status") && this.plugin.getStatusManager().getStatus(player.getUniqueId())
@@ -112,21 +113,23 @@ public class EventListener implements Listener {
 			return;
 		}
 
-		if (channel.equals(Channel.STAFF)) {
-			if (!player.hasPermission(Permissions.STAFF_CHAT) && !player.hasPermission(Permissions.ADMIN)) {
+		if (channel == Channel.STAFF || channel == Channel.ADMIN) {
+			if (channel == Channel.ADMIN ? !player.hasPermission(Permissions.ADMIN)
+					: !player.hasPermission(Permissions.STAFF_CHAT) && !player.hasPermission(Permissions.ADMIN)) {
 				event.setCancelled(true);
 				this.plugin.getChatCommand().getChannels().remove(player.getUniqueId());
-				this.plugin.info(player, this.plugin.getLanguageManager().getPlayer(player).getString(Messages.NO_PERMISSION));
+				this.plugin.info(player, this.plugin.getLanguageManager().getPlayer(player).getString("Chat.No-Permission"));
 				return;
 			}
 			event.setCancelled(true);
 
 			FriendUtils myFriends = plugin.getFriendManager().getPlayer(player);
 			for (ProxiedPlayer oPlayer : this.plugin.getProxy().getPlayers()) {
-				if (oPlayer.hasPermission(Permissions.STAFF_CHAT) || oPlayer.hasPermission(Permissions.ADMIN)) {
+				if (channel == Channel.ADMIN ? oPlayer.hasPermission(Permissions.ADMIN)
+						: oPlayer.hasPermission(Permissions.STAFF_CHAT) || oPlayer.hasPermission(Permissions.ADMIN)) {
 					LanguageUtils langUtils = this.plugin.getLanguageManager().getPlayer(oPlayer);
 
-					String prefix = langUtils.getString("Chat.Channels.Staff");
+					String prefix = langUtils.getString(channel == Channel.ADMIN ? "Chat.Channels.Admin" : "Chat.Channels.Staff");
 					this.plugin.info(oPlayer, prefix + " > " + myFriends.getDisplayName() + "&f: " + event.getMessage());
 				}
 			}
