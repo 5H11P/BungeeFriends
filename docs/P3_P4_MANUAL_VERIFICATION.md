@@ -16,7 +16,7 @@
 
 ## 准备
 
-1. 先取得**由当前源码构建的核心 JAR**，核对 `plugin.yml` 入口和构建时间。2026-10-20 的 Maven `package` 因无法解析 `maven-replacer-plugin:1.4.1` 而失败；不要把已有 `target/` JAR 当作本次源码的构建结果。
+1. 先取得**由当前源码构建的核心 JAR**，核对 `plugin.yml` 入口、构建时间和 SHA-256。P6 阶段已用 JDK 8 完成一次六模块 `clean test package`；部署前仍应按当前提交重新构建，不要沿用旧 `target/` JAR。
 2. 使用独立测试代理、两个可切换的后端服务器、三个测试账号和可重启的测试 MySQL。所有故障注入仅在测试环境执行。记录代理、数据库和操作系统日志。
 3. 先用 `mysql.yml` 的 `Enable: false` 运行 YAML 模式；备份插件数据目录后，用全新的测试数据库及 `Enable: true` 运行 MySQL 模式。两种模式**不会自动互相导入数据**，应分别初始化玩家并执行用例。每次切换模式都重启代理。
 4. 给 A、B、C 明确分配权限：普通玩家仅有基础命令权限，另准备 `friends.command.admin`、`friends.chat.staff`、`friends.command.force-add`、`friends.party.private`、`friends.party.hijack` 的授权账号。记录实际权限插件配置。

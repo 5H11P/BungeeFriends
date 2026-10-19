@@ -1,6 +1,6 @@
 # P6 示例、配置与质量阶段记录
 
-状态：三个示例已从空入口迁入，Java 8 目标编译和命令选择单元测试通过；六模块 Maven 打包与真实双端示例联调仍受环境限制，不能判定 P6 整阶段验收完成。
+状态：三个示例已从空入口迁入，JDK 8 六模块干净构建、31 项自动测试及 JAR 静态检查通过；真实双端示例联调尚未执行，不能判定 P6 整阶段验收完成。
 
 ## 部署与操作
 
@@ -29,10 +29,11 @@
 | 日志噪声 | 原示例启停及每次命令成功都写日志 | 被动跟随不记录成功投递，仅在查询或投递失败时记录原因 | 源码核对；尚无运行时日志量基线 |
 | 生命周期 | 原示例异步回调可能在玩家离线或插件停用后访问 Bukkit 对象，且有额外延迟任务 | 回调切回主线程并检查启用/在线；示例不持有定时任务，待处理请求由 P5 API 清理 | Java 8 编译；真实重载与停机竞态需联调 |
 | 公开 API | 原命令示例直接引用 `SpigotAPIPlugin` 与泛型 `sendCustomRequest` | 三个示例只调用 `SpigotFriendsAPI`，使用类型化查询和 `executeCommand` | Java 8 编译及静态依赖检查通过 |
+| 测试运行路径 | YAML 测试将临时目录固定为 `core/target`，从 Maven 模块目录启动时失败 | 改用系统临时目录，不依赖工作目录 | JDK 8 `clean test package` 中核心 15 项通过 |
 
 ## 构建、测试与许可
 
-2026-10-20：三个示例使用 `javac --release 8` 编译通过；`CommandRulesTest` 和 `ForwardingPlanTest` 共 3 项通过。`mvn -q -DskipTests package` 在当前沙箱尝试从阿里云解析 `maven-replacer-plugin:1.4.1` 时被拒绝；用本机已有缓存离线构建已进入核心编译，但沙箱拒绝编译器直接读取用户目录的 `bungeecord-chat` JAR。手工编译不是六模块可部署 JAR 的打包验收。需在具备可读 Maven 仓库的环境运行 `mvn clean test`、`mvn package` 和 `python scripts/verify_p2_artifacts.py`，并检查每个示例 JAR 的 `plugin.yml`、默认配置及许可证。
+2026-10-20：三个示例先以 `javac --release 8` 编译通过。随后本机使用 JDK 8、原有 Maven 全局镜像配置和用户仓库缓存执行离线 `clean test package`，七个 reactor 项目全部通过；核心 15 项、Bungee API 8 项、Spigot API 5 项、命令示例 3 项测试合计 31 项通过。`python scripts/verify_p2_artifacts.py` 验证六个 JAR 的入口、Fork 许可和 class major 52；双端 API JAR 含 `Protocol.class`，跟随示例 JAR 含 `config.yml`。直接使用当前沙箱的默认 Maven 仓库仍可能因无下载权限失败；JDK 17 从用户目录读取缓存 JAR 时也会出现访问异常，不能用其表面上的 `BUILD SUCCESS` 代替上述 JDK 8 干净构建。该结果仍不证明示例已在真实服务器运行。
 
 来源审计见 [P1 差异矩阵](audit/P1_DIFF_MATRIX.md) 和 `audit/license_headers.tsv`。Fork 根 `LICENSE.md` 与父 POM 声明 LGPL 2.1；原有部分 Java 文件头声明 LGPL v3/MIT；核心描述符列出 `SimplyRin, 5H11P`，API 与三个示例描述符列出 `5H11P`。本次未改写旧文件头，也未把两种 LGPL 声明视为已统一。Maven 资源配置将 Fork 根许可放入六个模块；最终 JAR 内容及许可表述仍须在 P7 发布前核对。
 

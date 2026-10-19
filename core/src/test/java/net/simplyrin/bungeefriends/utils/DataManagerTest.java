@@ -13,7 +13,7 @@ import org.junit.Test;
 public class DataManagerTest {
 	@Test
 	public void existingPartySurvivesYamlReload() throws Exception {
-		File directory = Files.createTempDirectory(new File("core/target").toPath(), "bungeefriends-yaml-").toFile();
+		File directory = Files.createTempDirectory("bungeefriends-yaml-").toFile();
 		File file = new File(directory, "data.yml");
 		String leader = UUID.randomUUID().toString();
 		String member = UUID.randomUUID().toString();
@@ -31,7 +31,7 @@ public class DataManagerTest {
 
 	@Test
 	public void friendAndPartyDetailsSurviveYamlReload() throws Exception {
-		File directory = Files.createTempDirectory(new File("core/target").toPath(), "bungeefriends-yaml-").toFile();
+		File directory = Files.createTempDirectory("bungeefriends-yaml-").toFile();
 		File file = new File(directory, "data.yml");
 		String owner = UUID.randomUUID().toString();
 		String target = UUID.randomUUID().toString();

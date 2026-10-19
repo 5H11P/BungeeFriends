@@ -33,6 +33,6 @@
 
 2026-10-20：核心新增 API、Bungee API 和 Spigot API 以 `javac --release 8` 编译通过。Bungee 侧 JUnit 8 项、Spigot 侧 JUnit 5 项通过，覆盖协议版本/大小/畸形数据、命令白名单、来源与跨服队伍策略、请求去重、列表/布尔解析，以及成功、拒绝、超时、离线、重复响应、停用和重新启用时的 Future 状态。测试对策略和请求状态使用可控输入；没有完整穿过真实 Bungee/Spigot 消息入口。
 
-完整 Maven reactor 在核心模块解析 `maven-replacer-plugin:1.4.1` 时失败，本地离线仓库没有该插件；手工 `javac` 验证不等于可部署 JAR 构建。取得依赖后须重新执行 `mvn clean test` 与 `mvn package`，检查双端 JAR 是否包含 `Protocol.class`、入口配置及许可证。
+本阶段首次完整 Maven reactor 在核心模块解析 `maven-replacer-plugin:1.4.1` 时失败。P6 后续已使用 JDK 8 与本机缓存完成 `clean test package`，双端 JAR 的协议类、入口配置、许可证及 Java 8 字节码检查通过；真实消息入口仍待联调。
 
 真实环境验收需使用一个代理、两个后端和至少三名玩家：在两个后端之间切换队长，分别验证查询成功/拒绝、队长给另一后端成员投递白名单命令、不同承载玩家收到响应和命令、重复消息仅执行一次、目标离线、权限撤销、插件停用/重新启用、超时与版本不一致。记录代理/后端日志、请求 ID、命令实际执行次数和每个 Future 最终状态；通过后再勾选 P5 的双端契约测试项。
