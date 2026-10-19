@@ -1,0 +1,786 @@
+surface	key	relation	fork_reference	source_reference	proposed_disposition	verification
+command	ac	source-only	-	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	achat	source-only	-	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	apitest	source-only	-	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	block	source-only	-	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	chat	shared	java/net/simplyrin/bungeefriends/Main.java	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	f	shared	java/net/simplyrin/bungeefriends/Main.java	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	fl	shared	java/net/simplyrin/bungeefriends/Main.java	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	friend	shared	java/net/simplyrin/bungeefriends/Main.java	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	friendconsole	shared	java/net/simplyrin/bungeefriends/Main.java	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	ignore	source-only	-	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	message	shared	java/net/simplyrin/bungeefriends/Main.java	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	msg	shared	java/net/simplyrin/bungeefriends/Main.java	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	party	shared	java/net/simplyrin/bungeefriends/Main.java	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	partychat	shared	java/net/simplyrin/bungeefriends/Main.java	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	pc	shared	java/net/simplyrin/bungeefriends/Main.java	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	pchat	shared	java/net/simplyrin/bungeefriends/Main.java	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	pl	source-only	-	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	r	shared	java/net/simplyrin/bungeefriends/Main.java	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	reply	shared	java/net/simplyrin/bungeefriends/Main.java	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	status	source-only	-	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	tell	shared	java/net/simplyrin/bungeefriends/Main.java	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	w	shared	java/net/simplyrin/bungeefriends/Main.java	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+command	whisper	shared	java/net/simplyrin/bungeefriends/Main.java	java/net/_5h11p/bungeefriends/CorePlugin.java	P4: migrate and regression check	command permission and alias smoke test
+permission	friends.chat.staff	source-only	-	src/main/java/net/_5h11p/bungeefriends/messages/Permissions.java	P4/P5: add and check defaults	allowed and denied player test
+permission	friends.command.admin	shared	src/main/java/net/simplyrin/bungeefriends/messages/Permissions.java	src/main/java/net/_5h11p/bungeefriends/messages/Permissions.java	P4: preserve	allowed and denied player test
+permission	friends.command.api-test	source-only	-	src/main/java/net/_5h11p/bungeefriends/messages/Permissions.java	P4/P5: add and check defaults	allowed and denied player test
+permission	friends.command.force-add	source-only	-	src/main/java/net/_5h11p/bungeefriends/messages/Permissions.java	P4/P5: add and check defaults	allowed and denied player test
+permission	friends.command.lang-update	source-only	-	src/main/java/net/_5h11p/bungeefriends/messages/Permissions.java	P4/P5: add and check defaults	allowed and denied player test
+permission	friends.command.main	shared	src/main/java/net/simplyrin/bungeefriends/messages/Permissions.java	src/main/java/net/_5h11p/bungeefriends/messages/Permissions.java	P4: preserve	allowed and denied player test
+permission	friends.command.tell-bypass	source-only	-	src/main/java/net/_5h11p/bungeefriends/messages/Permissions.java	P4/P5: add and check defaults	allowed and denied player test
+permission	friends.limit.bypass	source-only	-	src/main/java/net/_5h11p/bungeefriends/messages/Permissions.java	P4/P5: add and check defaults	allowed and denied player test
+permission	friends.notify.update	source-only	-	src/main/java/net/_5h11p/bungeefriends/messages/Permissions.java	P4/P5: add and check defaults	allowed and denied player test
+permission	friends.party.hijack	source-only	-	src/main/java/net/_5h11p/bungeefriends/messages/Permissions.java	P4/P5: add and check defaults	allowed and denied player test
+permission	friends.party.private	source-only	-	src/main/java/net/_5h11p/bungeefriends/messages/Permissions.java	P4/P5: add and check defaults	allowed and denied player test
+permission	friends.prefix.admin	shared	src/main/java/net/simplyrin/bungeefriends/utils/PrefixManager.java	src/main/java/net/_5h11p/bungeefriends/utils/PrefixManager.java	P4: preserve	allowed and denied player test
+permission	friends.prefix.mvp	shared	src/main/java/net/simplyrin/bungeefriends/utils/PrefixManager.java	src/main/java/net/_5h11p/bungeefriends/utils/PrefixManager.java	P4: preserve	allowed and denied player test
+permission	friends.prefix.mvp_plus	shared	src/main/java/net/simplyrin/bungeefriends/utils/PrefixManager.java	src/main/java/net/_5h11p/bungeefriends/utils/PrefixManager.java	P4: preserve	allowed and denied player test
+permission	friends.prefix.owner	shared	src/main/java/net/simplyrin/bungeefriends/utils/PrefixManager.java	src/main/java/net/_5h11p/bungeefriends/utils/PrefixManager.java	P4: preserve	allowed and denied player test
+permission	friends.prefix.vip	shared	src/main/java/net/simplyrin/bungeefriends/utils/PrefixManager.java	src/main/java/net/_5h11p/bungeefriends/utils/PrefixManager.java	P4: preserve	allowed and denied player test
+permission	friends.prefix.vip_plus	shared	src/main/java/net/simplyrin/bungeefriends/utils/PrefixManager.java	src/main/java/net/_5h11p/bungeefriends/utils/PrefixManager.java	P4: preserve	allowed and denied player test
+config-key	BungeeParties.Enable	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Player.64636120-8633-4541-aa5f-412b42ddb04d.Friends	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
+config-key	Player.64636120-8633-4541-aa5f-412b42ddb04d.Language	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
+config-key	Player.64636120-8633-4541-aa5f-412b42ddb04d.Name	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
+config-key	Player.64636120-8633-4541-aa5f-412b42ddb04d.Prefix	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
+config-key	Player.64636120-8633-4541-aa5f-412b42ddb04d.Toggle	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
+config-key	Player.b0bb65a2-832f-4a5d-854e-873b7c4522ed.Friends	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
+config-key	Player.b0bb65a2-832f-4a5d-854e-873b7c4522ed.Language	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
+config-key	Player.b0bb65a2-832f-4a5d-854e-873b7c4522ed.Name	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
+config-key	Player.b0bb65a2-832f-4a5d-854e-873b7c4522ed.Prefix	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
+config-key	Player.b0bb65a2-832f-4a5d-854e-873b7c4522ed.Toggle	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
+config-key	Plugin.AlreadyMigrated	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/MySQLManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
+config-key	Plugin.BungeeParties.PartyCmdSender	shared	src/main/java/net/simplyrin/bungeefriends/Main.java	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.BungeeParties.PartyCmdSender.1.Leader	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.BungeeParties.PartyCmdSender.1.Member	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.BungeeParties.PartyCmdSender.2.Leader	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.BungeeParties.PartyCmdSender.2.Member	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Bypass-Lobby-Name-Contains	fork-only	src/main/java/net/simplyrin/bungeefriends/listeners/parties/PartyListener.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
+config-key	Plugin.Default-Language	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-Alias	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-Aliases./block	source-only	-	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-Aliases./f	shared	src/main/java/net/simplyrin/bungeefriends/Main.java	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-Aliases./fl	shared	src/main/java/net/simplyrin/bungeefriends/Main.java	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-Aliases./ignore	source-only	-	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-Aliases./message	shared	src/main/java/net/simplyrin/bungeefriends/Main.java	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-Aliases./msg	shared	src/main/java/net/simplyrin/bungeefriends/Main.java	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-Aliases./pc	shared	src/main/java/net/simplyrin/bungeefriends/Main.java	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-Aliases./pl	source-only	-	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-Aliases./r	shared	src/main/java/net/simplyrin/bungeefriends/Main.java	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-Aliases./reply	shared	src/main/java/net/simplyrin/bungeefriends/Main.java	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-Aliases./tell	shared	src/main/java/net/simplyrin/bungeefriends/Main.java	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-Aliases./w	shared	src/main/java/net/simplyrin/bungeefriends/Main.java	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-Aliases./whisper	shared	src/main/java/net/simplyrin/bungeefriends/Main.java	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-Hyphen	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-Lang-Command	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-LuckPerms-API	shared	src/main/java/net/simplyrin/bungeefriends/Main.java	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-Party-ServerSwitchNotifer	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-PartyCmdSender	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-PartyWarp	shared	src/main/java/net/simplyrin/bungeefriends/listeners/parties/PartyListener.java	src/main/java/net/_5h11p/bungeefriends/listeners/parties/PartyListener.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-ServerSwitchNotifer	shared	src/main/java/net/simplyrin/bungeefriends/listeners/EventListener.java	src/main/java/net/_5h11p/bungeefriends/listeners/EventListener.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Disable-TabComplete	shared	src/main/java/net/simplyrin/bungeefriends/commands/FriendCommand.java	src/main/java/net/_5h11p/bungeefriends/commands/BlockCommand.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Enable-BungeeParties	shared	src/main/java/net/simplyrin/bungeefriends/Main.java	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Enable-Deprecated-PrefixYml	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Enable-NoPartyWarp-Servers	source-only	-	src/main/java/net/_5h11p/bungeefriends/listeners/parties/PartyListener.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Enable-Status	source-only	-	src/main/java/net/_5h11p/bungeefriends/commands/FriendCommand.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.FriendList-NoPrefix	shared	src/main/java/net/simplyrin/bungeefriends/commands/FriendCommand.java	src/main/java/net/_5h11p/bungeefriends/commands/FriendCommand.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.FriendList-Sort	shared	src/main/java/net/simplyrin/bungeefriends/tools/Priority.java	src/main/java/net/_5h11p/bungeefriends/tools/Priority.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.FriendList-Sort.1.NoColorPrefix	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.FriendList-Sort.1.Priority	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.FriendList-Sort.2.NoColorPrefix	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.FriendList-Sort.2.Priority	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.FriendList-Time.Format	source-only	-	src/main/java/net/_5h11p/bungeefriends/commands/FriendCommand.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.LuckPerms.OfflinePrefixCacheMinutes	source-only	-	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.LuckPerms.OfflinePrefixLoadTimeoutSeconds	source-only	-	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.NoPartyWarp-Servers	source-only	-	src/main/java/net/_5h11p/bungeefriends/listeners/parties/PartyListener.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Party-Disband-Time	source-only	-	src/main/java/net/_5h11p/bungeefriends/listeners/parties/PartyListener.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Party-Kick-Offline-Time	source-only	-	src/main/java/net/_5h11p/bungeefriends/listeners/parties/PartyListener.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Party-Max-Size	source-only	-	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.PartyWarp-Delay	source-only	-	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.PartyWarp.Confirm-Timeout	source-only	-	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.PartyWarp.Enable-Confirmation	source-only	-	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.PartyWarp.Game-Servers	source-only	-	src/main/java/net/_5h11p/bungeefriends/listeners/EventListener.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.PartyWarp.Initial-Delay	source-only	-	src/main/java/net/_5h11p/bungeefriends/commands/PartyCommand.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.PartyWarp.Member-Interval	source-only	-	src/main/java/net/_5h11p/bungeefriends/commands/PartyCommand.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.PartyWarp.Normal-Servers	source-only	-	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Prefix	shared	src/main/java/net/simplyrin/bungeefriends/Main.java	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Send-Remove-Target-Message	source-only	-	src/main/java/net/_5h11p/bungeefriends/commands/FriendCommand.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.ServerName	shared	src/main/java/net/simplyrin/bungeefriends/Main.java	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.ServerName.	shared	src/main/java/net/simplyrin/bungeefriends/Main.java	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.ServerName.1.ReplaceName	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.ServerName.1.ServerName	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.ServerName.1.Type	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.ServerName.2.ReplaceName	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.ServerName.2.ServerName	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.ServerName.2.Type	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.ServerName.3.ReplaceName	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.ServerName.3.ServerName	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.ServerName.3.Type	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+config-key	Plugin.Use-LuckPerms-API	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
+message-key-english	Accept	shared	English.yml:78	English.yml:93	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Accept-Party	shared	English.yml:216	English.yml:295	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Accept-Party.Joined	shared	English.yml:219	English.yml:298	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Accept-Party.Usage	shared	English.yml:217	English.yml:296	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Accept-Party.You-Joined	shared	English.yml:218	English.yml:297	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Accept.Target	shared	English.yml:81	English.yml:96	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Accept.Usage	shared	English.yml:79	English.yml:94	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Accept.YourSelf	shared	English.yml:80	English.yml:95	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Add	shared	English.yml:49	English.yml:64	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Add.Accept	shared	English.yml:53	English.yml:68	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Add.Accept.Message	shared	English.yml:55	English.yml:70	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Add.Accept.Prefix	shared	English.yml:54	English.yml:69	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Add.Deny	shared	English.yml:56	English.yml:71	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Add.Deny.Message	shared	English.yml:58	English.yml:73	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Add.Deny.Prefix	shared	English.yml:57	English.yml:72	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Add.Expired	shared	English.yml:64	English.yml:79	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Add.Expired.Target	shared	English.yml:66	English.yml:81	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Add.Expired.YourSelf	shared	English.yml:65	English.yml:80	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Add.Ignore	shared	English.yml:59	English.yml:74	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Add.Ignore.Message	shared	English.yml:61	English.yml:76	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Add.Ignore.Prefix	shared	English.yml:60	English.yml:75	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Add.Request	shared	English.yml:62	English.yml:77	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Add.Request.Received	shared	English.yml:63	English.yml:78	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Add.Sent	shared	English.yml:51	English.yml:66	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Add.Usage	shared	English.yml:50	English.yml:65	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Block	source-only	-	English.yml:157	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Block.Command	source-only	-	English.yml:158	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Block.List-Format	source-only	-	English.yml:165	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Block.List-Page	source-only	-	English.yml:164	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Block.RemoveAll-Done	source-only	-	English.yml:166	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Block.add	source-only	-	English.yml:159	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Block.help	source-only	-	English.yml:160	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Block.list	source-only	-	English.yml:161	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Block.remove	source-only	-	English.yml:162	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Block.removeall	source-only	-	English.yml:163	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Cant-Find	shared	English.yml:42	English.yml:57	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Chat	shared	English.yml:174	English.yml:248	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Chat.AllChatUsage	source-only	-	English.yml:251	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Chat.Channels	shared	English.yml:179	English.yml:254	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Chat.Channels.Admin	source-only	-	English.yml:258	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Chat.Channels.All	shared	English.yml:180	English.yml:255	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Chat.Channels.Party	shared	English.yml:181	English.yml:256	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Chat.Channels.Staff	source-only	-	English.yml:257	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Chat.Chat-NoPermission	source-only	-	English.yml:252	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Chat.ChatUsage	shared	English.yml:176	English.yml:250	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Chat.NeedInAParty	fork-only	English.yml:178	-	P4: retain if still referenced	compare locale keys and render message
+message-key-english	Chat.Update	shared	English.yml:177	English.yml:253	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Chat.Usage	shared	English.yml:175	English.yml:249	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Deny	shared	English.yml:83	English.yml:98	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Deny.Declined	shared	English.yml:85	English.yml:100	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Deny.Usage	shared	English.yml:84	English.yml:99	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Disband	shared	English.yml:225	English.yml:304	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Disband.Disbanded	shared	English.yml:227	English.yml:306	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Disband.Must-Leader	shared	English.yml:226	English.yml:305	P4: migrate/check translation	compare locale keys and render message
+message-key-english	DisplayLanguage	shared	English.yml:10	English.yml:10	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions	shared	English.yml:17	English.yml:17	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.Already	shared	English.yml:31	English.yml:31	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.Already.In	shared	English.yml:32	English.yml:32	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.Already.Invited	shared	English.yml:34	English.yml:34	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.Already.Joined	shared	English.yml:33	English.yml:33	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.AlreadyFriend	shared	English.yml:19	English.yml:19	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.AlreadySent	shared	English.yml:18	English.yml:18	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.Cant-Invite-Self	shared	English.yml:29	English.yml:29	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.Cant-Remove-Your-Self	shared	English.yml:37	English.yml:37	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.CantAddYourSelf	shared	English.yml:22	English.yml:22	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.CantRemoveYourself	shared	English.yml:23	English.yml:23	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.Disable-Invite	shared	English.yml:30	English.yml:30	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.HasntFriend	shared	English.yml:25	English.yml:25	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.Havent-Received-Invite	shared	English.yml:35	English.yml:35	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.Ignored	shared	English.yml:20	English.yml:20	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.Isnt-In-Your-Party	shared	English.yml:38	English.yml:38	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.IsntOnYourFriends	shared	English.yml:21	English.yml:21	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.NoInvited	shared	English.yml:24	English.yml:24	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.Not-Joined	shared	English.yml:28	English.yml:28	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.Party-Full	source-only	-	English.yml:39	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.RequestDeny	shared	English.yml:27	English.yml:27	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.SlotLimitReached	shared	English.yml:26	English.yml:26	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.Too-Many-Invites	source-only	-	English.yml:40	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Exceptions.Your-Self-Invite	shared	English.yml:36	English.yml:36	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Force-Add	shared	English.yml:123	English.yml:174	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Force-Add.Target	shared	English.yml:126	English.yml:177	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Force-Add.Usage	shared	English.yml:124	English.yml:175	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Force-Add.YourSelf	shared	English.yml:125	English.yml:176	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Friends	shared	English.yml:44	English.yml:59	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Friends.Join	shared	English.yml:45	English.yml:60	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Friends.Quit	shared	English.yml:46	English.yml:61	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Friends.Server-Move	shared	English.yml:47	English.yml:62	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help	shared	English.yml:144	English.yml:217	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party	shared	English.yml:244	English.yml:328	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party-Setting	source-only	-	English.yml:345	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party-Setting.AllInvite	source-only	-	English.yml:347	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party-Setting.Command	source-only	-	English.yml:346	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party-Setting.Mute	source-only	-	English.yml:349	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party-Setting.Private	source-only	-	English.yml:348	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party.Accept	shared	English.yml:254	English.yml:338	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party.Chat	shared	English.yml:248	English.yml:332	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party.Command	shared	English.yml:245	English.yml:329	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party.Disband	shared	English.yml:256	English.yml:340	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party.Help	shared	English.yml:246	English.yml:330	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party.Hijack	shared	English.yml:259	English.yml:344	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party.Invite	shared	English.yml:249	English.yml:333	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party.KickOffline	shared	English.yml:258	English.yml:342	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party.Lang	shared	English.yml:247	English.yml:331	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party.Leave	shared	English.yml:250	English.yml:334	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party.List	shared	English.yml:251	English.yml:335	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party.Promote	shared	English.yml:257	English.yml:341	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party.Remove	shared	English.yml:252	English.yml:336	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party.Setting	source-only	-	English.yml:343	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party.Toggle	shared	English.yml:255	English.yml:339	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help-Party.Warp	shared	English.yml:253	English.yml:337	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help.Accept	shared	English.yml:151	English.yml:224	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help.Add	shared	English.yml:148	English.yml:221	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help.Command	shared	English.yml:145	English.yml:218	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help.Deny	shared	English.yml:152	English.yml:225	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help.Force-Add	shared	English.yml:155	English.yml:228	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help.Help	shared	English.yml:146	English.yml:219	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help.Ignore	shared	English.yml:154	English.yml:227	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help.Lang	shared	English.yml:147	English.yml:220	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help.List	shared	English.yml:153	English.yml:226	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help.Prefix	shared	English.yml:156	English.yml:229	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help.Reload	shared	English.yml:158	English.yml:231	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help.Remove	shared	English.yml:149	English.yml:222	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help.RemoveAll	shared	English.yml:150	English.yml:223	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Help.Toggle	shared	English.yml:157	English.yml:230	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Hijack	shared	English.yml:233	English.yml:312	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Hijack.Other	shared	English.yml:237	English.yml:316	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Hijack.PlayerNotJoined	shared	English.yml:235	English.yml:314	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Hijack.Usage	shared	English.yml:234	English.yml:313	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Hijack.You	shared	English.yml:236	English.yml:315	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Hyphen	shared	English.yml:14	English.yml:14	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Ignore	shared	English.yml:110	English.yml:144	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Ignore.Added	shared	English.yml:118	English.yml:152	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Ignore.AlreadyAdded	shared	English.yml:119	English.yml:153	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Ignore.Havent	shared	English.yml:115	English.yml:149	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Ignore.Havent.One	shared	English.yml:116	English.yml:150	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Ignore.Havent.Two	shared	English.yml:117	English.yml:151	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Ignore.NotAdded	shared	English.yml:121	English.yml:155	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Ignore.Removed	shared	English.yml:120	English.yml:154	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Ignore.Usage	shared	English.yml:111	English.yml:145	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Ignore.Usage.Add	shared	English.yml:113	English.yml:147	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Ignore.Usage.Main	shared	English.yml:112	English.yml:146	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Ignore.Usage.Remove	shared	English.yml:114	English.yml:148	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Ingame_Only	shared	English.yml:12	English.yml:12	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Invite	shared	English.yml:183	English.yml:260	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Invite.All-Left	shared	English.yml:185	English.yml:262	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Invite.Request	shared	English.yml:186	English.yml:263	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Invite.Request.Click-here	shared	English.yml:190	English.yml:267	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Invite.Request.Click-here.Accept	shared	English.yml:192	English.yml:269	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Invite.Request.Click-here.Command	shared	English.yml:193	English.yml:270	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Invite.Request.Click-here.Here	shared	English.yml:191	English.yml:268	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Invite.Request.Click-here.Receive	shared	English.yml:194	English.yml:271	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Invite.Request.Expired	shared	English.yml:195	English.yml:272	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Invite.Request.Expired.Target	shared	English.yml:197	English.yml:274	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Invite.Request.Expired.Your-Self	shared	English.yml:196	English.yml:273	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Invite.Request.Sent	shared	English.yml:187	English.yml:264	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Invite.Request.Sent.Invited	shared	English.yml:188	English.yml:265	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Invite.Usage	shared	English.yml:184	English.yml:261	P4: migrate/check translation	compare locale keys and render message
+message-key-english	KickOffline	shared	English.yml:209	English.yml:286	P4: migrate/check translation	compare locale keys and render message
+message-key-english	KickOffline.AllOnline	shared	English.yml:210	English.yml:287	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Lang	shared	English.yml:96	English.yml:130	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Lang.Available	shared	English.yml:98	English.yml:132	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Lang.Update	shared	English.yml:99	English.yml:133	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Lang.Updater	shared	English.yml:100	English.yml:134	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Lang.Updater.Available	shared	English.yml:107	English.yml:141	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Lang.Updater.Checking	shared	English.yml:104	English.yml:138	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Lang.Updater.Failed-Connect	shared	English.yml:105	English.yml:139	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Lang.Updater.LastUpdate	shared	English.yml:101	English.yml:135	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Lang.Updater.NeedCheck	shared	English.yml:103	English.yml:137	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Lang.Updater.Unknown	shared	English.yml:106	English.yml:140	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Lang.Updater.Updated	shared	English.yml:108	English.yml:142	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Lang.Updater.Usage	shared	English.yml:102	English.yml:136	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Lang.Usage	shared	English.yml:97	English.yml:131	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Language	shared	English.yml:5	English.yml:5	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Leave	shared	English.yml:199	English.yml:276	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Leave.NeedDisband	shared	English.yml:202	English.yml:279	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Leave.Player-Left	shared	English.yml:201	English.yml:278	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Leave.You-Left	shared	English.yml:200	English.yml:277	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List	shared	English.yml:87	English.yml:102	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.DontHave	shared	English.yml:88	English.yml:103	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.DontHave.One	shared	English.yml:89	English.yml:104	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.DontHave.Two	shared	English.yml:90	English.yml:105	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.Hover	source-only	-	English.yml:108	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.Hover-Offline	source-only	-	English.yml:110	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.Hover-Online	source-only	-	English.yml:109	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.Offline	shared	English.yml:92	English.yml:107	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.Online	shared	English.yml:91	English.yml:106	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.Page	shared	English.yml:93	English.yml:124	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.Party-Header	source-only	-	English.yml:126	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.Party-Leader	source-only	-	English.yml:127	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.Party-List	shared	English.yml:94	English.yml:125	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.Party-Members	source-only	-	English.yml:128	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.Status	source-only	-	English.yml:119	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.Status.AppearOffline	source-only	-	English.yml:123	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.Status.Away	source-only	-	English.yml:121	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.Status.Busy	source-only	-	English.yml:122	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.Status.Online	source-only	-	English.yml:120	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.TimeAgo	source-only	-	English.yml:112	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.TimeAgo.Days	source-only	-	English.yml:116	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.TimeAgo.Hours	source-only	-	English.yml:115	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.TimeAgo.Minutes	source-only	-	English.yml:114	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.TimeAgo.Months	source-only	-	English.yml:117	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.TimeAgo.Seconds	source-only	-	English.yml:113	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.TimeAgo.Years	source-only	-	English.yml:118	P4: migrate/check translation	compare locale keys and render message
+message-key-english	List.Unknown	source-only	-	English.yml:111	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Logout	shared	English.yml:239	English.yml:318	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Logout.Become	shared	English.yml:242	English.yml:322	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Logout.One	shared	English.yml:240	English.yml:319	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Logout.Three	source-only	-	English.yml:321	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Logout.Two	shared	English.yml:241	English.yml:320	P4: migrate/check translation	compare locale keys and render message
+message-key-english	No-Joined-The-Party	shared	English.yml:41	English.yml:56	P4: migrate/check translation	compare locale keys and render message
+message-key-english	No_Permission	shared	English.yml:13	English.yml:13	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Pagination	source-only	-	English.yml:168	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Pagination.Next	source-only	-	English.yml:170	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Pagination.Next-Hover	source-only	-	English.yml:172	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Pagination.Previous	source-only	-	English.yml:169	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Pagination.Previous-Hover	source-only	-	English.yml:171	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Party-AllInvite	source-only	-	English.yml:42	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Party-AllInvite.Disabled	source-only	-	English.yml:44	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Party-AllInvite.Enabled	source-only	-	English.yml:43	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Party-AllInvite.No-Invite-Permission	source-only	-	English.yml:45	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Party-Connection	source-only	-	English.yml:324	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Party-Connection.Offline	source-only	-	English.yml:325	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Party-Connection.Rejoin	source-only	-	English.yml:326	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Party-Mute	source-only	-	English.yml:46	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Party-Mute.Disabled	source-only	-	English.yml:48	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Party-Mute.Enabled	source-only	-	English.yml:47	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Party-Mute.Info-Enabled	source-only	-	English.yml:49	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Party-Mute.Muted-1	source-only	-	English.yml:50	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Party-Mute.Muted-2	source-only	-	English.yml:51	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Party-Private	source-only	-	English.yml:52	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Party-Private.Disabled	source-only	-	English.yml:54	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Party-Private.Enabled	source-only	-	English.yml:53	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Party-Private.No-Permission	source-only	-	English.yml:55	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Prefix	shared	English.yml:128	English.yml:179	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Prefix.Current	shared	English.yml:130	English.yml:181	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Prefix.CurrentNone	source-only	-	English.yml:182	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Prefix.MustBeFriends	source-only	-	English.yml:185	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Prefix.Reset	source-only	-	English.yml:184	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Prefix.ResetAll	source-only	-	English.yml:186	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Prefix.ResetAll.Confirm	source-only	-	English.yml:187	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Prefix.ResetAll.Done	source-only	-	English.yml:188	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Prefix.To	shared	English.yml:131	English.yml:183	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Prefix.Usage	shared	English.yml:129	English.yml:180	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Promote	shared	English.yml:229	English.yml:308	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Promote.Promoted	shared	English.yml:231	English.yml:310	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Promote.Usage	shared	English.yml:230	English.yml:309	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Reload	shared	English.yml:137	English.yml:210	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Reload.AliasCommand	shared	English.yml:141	English.yml:214	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Reload.Config	shared	English.yml:139	English.yml:212	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Reload.Lang	shared	English.yml:142	English.yml:215	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Reload.Prefix	shared	English.yml:140	English.yml:213	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Reload.Usage	shared	English.yml:138	English.yml:211	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Remove	shared	English.yml:69	English.yml:84	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Remove-Party	shared	English.yml:204	English.yml:281	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Remove-Party.Me-Removed	shared	English.yml:207	English.yml:284	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Remove-Party.Member-Removed	shared	English.yml:206	English.yml:283	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Remove-Party.Usage	shared	English.yml:205	English.yml:282	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Remove.All	shared	English.yml:73	English.yml:88	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Remove.All.Confirm	shared	English.yml:74	English.yml:89	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Remove.All.Done	shared	English.yml:76	English.yml:91	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Remove.All.Failed	shared	English.yml:75	English.yml:90	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Remove.Target	shared	English.yml:72	English.yml:87	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Remove.Usage	shared	English.yml:70	English.yml:85	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Remove.YourSelf	shared	English.yml:71	English.yml:86	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Reply-Command	shared	English.yml:170	English.yml:244	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Reply-Command.Target	shared	English.yml:172	English.yml:246	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Reply-Command.Usage	shared	English.yml:171	English.yml:245	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Status	source-only	-	English.yml:194	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Status-Command	source-only	-	English.yml:206	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Status-Command.Disabled	source-only	-	English.yml:208	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Status-Command.Usage	source-only	-	English.yml:207	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Status.ActionBar	source-only	-	English.yml:195	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Status.ActionBar.AppearOffline	source-only	-	English.yml:199	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Status.ActionBar.Away	source-only	-	English.yml:197	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Status.ActionBar.Busy	source-only	-	English.yml:198	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Status.ActionBar.Online	source-only	-	English.yml:196	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Status.ChatBar	source-only	-	English.yml:200	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Status.ChatBar.AppearOffline	source-only	-	English.yml:204	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Status.ChatBar.Away	source-only	-	English.yml:202	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Status.ChatBar.Busy	source-only	-	English.yml:203	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Status.ChatBar.Online	source-only	-	English.yml:201	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Tell-Command	shared	English.yml:161	English.yml:234	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Tell-Command.AppearOffline-CantSend	source-only	-	English.yml:241	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Tell-Command.CantSend	shared	English.yml:167	English.yml:240	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Tell-Command.MustBeFriends	shared	English.yml:165	English.yml:238	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Tell-Command.Offline	shared	English.yml:166	English.yml:239	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Tell-Command.Target	shared	English.yml:164	English.yml:237	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Tell-Command.Usage	shared	English.yml:162	English.yml:235	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Tell-Command.YourSelf	shared	English.yml:163	English.yml:236	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Toggle	shared	English.yml:133	English.yml:190	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Toggle-Party	shared	English.yml:221	English.yml:300	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Toggle-Party.Disabled	shared	English.yml:222	English.yml:301	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Toggle-Party.Enabled	shared	English.yml:223	English.yml:302	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Toggle.Disabled	shared	English.yml:135	English.yml:192	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Toggle.Enabled	shared	English.yml:134	English.yml:191	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Warp	shared	English.yml:212	English.yml:289	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Warp.Confirm	source-only	-	English.yml:292	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Warp.Confirm-Usage	source-only	-	English.yml:293	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Warp.Sending	shared	English.yml:214	English.yml:291	P4: migrate/check translation	compare locale keys and render message
+message-key-english	Warp.Summon	shared	English.yml:213	English.yml:290	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Accept	shared	Chinese.yml:68	Chinese.yml:84	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Accept-Party	shared	Chinese.yml:188	Chinese.yml:269	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Accept-Party.Joined	shared	Chinese.yml:191	Chinese.yml:272	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Accept-Party.Usage	shared	Chinese.yml:189	Chinese.yml:270	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Accept-Party.You-Joined	shared	Chinese.yml:190	Chinese.yml:271	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Accept.Target	shared	Chinese.yml:71	Chinese.yml:87	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Accept.Usage	shared	Chinese.yml:69	Chinese.yml:85	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Accept.YourSelf	shared	Chinese.yml:70	Chinese.yml:86	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Add	shared	Chinese.yml:42	Chinese.yml:58	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Add.Accept	shared	Chinese.yml:46	Chinese.yml:62	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Add.Accept.Message	shared	Chinese.yml:48	Chinese.yml:64	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Add.Accept.Prefix	shared	Chinese.yml:47	Chinese.yml:63	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Add.Deny	shared	Chinese.yml:49	Chinese.yml:65	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Add.Deny.Message	shared	Chinese.yml:51	Chinese.yml:67	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Add.Deny.Prefix	shared	Chinese.yml:50	Chinese.yml:66	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Add.Expired	shared	Chinese.yml:57	Chinese.yml:73	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Add.Expired.Target	shared	Chinese.yml:59	Chinese.yml:75	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Add.Expired.YourSelf	shared	Chinese.yml:58	Chinese.yml:74	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Add.Ignore	shared	Chinese.yml:52	Chinese.yml:68	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Add.Ignore.Message	shared	Chinese.yml:54	Chinese.yml:70	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Add.Ignore.Prefix	shared	Chinese.yml:53	Chinese.yml:69	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Add.Request	shared	Chinese.yml:55	Chinese.yml:71	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Add.Request.Received	shared	Chinese.yml:56	Chinese.yml:72	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Add.Sent	shared	Chinese.yml:44	Chinese.yml:60	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Add.Usage	shared	Chinese.yml:43	Chinese.yml:59	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Block	source-only	-	Chinese.yml:145	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Block.Command	source-only	-	Chinese.yml:146	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Block.List-Format	source-only	-	Chinese.yml:153	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Block.List-Page	source-only	-	Chinese.yml:152	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Block.RemoveAll-Done	source-only	-	Chinese.yml:154	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Block.add	source-only	-	Chinese.yml:147	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Block.help	source-only	-	Chinese.yml:148	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Block.list	source-only	-	Chinese.yml:149	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Block.remove	source-only	-	Chinese.yml:150	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Block.removeall	source-only	-	Chinese.yml:151	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Cant-Find	shared	Chinese.yml:37	Chinese.yml:53	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Chat	shared	Chinese.yml:152	Chinese.yml:228	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Chat.AllChatUsage	source-only	-	Chinese.yml:232	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Chat.Channels	shared	Chinese.yml:157	Chinese.yml:234	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Chat.Channels.Admin	source-only	-	Chinese.yml:238	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Chat.Channels.All	shared	Chinese.yml:158	Chinese.yml:235	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Chat.Channels.Party	shared	Chinese.yml:159	Chinese.yml:236	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Chat.Channels.Staff	source-only	-	Chinese.yml:237	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Chat.Chat-NoPermission	source-only	-	Chinese.yml:233	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Chat.ChatUsage	shared	Chinese.yml:154	Chinese.yml:230	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Chat.NeedInAParty	fork-only	Chinese.yml:156	-	P4: retain if still referenced	compare locale keys and render message
+message-key-chinese	Chat.Update	shared	Chinese.yml:155	Chinese.yml:231	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Chat.Usage	shared	Chinese.yml:153	Chinese.yml:229	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Deny	shared	Chinese.yml:72	Chinese.yml:88	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Deny.Declined	shared	Chinese.yml:74	Chinese.yml:90	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Deny.Usage	shared	Chinese.yml:73	Chinese.yml:89	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Disband	shared	Chinese.yml:195	Chinese.yml:276	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Disband.Disbanded	shared	Chinese.yml:197	Chinese.yml:278	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Disband.Must-Leader	shared	Chinese.yml:196	Chinese.yml:277	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	DisplayLanguage	shared	Chinese.yml:8	Chinese.yml:8	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions	shared	Chinese.yml:13	Chinese.yml:13	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.Already	shared	Chinese.yml:27	Chinese.yml:27	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.Already.In	shared	Chinese.yml:28	Chinese.yml:28	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.Already.Invited	shared	Chinese.yml:30	Chinese.yml:30	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.Already.Joined	shared	Chinese.yml:29	Chinese.yml:29	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.AlreadyFriend	shared	Chinese.yml:15	Chinese.yml:15	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.AlreadySent	shared	Chinese.yml:14	Chinese.yml:14	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.Cant-Invite-Self	shared	Chinese.yml:25	Chinese.yml:25	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.Cant-Remove-Your-Self	shared	Chinese.yml:33	Chinese.yml:33	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.CantAddYourSelf	shared	Chinese.yml:18	Chinese.yml:18	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.CantRemoveYourself	shared	Chinese.yml:19	Chinese.yml:19	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.Disable-Invite	shared	Chinese.yml:26	Chinese.yml:26	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.HasntFriend	shared	Chinese.yml:21	Chinese.yml:21	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.Havent-Received-Invite	shared	Chinese.yml:31	Chinese.yml:31	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.Ignored	shared	Chinese.yml:16	Chinese.yml:16	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.Isnt-In-Your-Party	shared	Chinese.yml:34	Chinese.yml:34	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.IsntOnYourFriends	shared	Chinese.yml:17	Chinese.yml:17	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.NoInvited	shared	Chinese.yml:20	Chinese.yml:20	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.Not-Joined	shared	Chinese.yml:24	Chinese.yml:24	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.Party-Full	source-only	-	Chinese.yml:35	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.RequestDeny	shared	Chinese.yml:23	Chinese.yml:23	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.SlotLimitReached	shared	Chinese.yml:22	Chinese.yml:22	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.Too-Many-Invites	source-only	-	Chinese.yml:36	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Exceptions.Your-Self-Invite	shared	Chinese.yml:32	Chinese.yml:32	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Force-Add	shared	Chinese.yml:108	Chinese.yml:160	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Force-Add.Target	shared	Chinese.yml:111	Chinese.yml:163	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Force-Add.Usage	shared	Chinese.yml:109	Chinese.yml:161	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Force-Add.YourSelf	shared	Chinese.yml:110	Chinese.yml:162	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Friends	shared	Chinese.yml:38	Chinese.yml:54	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Friends.Join	shared	Chinese.yml:39	Chinese.yml:55	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Friends.Quit	shared	Chinese.yml:40	Chinese.yml:56	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Friends.Server-Move	shared	Chinese.yml:41	Chinese.yml:57	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help	shared	Chinese.yml:125	Chinese.yml:197	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party	shared	Chinese.yml:210	Chinese.yml:295	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party-Setting	source-only	-	Chinese.yml:312	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party-Setting.AllInvite	source-only	-	Chinese.yml:314	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party-Setting.Command	source-only	-	Chinese.yml:313	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party-Setting.Mute	source-only	-	Chinese.yml:316	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party-Setting.Private	source-only	-	Chinese.yml:315	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party.Accept	shared	Chinese.yml:220	Chinese.yml:305	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party.Chat	shared	Chinese.yml:214	Chinese.yml:299	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party.Command	shared	Chinese.yml:211	Chinese.yml:296	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party.Disband	shared	Chinese.yml:222	Chinese.yml:307	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party.Help	shared	Chinese.yml:212	Chinese.yml:297	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party.Hijack	shared	Chinese.yml:225	Chinese.yml:311	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party.Invite	shared	Chinese.yml:215	Chinese.yml:300	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party.KickOffline	shared	Chinese.yml:224	Chinese.yml:309	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party.Lang	shared	Chinese.yml:213	Chinese.yml:298	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party.Leave	shared	Chinese.yml:216	Chinese.yml:301	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party.List	shared	Chinese.yml:217	Chinese.yml:302	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party.Promote	shared	Chinese.yml:223	Chinese.yml:308	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party.Remove	shared	Chinese.yml:218	Chinese.yml:303	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party.Setting	source-only	-	Chinese.yml:310	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party.Toggle	shared	Chinese.yml:221	Chinese.yml:306	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help-Party.Warp	shared	Chinese.yml:219	Chinese.yml:304	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help.Accept	shared	Chinese.yml:132	Chinese.yml:204	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help.Add	shared	Chinese.yml:129	Chinese.yml:201	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help.Command	shared	Chinese.yml:126	Chinese.yml:198	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help.Deny	shared	Chinese.yml:133	Chinese.yml:205	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help.Force-Add	shared	Chinese.yml:136	Chinese.yml:208	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help.Help	shared	Chinese.yml:127	Chinese.yml:199	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help.Ignore	shared	Chinese.yml:135	Chinese.yml:207	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help.Lang	shared	Chinese.yml:128	Chinese.yml:200	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help.List	shared	Chinese.yml:134	Chinese.yml:206	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help.Prefix	shared	Chinese.yml:137	Chinese.yml:209	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help.Reload	shared	Chinese.yml:139	Chinese.yml:211	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help.Remove	shared	Chinese.yml:130	Chinese.yml:202	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help.RemoveAll	shared	Chinese.yml:131	Chinese.yml:203	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Help.Toggle	shared	Chinese.yml:138	Chinese.yml:210	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Hijack	shared	Chinese.yml:201	Chinese.yml:282	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Hijack.Other	shared	Chinese.yml:205	Chinese.yml:286	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Hijack.PlayerNotJoined	shared	Chinese.yml:203	Chinese.yml:284	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Hijack.Usage	shared	Chinese.yml:202	Chinese.yml:283	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Hijack.You	shared	Chinese.yml:204	Chinese.yml:285	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Hyphen	shared	Chinese.yml:11	Chinese.yml:11	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Ignore	shared	Chinese.yml:96	Chinese.yml:133	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Ignore.Added	shared	Chinese.yml:104	Chinese.yml:141	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Ignore.AlreadyAdded	shared	Chinese.yml:105	Chinese.yml:142	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Ignore.Havent	shared	Chinese.yml:101	Chinese.yml:138	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Ignore.Havent.One	shared	Chinese.yml:102	Chinese.yml:139	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Ignore.Havent.Two	shared	Chinese.yml:103	Chinese.yml:140	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Ignore.NotAdded	shared	Chinese.yml:107	Chinese.yml:144	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Ignore.Removed	shared	Chinese.yml:106	Chinese.yml:143	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Ignore.Usage	shared	Chinese.yml:97	Chinese.yml:134	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Ignore.Usage.Add	shared	Chinese.yml:99	Chinese.yml:136	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Ignore.Usage.Main	shared	Chinese.yml:98	Chinese.yml:135	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Ignore.Usage.Remove	shared	Chinese.yml:100	Chinese.yml:137	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Ingame_Only	shared	Chinese.yml:9	Chinese.yml:9	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Invite	shared	Chinese.yml:160	Chinese.yml:239	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Invite.All-Left	shared	Chinese.yml:162	Chinese.yml:241	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Invite.Request	shared	Chinese.yml:163	Chinese.yml:242	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Invite.Request.Click-here	shared	Chinese.yml:167	Chinese.yml:246	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Invite.Request.Click-here.Accept	shared	Chinese.yml:169	Chinese.yml:248	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Invite.Request.Click-here.Command	shared	Chinese.yml:170	Chinese.yml:249	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Invite.Request.Click-here.Here	shared	Chinese.yml:168	Chinese.yml:247	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Invite.Request.Click-here.Receive	shared	Chinese.yml:171	Chinese.yml:250	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Invite.Request.Expired	shared	Chinese.yml:172	Chinese.yml:251	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Invite.Request.Expired.Target	shared	Chinese.yml:174	Chinese.yml:253	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Invite.Request.Expired.Your-Self	shared	Chinese.yml:173	Chinese.yml:252	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Invite.Request.Sent	shared	Chinese.yml:164	Chinese.yml:243	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Invite.Request.Sent.Invited	shared	Chinese.yml:165	Chinese.yml:244	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Invite.Usage	shared	Chinese.yml:161	Chinese.yml:240	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	KickOffline	shared	Chinese.yml:183	Chinese.yml:262	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	KickOffline.AllOnline	shared	Chinese.yml:184	Chinese.yml:263	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Lang	shared	Chinese.yml:83	Chinese.yml:120	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Lang.Available	shared	Chinese.yml:85	Chinese.yml:122	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Lang.Update	shared	Chinese.yml:86	Chinese.yml:123	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Lang.Updater	shared	Chinese.yml:87	Chinese.yml:124	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Lang.Updater.Available	shared	Chinese.yml:94	Chinese.yml:131	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Lang.Updater.Checking	shared	Chinese.yml:91	Chinese.yml:128	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Lang.Updater.Failed-Connect	shared	Chinese.yml:92	Chinese.yml:129	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Lang.Updater.LastUpdate	shared	Chinese.yml:88	Chinese.yml:125	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Lang.Updater.NeedCheck	shared	Chinese.yml:90	Chinese.yml:127	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Lang.Updater.Unknown	shared	Chinese.yml:93	Chinese.yml:130	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Lang.Updater.Updated	shared	Chinese.yml:95	Chinese.yml:132	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Lang.Updater.Usage	shared	Chinese.yml:89	Chinese.yml:126	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Lang.Usage	shared	Chinese.yml:84	Chinese.yml:121	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Language	shared	Chinese.yml:4	Chinese.yml:4	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Leave	shared	Chinese.yml:175	Chinese.yml:254	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Leave.NeedDisband	shared	Chinese.yml:178	Chinese.yml:257	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Leave.Player-Left	shared	Chinese.yml:177	Chinese.yml:256	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Leave.You-Left	shared	Chinese.yml:176	Chinese.yml:255	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List	shared	Chinese.yml:75	Chinese.yml:91	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.DontHave	shared	Chinese.yml:76	Chinese.yml:92	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.DontHave.One	shared	Chinese.yml:77	Chinese.yml:93	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.DontHave.Two	shared	Chinese.yml:78	Chinese.yml:94	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.Hover	source-only	-	Chinese.yml:97	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.Hover-Offline	source-only	-	Chinese.yml:99	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.Hover-Online	source-only	-	Chinese.yml:98	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.Offline	shared	Chinese.yml:80	Chinese.yml:96	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.Online	shared	Chinese.yml:79	Chinese.yml:95	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.Page	shared	Chinese.yml:81	Chinese.yml:113	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.Party-Header	source-only	-	Chinese.yml:115	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.Party-Leader	source-only	-	Chinese.yml:118	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.Party-List	shared	Chinese.yml:82	Chinese.yml:114	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.Party-Members	source-only	-	Chinese.yml:119	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.Status	source-only	-	Chinese.yml:108	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.Status.AppearOffline	source-only	-	Chinese.yml:112	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.Status.Away	source-only	-	Chinese.yml:110	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.Status.Busy	source-only	-	Chinese.yml:111	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.Status.Online	source-only	-	Chinese.yml:109	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.TimeAgo	source-only	-	Chinese.yml:101	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.TimeAgo.Days	source-only	-	Chinese.yml:105	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.TimeAgo.Hours	source-only	-	Chinese.yml:104	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.TimeAgo.Minutes	source-only	-	Chinese.yml:103	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.TimeAgo.Months	source-only	-	Chinese.yml:106	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.TimeAgo.Seconds	source-only	-	Chinese.yml:102	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.TimeAgo.Years	source-only	-	Chinese.yml:107	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	List.Unknown	source-only	-	Chinese.yml:100	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Logout	shared	Chinese.yml:206	Chinese.yml:287	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Logout.Become	shared	Chinese.yml:209	Chinese.yml:291	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Logout.One	shared	Chinese.yml:207	Chinese.yml:288	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Logout.Three	source-only	-	Chinese.yml:290	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Logout.Two	shared	Chinese.yml:208	Chinese.yml:289	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	No-Joined-The-Party	shared	Chinese.yml:36	Chinese.yml:52	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	No_Permission	shared	Chinese.yml:10	Chinese.yml:10	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Pagination	source-only	-	Chinese.yml:155	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Pagination.Next	source-only	-	Chinese.yml:157	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Pagination.Next-Hover	source-only	-	Chinese.yml:159	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Pagination.Previous	source-only	-	Chinese.yml:156	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Pagination.Previous-Hover	source-only	-	Chinese.yml:158	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Party-AllInvite	source-only	-	Chinese.yml:38	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Party-AllInvite.Disabled	source-only	-	Chinese.yml:40	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Party-AllInvite.Enabled	source-only	-	Chinese.yml:39	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Party-AllInvite.No-Invite-Permission	source-only	-	Chinese.yml:41	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Party-Connection	source-only	-	Chinese.yml:292	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Party-Connection.Offline	source-only	-	Chinese.yml:293	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Party-Connection.Rejoin	source-only	-	Chinese.yml:294	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Party-Mute	source-only	-	Chinese.yml:42	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Party-Mute.Disabled	source-only	-	Chinese.yml:44	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Party-Mute.Enabled	source-only	-	Chinese.yml:43	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Party-Mute.Info-Enabled	source-only	-	Chinese.yml:45	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Party-Mute.Muted-1	source-only	-	Chinese.yml:46	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Party-Mute.Muted-2	source-only	-	Chinese.yml:47	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Party-Private	source-only	-	Chinese.yml:48	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Party-Private.Disabled	source-only	-	Chinese.yml:50	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Party-Private.Enabled	source-only	-	Chinese.yml:49	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Party-Private.No-Permission	source-only	-	Chinese.yml:51	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Prefix	shared	Chinese.yml:112	Chinese.yml:164	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Prefix.Current	shared	Chinese.yml:114	Chinese.yml:166	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Prefix.CurrentNone	source-only	-	Chinese.yml:167	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Prefix.MustBeFriends	source-only	-	Chinese.yml:170	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Prefix.Reset	source-only	-	Chinese.yml:169	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Prefix.ResetAll	source-only	-	Chinese.yml:171	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Prefix.ResetAll.Confirm	source-only	-	Chinese.yml:172	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Prefix.ResetAll.Done	source-only	-	Chinese.yml:173	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Prefix.To	shared	Chinese.yml:115	Chinese.yml:168	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Prefix.Usage	shared	Chinese.yml:113	Chinese.yml:165	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Promote	shared	Chinese.yml:198	Chinese.yml:279	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Promote.Promoted	shared	Chinese.yml:200	Chinese.yml:281	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Promote.Usage	shared	Chinese.yml:199	Chinese.yml:280	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Reload	shared	Chinese.yml:119	Chinese.yml:191	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Reload.AliasCommand	shared	Chinese.yml:123	Chinese.yml:195	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Reload.Config	shared	Chinese.yml:121	Chinese.yml:193	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Reload.Lang	shared	Chinese.yml:124	Chinese.yml:196	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Reload.Prefix	shared	Chinese.yml:122	Chinese.yml:194	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Reload.Usage	shared	Chinese.yml:120	Chinese.yml:192	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Remove	shared	Chinese.yml:60	Chinese.yml:76	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Remove-Party	shared	Chinese.yml:179	Chinese.yml:258	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Remove-Party.Me-Removed	shared	Chinese.yml:182	Chinese.yml:261	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Remove-Party.Member-Removed	shared	Chinese.yml:181	Chinese.yml:260	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Remove-Party.Usage	shared	Chinese.yml:180	Chinese.yml:259	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Remove.All	shared	Chinese.yml:64	Chinese.yml:80	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Remove.All.Confirm	shared	Chinese.yml:65	Chinese.yml:81	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Remove.All.Done	shared	Chinese.yml:67	Chinese.yml:83	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Remove.All.Failed	shared	Chinese.yml:66	Chinese.yml:82	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Remove.Target	shared	Chinese.yml:63	Chinese.yml:79	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Remove.Usage	shared	Chinese.yml:61	Chinese.yml:77	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Remove.YourSelf	shared	Chinese.yml:62	Chinese.yml:78	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Reply-Command	shared	Chinese.yml:149	Chinese.yml:222	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Reply-Command.Target	shared	Chinese.yml:151	Chinese.yml:224	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Reply-Command.Usage	shared	Chinese.yml:150	Chinese.yml:223	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Status	source-only	-	Chinese.yml:177	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Status-Command	source-only	-	Chinese.yml:188	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Status-Command.Disabled	source-only	-	Chinese.yml:190	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Status-Command.Usage	source-only	-	Chinese.yml:189	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Status.ActionBar	source-only	-	Chinese.yml:178	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Status.ActionBar.AppearOffline	source-only	-	Chinese.yml:182	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Status.ActionBar.Away	source-only	-	Chinese.yml:180	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Status.ActionBar.Busy	source-only	-	Chinese.yml:181	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Status.ActionBar.Online	source-only	-	Chinese.yml:179	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Status.ChatBar	source-only	-	Chinese.yml:183	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Status.ChatBar.AppearOffline	source-only	-	Chinese.yml:187	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Status.ChatBar.Away	source-only	-	Chinese.yml:185	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Status.ChatBar.Busy	source-only	-	Chinese.yml:186	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Status.ChatBar.Online	source-only	-	Chinese.yml:184	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Tell-Command	shared	Chinese.yml:141	Chinese.yml:213	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Tell-Command.AppearOffline-CantSend	source-only	-	Chinese.yml:220	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Tell-Command.CantSend	shared	Chinese.yml:147	Chinese.yml:219	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Tell-Command.MustBeFriends	shared	Chinese.yml:145	Chinese.yml:217	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Tell-Command.Offline	shared	Chinese.yml:146	Chinese.yml:218	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Tell-Command.Target	shared	Chinese.yml:144	Chinese.yml:216	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Tell-Command.Usage	shared	Chinese.yml:142	Chinese.yml:214	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Tell-Command.YourSelf	shared	Chinese.yml:143	Chinese.yml:215	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Toggle	shared	Chinese.yml:116	Chinese.yml:174	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Toggle-Party	shared	Chinese.yml:192	Chinese.yml:273	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Toggle-Party.Disabled	shared	Chinese.yml:193	Chinese.yml:274	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Toggle-Party.Enabled	shared	Chinese.yml:194	Chinese.yml:275	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Toggle.Disabled	shared	Chinese.yml:118	Chinese.yml:176	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Toggle.Enabled	shared	Chinese.yml:117	Chinese.yml:175	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Warp	shared	Chinese.yml:185	Chinese.yml:264	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Warp.Confirm	source-only	-	Chinese.yml:267	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Warp.Confirm-Usage	source-only	-	Chinese.yml:268	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Warp.Sending	shared	Chinese.yml:187	Chinese.yml:266	P4: migrate/check translation	compare locale keys and render message
+message-key-chinese	Warp.Summon	shared	Chinese.yml:186	Chinese.yml:265	P4: migrate/check translation	compare locale keys and render message
+bungee-public-api	addFriend	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	addFriendRequest	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	addToParty	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	areFriends	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	getDisplayName	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	getFriendDetailList	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	getFriendDetailListByName	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	getFriendList	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	getFriendUtils	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	getInstance	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	getName	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	getPartyLeader	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	getPartyMemberDetailList	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	getPartyMemberDetailListByName	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	getPartyMembers	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	getPartyUtils	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	getPrefix	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	getUuid	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	inviteToParty	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	isInParty	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	isLeader	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	isOnline	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	isPartyLeader	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	isPartyPrivate	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	removeFriend	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	removeFromParty	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	sendPartyChat	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	setDisplayName	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	setLeader	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	setName	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	setOnline	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	setPrefix	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+bungee-public-api	setUuid	source-only	-	BungeeFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	areFriends	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	getDisplayName	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	getFriendDetailList	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	getFriendDetailListByName	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	getFriendList	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	getInstance	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	getName	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	getPartyMemberDetailList	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	getPartyMemberDetailListByName	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	getPartyMemberDetailListByUUID	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	getPartyMembers	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	getPrefix	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	getUuid	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	isInParty	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	isLeader	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	isOnline	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	isPartyLeader	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	isPartyPrivate	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+spigot-public-api	sendCustomRequest	source-only	-	SpigotFriendsAPI.java	P5: redesign contract and migrate	typed response and lifecycle contract test
+plugin-message-request	addToParty	source-only	-	BungeeAPIPlugin.java	P5: protocol contract and authorization	Bungee/Spigot request-response test
+plugin-message-request	areFriends	source-only	-	BungeeAPIPlugin.java	P5: protocol contract and authorization	Bungee/Spigot request-response test
+plugin-message-request	executeCommand	source-only	-	BungeeAPIPlugin.java	P5: protocol contract and authorization	Bungee/Spigot request-response test
+plugin-message-request	getFriendDetailList	source-only	-	BungeeAPIPlugin.java	P5: protocol contract and authorization	Bungee/Spigot request-response test
+plugin-message-request	getFriendDetailListByName	source-only	-	BungeeAPIPlugin.java	P5: protocol contract and authorization	Bungee/Spigot request-response test
+plugin-message-request	getFriendList	source-only	-	BungeeAPIPlugin.java	P5: protocol contract and authorization	Bungee/Spigot request-response test
+plugin-message-request	getOwner	source-only	-	BungeeAPIPlugin.java	P5: protocol contract and authorization	Bungee/Spigot request-response test
+plugin-message-request	getPartyMemberDetailList	source-only	-	BungeeAPIPlugin.java	P5: protocol contract and authorization	Bungee/Spigot request-response test
+plugin-message-request	getPartyMemberDetailListByName	source-only	-	BungeeAPIPlugin.java	P5: protocol contract and authorization	Bungee/Spigot request-response test
+plugin-message-request	getPartyMemberDetailListByUUID	source-only	-	BungeeAPIPlugin.java	P5: protocol contract and authorization	Bungee/Spigot request-response test
+plugin-message-request	getPartyMembers	source-only	-	BungeeAPIPlugin.java	P5: protocol contract and authorization	Bungee/Spigot request-response test
+plugin-message-request	isInParty	source-only	-	BungeeAPIPlugin.java	P5: protocol contract and authorization	Bungee/Spigot request-response test
+plugin-message-request	isPartyLeader	source-only	-	BungeeAPIPlugin.java	P5: protocol contract and authorization	Bungee/Spigot request-response test
+plugin-message-request	isPartyPrivate	source-only	-	BungeeAPIPlugin.java	P5: protocol contract and authorization	Bungee/Spigot request-response test

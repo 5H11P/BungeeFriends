@@ -1,0 +1,150 @@
+HEAD 1801c4ee8f5647de697f1de4163505df5ab4ece8
+ M README.md
+ D bungee-api/.gitignore
+ M bungee-api/pom.xml
+ D bungee-api/src/main/java/net/simplyrin/bungeefriends/api/bungee/BungeeFriendsAPIBungee.java
+ D bungee-api/src/main/resources/GPL-3.0.txt
+ D bungee-api/src/main/resources/LICENSE.md
+ M bungee-api/src/main/resources/bungee.yml
+ D core/.gitignore
+ M core/API-README.md
+ D core/LICENSE.md
+ M core/pom.xml
+ D core/src/main/java/net/simplyrin/bungeefriends/BungeeFriends.java
+ D core/src/main/java/net/simplyrin/bungeefriends/Main.java
+ D core/src/main/java/net/simplyrin/bungeefriends/api/BungeeFriendsAPI.java
+ D core/src/main/java/net/simplyrin/bungeefriends/api/event/PartyWarpEvent.java
+ D core/src/main/java/net/simplyrin/bungeefriends/commands/APITestCommand.java
+ D core/src/main/java/net/simplyrin/bungeefriends/commands/AllChatCommand.java
+ D core/src/main/java/net/simplyrin/bungeefriends/commands/BlockCommand.java
+ D core/src/main/java/net/simplyrin/bungeefriends/commands/ChatCommand.java
+ D core/src/main/java/net/simplyrin/bungeefriends/commands/FriendCommand.java
+ D core/src/main/java/net/simplyrin/bungeefriends/commands/FriendConsoleCommand.java
+ D core/src/main/java/net/simplyrin/bungeefriends/commands/PartyChatCommand.java
+ D core/src/main/java/net/simplyrin/bungeefriends/commands/PartyCommand.java
+ D core/src/main/java/net/simplyrin/bungeefriends/commands/ReplyCommand.java
+ D core/src/main/java/net/simplyrin/bungeefriends/commands/StatusCommand.java
+ D core/src/main/java/net/simplyrin/bungeefriends/commands/TellCommand.java
+ D core/src/main/java/net/simplyrin/bungeefriends/commands/alias/FLCommand.java
+ D core/src/main/java/net/simplyrin/bungeefriends/commands/alias/PLCommand.java
+ D core/src/main/java/net/simplyrin/bungeefriends/exceptions/AlreadyAddedException.java
+ D core/src/main/java/net/simplyrin/bungeefriends/exceptions/FailedAddingException.java
+ D core/src/main/java/net/simplyrin/bungeefriends/exceptions/FaliedRemovingException.java
+ D core/src/main/java/net/simplyrin/bungeefriends/exceptions/FriendSlotLimitException.java
+ D core/src/main/java/net/simplyrin/bungeefriends/exceptions/IgnoredException.java
+ D core/src/main/java/net/simplyrin/bungeefriends/exceptions/NotAddedException.java
+ D core/src/main/java/net/simplyrin/bungeefriends/exceptions/RequestDenyException.java
+ D core/src/main/java/net/simplyrin/bungeefriends/exceptions/SelfException.java
+ D core/src/main/java/net/simplyrin/bungeefriends/exceptions/parties/AlreadyJoinedException.java
+ D core/src/main/java/net/simplyrin/bungeefriends/exceptions/parties/FailedAddingException.java
+ D core/src/main/java/net/simplyrin/bungeefriends/exceptions/parties/FailedInvitingException.java
+ D core/src/main/java/net/simplyrin/bungeefriends/exceptions/parties/NotInvitedException.java
+ D core/src/main/java/net/simplyrin/bungeefriends/exceptions/parties/NotJoinedException.java
+ D core/src/main/java/net/simplyrin/bungeefriends/listeners/EventListener.java
+ D core/src/main/java/net/simplyrin/bungeefriends/listeners/parties/PartyListener.java
+ D core/src/main/java/net/simplyrin/bungeefriends/messages/Messages.java
+ D core/src/main/java/net/simplyrin/bungeefriends/messages/Permissions.java
+ D core/src/main/java/net/simplyrin/bungeefriends/tools/Config.java
+ D core/src/main/java/net/simplyrin/bungeefriends/tools/MySQL.java
+ D core/src/main/java/net/simplyrin/bungeefriends/tools/PartyWarpEventDispatcher.java
+ D core/src/main/java/net/simplyrin/bungeefriends/tools/Priority.java
+ D core/src/main/java/net/simplyrin/bungeefriends/tools/ThreadPool.java
+ D core/src/main/java/net/simplyrin/bungeefriends/tools/Version.template
+ D core/src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java
+ D core/src/main/java/net/simplyrin/bungeefriends/utils/DataManager.java
+ D core/src/main/java/net/simplyrin/bungeefriends/utils/FriendManager.java
+ D core/src/main/java/net/simplyrin/bungeefriends/utils/LanguageManager.java
+ D core/src/main/java/net/simplyrin/bungeefriends/utils/MessageBuilder.java
+ D core/src/main/java/net/simplyrin/bungeefriends/utils/MySQLManager.java
+ D core/src/main/java/net/simplyrin/bungeefriends/utils/PartyManager.java
+ D core/src/main/java/net/simplyrin/bungeefriends/utils/PartyWarpConfirmManager.java
+ D core/src/main/java/net/simplyrin/bungeefriends/utils/PlayerManager.java
+ D core/src/main/java/net/simplyrin/bungeefriends/utils/PrefixManager.java
+ D core/src/main/java/net/simplyrin/bungeefriends/utils/StatusManager.java
+ D core/src/main/resources/GPL-3.0.txt
+ D core/src/main/resources/LICENSE.md
+ M core/src/main/resources/plugin.yml
+ M pom.xml
+ D spigot-api/.gitignore
+ M spigot-api/pom.xml
+ D spigot-api/src/main/java/net/simplyrin/bungeefriends/api/spigot/BungeeFriendsAPISpigot.java
+ D spigot-api/src/main/java/net/simplyrin/bungeefriends/api/spigot/PartyCmdSenderListener.java
+ D spigot-api/src/main/java/net/simplyrin/bungeefriends/api/spigot/PartyWarpEventDispatcher.java
+ D spigot-api/src/main/java/net/simplyrin/bungeefriends/api/spigot/SpigotFriendsAPI.java
+ D spigot-api/src/main/java/net/simplyrin/bungeefriends/api/spigot/event/PartyWarpEvent.java
+ D spigot-api/src/main/java/net/simplyrin/bungeefriends/api/spigot/example/ExamplePlugin.java
+ D spigot-api/src/main/java/net/simplyrin/bungeefriends/api/spigot/example/PartyCmdSenderExample.java
+ D spigot-api/src/main/java/net/simplyrin/bungeefriends/api/spigot/example/PartyCmdSenderSpigot.java
+ D spigot-api/src/main/java/net/simplyrin/bungeefriends/api/spigot/test/PartyAPITestCommand.java
+ D spigot-api/src/main/resources/GPL-3.0.txt
+ D spigot-api/src/main/resources/LICENSE.md
+ D spigot-api/src/main/resources/example-plugin.yml
+ D spigot-api/src/main/resources/example/plugin.yml
+ M spigot-api/src/main/resources/plugin.yml
+?? bungee-api/src/main/java/net/_5h11p/bungeefriends/api/bungee/BungeeAPIPlugin.java
+?? core/src/main/java/net/_5h11p/bungeefriends/BungeeFriends.java
+?? core/src/main/java/net/_5h11p/bungeefriends/CorePlugin.java
+?? core/src/main/java/net/_5h11p/bungeefriends/api/BungeeFriendsAPI.java
+?? core/src/main/java/net/_5h11p/bungeefriends/api/event/PartyWarpEvent.java
+?? core/src/main/java/net/_5h11p/bungeefriends/commands/APITestCommand.java
+?? core/src/main/java/net/_5h11p/bungeefriends/commands/AllChatCommand.java
+?? core/src/main/java/net/_5h11p/bungeefriends/commands/BlockCommand.java
+?? core/src/main/java/net/_5h11p/bungeefriends/commands/ChatCommand.java
+?? core/src/main/java/net/_5h11p/bungeefriends/commands/FriendCommand.java
+?? core/src/main/java/net/_5h11p/bungeefriends/commands/FriendConsoleCommand.java
+?? core/src/main/java/net/_5h11p/bungeefriends/commands/PartyChatCommand.java
+?? core/src/main/java/net/_5h11p/bungeefriends/commands/PartyCommand.java
+?? core/src/main/java/net/_5h11p/bungeefriends/commands/ReplyCommand.java
+?? core/src/main/java/net/_5h11p/bungeefriends/commands/StatusCommand.java
+?? core/src/main/java/net/_5h11p/bungeefriends/commands/TellCommand.java
+?? core/src/main/java/net/_5h11p/bungeefriends/commands/alias/FLCommand.java
+?? core/src/main/java/net/_5h11p/bungeefriends/commands/alias/PLCommand.java
+?? core/src/main/java/net/_5h11p/bungeefriends/exceptions/AlreadyAddedException.java
+?? core/src/main/java/net/_5h11p/bungeefriends/exceptions/FailedAddingException.java
+?? core/src/main/java/net/_5h11p/bungeefriends/exceptions/FaliedRemovingException.java
+?? core/src/main/java/net/_5h11p/bungeefriends/exceptions/FriendSlotLimitException.java
+?? core/src/main/java/net/_5h11p/bungeefriends/exceptions/IgnoredException.java
+?? core/src/main/java/net/_5h11p/bungeefriends/exceptions/NotAddedException.java
+?? core/src/main/java/net/_5h11p/bungeefriends/exceptions/RequestDenyException.java
+?? core/src/main/java/net/_5h11p/bungeefriends/exceptions/SelfException.java
+?? core/src/main/java/net/_5h11p/bungeefriends/exceptions/parties/AlreadyJoinedException.java
+?? core/src/main/java/net/_5h11p/bungeefriends/exceptions/parties/FailedAddingException.java
+?? core/src/main/java/net/_5h11p/bungeefriends/exceptions/parties/FailedInvitingException.java
+?? core/src/main/java/net/_5h11p/bungeefriends/exceptions/parties/NotInvitedException.java
+?? core/src/main/java/net/_5h11p/bungeefriends/exceptions/parties/NotJoinedException.java
+?? core/src/main/java/net/_5h11p/bungeefriends/listeners/EventListener.java
+?? core/src/main/java/net/_5h11p/bungeefriends/listeners/parties/PartyListener.java
+?? core/src/main/java/net/_5h11p/bungeefriends/messages/Messages.java
+?? core/src/main/java/net/_5h11p/bungeefriends/messages/Permissions.java
+?? core/src/main/java/net/_5h11p/bungeefriends/tools/Config.java
+?? core/src/main/java/net/_5h11p/bungeefriends/tools/MySQL.java
+?? core/src/main/java/net/_5h11p/bungeefriends/tools/PartyWarpEventDispatcher.java
+?? core/src/main/java/net/_5h11p/bungeefriends/tools/Priority.java
+?? core/src/main/java/net/_5h11p/bungeefriends/tools/ThreadPool.java
+?? core/src/main/java/net/_5h11p/bungeefriends/tools/Version.template
+?? core/src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java
+?? core/src/main/java/net/_5h11p/bungeefriends/utils/DataManager.java
+?? core/src/main/java/net/_5h11p/bungeefriends/utils/FriendManager.java
+?? core/src/main/java/net/_5h11p/bungeefriends/utils/LanguageManager.java
+?? core/src/main/java/net/_5h11p/bungeefriends/utils/MessageBuilder.java
+?? core/src/main/java/net/_5h11p/bungeefriends/utils/MySQLManager.java
+?? core/src/main/java/net/_5h11p/bungeefriends/utils/PartyManager.java
+?? core/src/main/java/net/_5h11p/bungeefriends/utils/PartyWarpConfirmManager.java
+?? core/src/main/java/net/_5h11p/bungeefriends/utils/PlayerManager.java
+?? core/src/main/java/net/_5h11p/bungeefriends/utils/PrefixManager.java
+?? core/src/main/java/net/_5h11p/bungeefriends/utils/StatusManager.java
+?? examples/party-cmd-example/pom.xml
+?? examples/party-cmd-example/src/main/java/net/_5h11p/bungeefriends/api/spigot/example/PartyCmdSenderExample.java
+?? examples/party-cmd-example/src/main/resources/plugin.yml
+?? examples/party-cmd-sender/pom.xml
+?? examples/party-cmd-sender/src/main/java/net/_5h11p/bungeefriends/api/spigot/example/PartyCmdSenderSpigot.java
+?? examples/party-cmd-sender/src/main/resources/config.yml
+?? examples/party-cmd-sender/src/main/resources/plugin.yml
+?? examples/spigot-api-example/pom.xml
+?? examples/spigot-api-example/src/main/java/net/_5h11p/bungeefriends/api/spigot/example/ExamplePlugin.java
+?? examples/spigot-api-example/src/main/resources/plugin.yml
+?? spigot-api/src/main/java/net/_5h11p/bungeefriends/api/spigot/PartyCmdSenderListener.java
+?? spigot-api/src/main/java/net/_5h11p/bungeefriends/api/spigot/PartyWarpEventDispatcher.java
+?? spigot-api/src/main/java/net/_5h11p/bungeefriends/api/spigot/SpigotAPIPlugin.java
+?? spigot-api/src/main/java/net/_5h11p/bungeefriends/api/spigot/SpigotFriendsAPI.java
+?? spigot-api/src/main/java/net/_5h11p/bungeefriends/api/spigot/event/PartyWarpEvent.java

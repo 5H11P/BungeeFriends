@@ -1,0 +1,105 @@
+tree	path	detected_header	author_field	copyright_field
+fork	LICENSE.md	LGPL text	-	Copyright (C) 1991, 1999 Free Software Foundation, Inc.
+fork	src/main/java/net/simplyrin/bungeefriends/BungeeFriends.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/Main.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/commands/ChatCommand.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/commands/FriendCommand.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/commands/FriendConsoleCommand.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/commands/PartyChatCommand.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/commands/PartyCommand.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/commands/ReplyCommand.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/commands/TellCommand.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/commands/alias/FLCommand.java	MIT header	-	Copyright (c) 2018 SimplyRin
+fork	src/main/java/net/simplyrin/bungeefriends/exceptions/AlreadyAddedException.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/exceptions/FailedAddingException.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/exceptions/FaliedRemovingException.java	MIT header	-	Copyright (c) 2018 SimplyRin
+fork	src/main/java/net/simplyrin/bungeefriends/exceptions/FriendSlotLimitException.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/exceptions/IgnoredException.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/exceptions/NotAddedException.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/exceptions/RequestDenyException.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/exceptions/SelfException.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/exceptions/parties/AlreadyJoinedException.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/exceptions/parties/FailedAddingException.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/exceptions/parties/FailedInvitingException.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/exceptions/parties/NotInvitedException.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/exceptions/parties/NotJoinedException.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/listeners/EventListener.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/listeners/parties/PartyListener.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/messages/Messages.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/messages/Permissions.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/tools/Config.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/tools/MySQL.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/tools/Priority.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/tools/ThreadPool.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/tools/Version.java	MIT header	-	Copyright (c) 2019 SimplyRin
+fork	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/utils/DataManager.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/utils/FriendManager.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/utils/LanguageManager.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/utils/MessageBuilder.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/utils/MySQLManager.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/utils/PartyManager.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/utils/PlayerManager.java	LGPL v3 header	SimplyRin	-
+fork	src/main/java/net/simplyrin/bungeefriends/utils/PrefixManager.java	LGPL v3 header	SimplyRin	-
+fork	src/main/resources/LICENSE.md	LGPL text	-	Copyright (C) 1991, 1999 Free Software Foundation, Inc.
+source	GPL-3.0.txt	GPL text	-	Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+source	LICENSE.md	LGPL text	-	Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+source	bungee-api/src/main/java/net/_5h11p/bungeefriends/api/bungee/BungeeAPIPlugin.java	no explicit header	-	-
+source	core/src/main/java/net/_5h11p/bungeefriends/BungeeFriends.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	no explicit header	-	-
+source	core/src/main/java/net/_5h11p/bungeefriends/api/BungeeFriendsAPI.java	no explicit header	-	-
+source	core/src/main/java/net/_5h11p/bungeefriends/api/event/PartyWarpEvent.java	no explicit header	-	-
+source	core/src/main/java/net/_5h11p/bungeefriends/commands/APITestCommand.java	no explicit header	-	-
+source	core/src/main/java/net/_5h11p/bungeefriends/commands/AllChatCommand.java	LGPL v3 header	Trae AI, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/commands/BlockCommand.java	no explicit header	-	-
+source	core/src/main/java/net/_5h11p/bungeefriends/commands/ChatCommand.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/commands/FriendCommand.java	no explicit header	-	-
+source	core/src/main/java/net/_5h11p/bungeefriends/commands/FriendConsoleCommand.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/commands/PartyChatCommand.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/commands/PartyCommand.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/commands/ReplyCommand.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/commands/StatusCommand.java	no explicit header	-	-
+source	core/src/main/java/net/_5h11p/bungeefriends/commands/TellCommand.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/commands/alias/FLCommand.java	MIT header	-	Copyright (c) 2018 SimplyRin
+source	core/src/main/java/net/_5h11p/bungeefriends/commands/alias/PLCommand.java	MIT header	-	Copyright (c) 2023 SHEEP
+source	core/src/main/java/net/_5h11p/bungeefriends/exceptions/AlreadyAddedException.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/exceptions/FailedAddingException.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/exceptions/FaliedRemovingException.java	MIT header	-	Copyright (c) 2018 SimplyRin
+source	core/src/main/java/net/_5h11p/bungeefriends/exceptions/FriendSlotLimitException.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/exceptions/IgnoredException.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/exceptions/NotAddedException.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/exceptions/RequestDenyException.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/exceptions/SelfException.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/exceptions/parties/AlreadyJoinedException.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/exceptions/parties/FailedAddingException.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/exceptions/parties/FailedInvitingException.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/exceptions/parties/NotInvitedException.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/exceptions/parties/NotJoinedException.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/listeners/EventListener.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/listeners/parties/PartyListener.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/messages/Messages.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/messages/Permissions.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/tools/Config.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/tools/MySQL.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/tools/PartyWarpEventDispatcher.java	no explicit header	-	-
+source	core/src/main/java/net/_5h11p/bungeefriends/tools/Priority.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/tools/ThreadPool.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/utils/DataManager.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/utils/FriendManager.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/utils/LanguageManager.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/utils/MessageBuilder.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/utils/MySQLManager.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/utils/PartyManager.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/utils/PartyWarpConfirmManager.java	no explicit header	-	-
+source	core/src/main/java/net/_5h11p/bungeefriends/utils/PlayerManager.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/utils/PrefixManager.java	LGPL v3 header	SimplyRin, 5H11P	-
+source	core/src/main/java/net/_5h11p/bungeefriends/utils/StatusManager.java	no explicit header	-	-
+source	examples/party-cmd-example/src/main/java/net/_5h11p/bungeefriends/api/spigot/example/PartyCmdSenderExample.java	no explicit header	-	-
+source	examples/party-cmd-sender/src/main/java/net/_5h11p/bungeefriends/api/spigot/example/PartyCmdSenderSpigot.java	no explicit header	-	-
+source	examples/spigot-api-example/src/main/java/net/_5h11p/bungeefriends/api/spigot/example/ExamplePlugin.java	no explicit header	-	-
+source	spigot-api/src/main/java/net/_5h11p/bungeefriends/api/spigot/PartyCmdSenderListener.java	no explicit header	-	-
+source	spigot-api/src/main/java/net/_5h11p/bungeefriends/api/spigot/PartyWarpEventDispatcher.java	no explicit header	-	-
+source	spigot-api/src/main/java/net/_5h11p/bungeefriends/api/spigot/SpigotAPIPlugin.java	no explicit header	-	-
+source	spigot-api/src/main/java/net/_5h11p/bungeefriends/api/spigot/SpigotFriendsAPI.java	no explicit header	-	-
+source	spigot-api/src/main/java/net/_5h11p/bungeefriends/api/spigot/event/PartyWarpEvent.java	no explicit header	-	-
