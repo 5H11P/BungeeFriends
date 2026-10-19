@@ -4,3 +4,12 @@ version: 2.4
 api-version: 1.13
 author: 5H11P
 depend: [BungeeFriend-SpigotAPI]
+description: Sends an allowed command to one online party member.
+commands:
+  partycmd:
+    description: Queue a command for a party member.
+    usage: /partycmd <member> <command> [args...]
+    permission: partycmdexample.use
+permissions:
+  partycmdexample.use:
+    default: true

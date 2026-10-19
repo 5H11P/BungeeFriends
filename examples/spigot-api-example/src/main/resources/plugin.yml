@@ -4,3 +4,12 @@ version: 2.4
 api-version: 1.13
 author: 5H11P
 depend: [BungeeFriend-SpigotAPI]
+description: Demonstrates public BungeeFriends queries.
+commands:
+  example:
+    description: Query friends and party data through the public API.
+    usage: /example friends|party|check <player>|isleader
+    permission: bungeefriends.api.example
+permissions:
+  bungeefriends.api.example:
+    default: true
