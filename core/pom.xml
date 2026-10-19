@@ -12,6 +12,8 @@
   <packaging>jar</packaging>
   <name>BungeeFriends</name>
   <dependencies>
+	<dependency><groupId>junit</groupId><artifactId>junit</artifactId><version>4.13.2</version><scope>test</scope></dependency>
+	<dependency><groupId>com.h2database</groupId><artifactId>h2</artifactId><version>2.2.224</version><scope>test</scope></dependency>
     <dependency><groupId>org.projectlombok</groupId><artifactId>lombok</artifactId><version>1.18.30</version><scope>provided</scope></dependency>
     <dependency><groupId>net.md-5</groupId><artifactId>bungeecord-api</artifactId><version>1.15-SNAPSHOT</version><scope>provided</scope></dependency>
     <dependency><groupId>net.luckperms</groupId><artifactId>api</artifactId><version>5.3</version><scope>provided</scope></dependency>
@@ -19,7 +21,16 @@
   </dependencies>
   <build>
     <resources>
-      <resource><directory>src/main/resources</directory></resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>plugin.yml</include>
+          <include>LICENSE.md</include>
+          <include>available.yml</include>
+          <include>English.yml</include>
+          <include>Chinese.yml</include>
+        </includes>
+      </resource>
       <resource>
         <directory>${project.basedir}/..</directory>
         <includes><include>LICENSE.md</include></includes>

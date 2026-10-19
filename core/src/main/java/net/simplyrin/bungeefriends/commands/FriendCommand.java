@@ -1,7 +1,5 @@
 package net.simplyrin.bungeefriends.commands;
 
-import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,8 +11,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.google.common.base.Charsets;
-
 import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
@@ -22,7 +18,6 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
-import net.md_5.bungee.config.Configuration;
 import net.simplyrin.bungeefriends.Main;
 import net.simplyrin.bungeefriends.exceptions.AlreadyAddedException;
 import net.simplyrin.bungeefriends.exceptions.FailedAddingException;
@@ -33,7 +28,6 @@ import net.simplyrin.bungeefriends.exceptions.RequestDenyException;
 import net.simplyrin.bungeefriends.exceptions.SelfException;
 import net.simplyrin.bungeefriends.messages.Messages;
 import net.simplyrin.bungeefriends.messages.Permissions;
-import net.simplyrin.bungeefriends.tools.Config;
 import net.simplyrin.bungeefriends.tools.Priority;
 import net.simplyrin.bungeefriends.tools.ThreadPool;
 import net.simplyrin.bungeefriends.utils.FriendManager.FriendUtils;
@@ -51,7 +45,7 @@ public class FriendCommand extends Command implements TabExecutor {
 
 	private Main plugin;
 	@Getter
-	private List<String> availableLanguages = new ArrayList<>();
+	private List<String> availableLanguages = Collections.unmodifiableList(Arrays.asList("English", "Chinese"));
 
 	public FriendCommand(Main plugin, String command) {
 		super(command, null);
@@ -71,9 +65,11 @@ public class FriendCommand extends Command implements TabExecutor {
 		String name = args[args.length - 1];
 		// System.out.println(args.length + ": " + name);
 		if (args.length == 1) {
-			list.addAll(Arrays.asList("add", "remove", "accept", "deny", "prefix", "lang", "language", "toggle", "help"));
+			list.addAll(Arrays.asList("add", "remove", "accept", "deny", "requests", "note", "lang", "language", "toggle", "help"));
 			if (sender.hasPermission(Permissions.ADMIN)) {
 				list.addAll(Arrays.asList("force-add", "prefix", "reload"));
+			} else if (sender.hasPermission(Permissions.FORCE_ADD)) {
+				list.add("force-add");
 			}
 		}
 
@@ -85,18 +81,7 @@ public class FriendCommand extends Command implements TabExecutor {
 					&& this.previousCommand.get(sender.getName()) != null
 					&& (this.previousCommand.get(sender.getName()).equalsIgnoreCase("lang")
 							|| this.previousCommand.get(sender.getName()).equalsIgnoreCase("language"))) {
-				if (sender.hasPermission(Permissions.ADMIN) && args.length == 2) {
-					list.add("update");
-				}
-
-				this.plugin.getDataFolder().mkdirs();
-				File folder = new File(this.plugin.getDataFolder(), "Language");
-				folder.mkdirs();
-
-				for (File file : folder.listFiles()) {
-					// System.out.println("add: " + file.getName().toLowerCase().replace(".yml", ""));
-					list.add(file.getName().toLowerCase().replace(".yml", ""));
-				}
+				list.addAll(Arrays.asList("english", "chinese"));
 			}
 		}
 
@@ -213,12 +198,24 @@ public class FriendCommand extends Command implements TabExecutor {
 					FriendUtils targetFriends = this.plugin.getFriendManager().getPlayer(target);
 					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(target);
 
-					try {
-						targetFriends.removeRequest(player);
-					} catch (NotAddedException e) {
+					String sent = this.plugin.getFriendRequestCreatedAt(target, player.getUniqueId());
+					long sentAt;
+					try { sentAt = Long.parseLong(sent); } catch (NumberFormatException e) { sentAt = 0; }
+					if (!targetFriends.getRequests().contains(player.getUniqueId().toString())
+							|| sentAt <= 0 || System.currentTimeMillis() - sentAt > TimeUnit.MINUTES.toMillis(5)) {
+						if (targetFriends.getRequests().contains(player.getUniqueId().toString())) {
+							try { targetFriends.removeRequest(player); } catch (NotAddedException ignored) { }
+						}
 						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 						this.plugin.info(player, langUtils.getString("Exceptions.NoInvited").replace("%name", targetFriends.getName()));
 						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+						return;
+					}
+					try {
+						myFriends.add(target);
+						targetFriends.removeRequest(player);
+					} catch (AlreadyAddedException | FailedAddingException | NotAddedException e) {
+						this.plugin.info(player, langUtils.getString("Exceptions.AlreadyFriend"));
 						return;
 					}
 
@@ -230,13 +227,6 @@ public class FriendCommand extends Command implements TabExecutor {
 					this.plugin.info(target, targetLangUtils.getString("Accept.Target").replace("%displayName", myFriends.getDisplayName()));
 					this.plugin.info(target, targetLangUtils.getString(Messages.HYPHEN));
 
-					try {
-						myFriends.add(target);
-					} catch (AlreadyAddedException e) {
-						e.printStackTrace();
-					} catch (FailedAddingException e) {
-						e.printStackTrace();
-					}
 					return;
 				}
 				this.plugin.info(player, langUtils.getString("Accept.Usage"));
@@ -272,6 +262,56 @@ public class FriendCommand extends Command implements TabExecutor {
 				return;
 			}
 
+			if (args[0].equalsIgnoreCase("requests")) {
+				List<UUID> requesters = this.plugin.getPendingFriendRequesters(player.getUniqueId());
+				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				if (requesters.isEmpty()) this.plugin.info(player, langUtils.getString("Requests.Empty"));
+				for (UUID requester : requesters) {
+					FriendUtils friend = this.plugin.getFriendManager().getPlayer(requester);
+					String time = this.plugin.getFriendRequestCreatedAt(requester, player.getUniqueId());
+					this.plugin.info(player, langUtils.getString("Requests.Entry")
+							.replace("%name", friend.getDisplayNameFor(player.getUniqueId()))
+							.replace("%time", time == null || time.isEmpty() ? "?" : time));
+				}
+				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				return;
+			}
+
+			if (args[0].equalsIgnoreCase("note")) {
+				if (args.length < 2) {
+					this.plugin.info(player, langUtils.getString("Note.Usage"));
+					return;
+				}
+				if (args[1].equalsIgnoreCase("resetall")) {
+					if (args.length == 3 && args[2].equalsIgnoreCase("confirm")) {
+						this.plugin.clearAllFriendCustomPrefixes(player.getUniqueId());
+						this.plugin.info(player, langUtils.getString("Note.Cleared"));
+					} else this.plugin.info(player, langUtils.getString("Note.Confirm"));
+					return;
+				}
+				UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[1]);
+				if (target == null || !myFriends.isFriend(target)) {
+					this.plugin.info(player, langUtils.getString("Note.MustBeFriends"));
+					return;
+				}
+				if (args.length == 2) {
+					String note = this.plugin.getFriendCustomPrefix(player.getUniqueId(), target);
+					this.plugin.info(player, langUtils.getString("Note.Current").replace("%prefix", note == null || note.isEmpty() ? "-" : note));
+				} else if (args.length == 3 && args[2].equalsIgnoreCase("reset")) {
+					this.plugin.clearFriendCustomPrefix(player.getUniqueId(), target);
+					this.plugin.info(player, langUtils.getString("Note.Cleared"));
+				} else {
+					String note = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+					if (note.length() > 255) {
+						this.plugin.info(player, langUtils.getString("Note.TooLong"));
+						return;
+					}
+					this.plugin.setFriendCustomPrefix(player.getUniqueId(), target, note + " ");
+					this.plugin.info(player, langUtils.getString("Note.Updated"));
+				}
+				return;
+			}
+
 			if (args[0].equalsIgnoreCase("list")) {
 				List<String> list = myFriends.getFriends();
 
@@ -303,14 +343,12 @@ public class FriendCommand extends Command implements TabExecutor {
 						prefix = ChatColor.stripColor(prefix).trim();
 
 						if (item.getNoColorPrefix().equals(prefix)) {
-							String displayName = colorOnly ? targetFriends.getPrefixColor() + targetFriends.getName() : targetFriends.getDisplayName();
+							String displayName = colorOnly ? targetFriends.getPrefixColor() + targetFriends.getName() : targetFriends.getDisplayNameFor(player.getUniqueId());
 
 							added.add(uuid);
 
-							if (target != null) {
-								String serverName = this.plugin.getServerName(target.getServer().getInfo().getName());
-
-								online.add(langUtils.getString("List.Online").replace("%targetDisplayName", displayName).replace("%server", serverName));
+							if (target != null && (!this.plugin.getBoolean("Plugin.Enable-Status") || this.plugin.getStatusManager().getStatus(target.getUniqueId()) != net.simplyrin.bungeefriends.utils.StatusManager.Status.APPEAR_OFFLINE)) {
+								online.add(this.friendListLine(target, langUtils, displayName));
 							} else {
 								offline.add(langUtils.getString("List.Offline").replace("%targetDisplayName", displayName));
 							}
@@ -329,14 +367,12 @@ public class FriendCommand extends Command implements TabExecutor {
 					String prefix = ChatColor.translateAlternateColorCodes('&', targetFriends.getPrefix());
 					prefix = ChatColor.stripColor(prefix);
 
-					String displayName = colorOnly ? targetFriends.getPrefixColor() + targetFriends.getName() : targetFriends.getDisplayName();
+					String displayName = colorOnly ? targetFriends.getPrefixColor() + targetFriends.getName() : targetFriends.getDisplayNameFor(player.getUniqueId());
 
 					added.add(uuid);
 
-					if (target != null) {
-						String serverName = this.plugin.getServerName(target.getServer().getInfo().getName());
-
-						online.add(langUtils.getString("List.Online").replace("%targetDisplayName", displayName).replace("%server", serverName));
+					if (target != null && (!this.plugin.getBoolean("Plugin.Enable-Status") || this.plugin.getStatusManager().getStatus(target.getUniqueId()) != net.simplyrin.bungeefriends.utils.StatusManager.Status.APPEAR_OFFLINE)) {
+						online.add(this.friendListLine(target, langUtils, displayName));
 					} else {
 						offline.add(langUtils.getString("List.Offline").replace("%targetDisplayName", displayName));
 					}
@@ -346,18 +382,18 @@ public class FriendCommand extends Command implements TabExecutor {
 				all.addAll(online);
 				all.addAll(offline);
 
-				int page = 0;
+				int page = 1;
 				if (args.length > 1) {
 					try {
 						page = Integer.valueOf(args[1]).intValue();
-						if (page <= -1) {
-							page = 0;
+						if (page < 1) {
+							page = 1;
 						}
 					} catch (Exception e) {
 					}
 				}
 
-				if (list.size() <= 7) {
+				if (all.size() <= 7) {
 					this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 					this.plugin.info(player, "               " + langUtils.getString("List.Page").replace("%%currentPage%%", String.valueOf(page == 0 ? 1 : page)).replace("%%maxPage%%", "1"));
 
@@ -370,6 +406,7 @@ public class FriendCommand extends Command implements TabExecutor {
 				}
 
 				List<List<String>> divide = this.divide(all, 7);
+				page = Math.min(page, divide.size());
 
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 				this.plugin.info(player, "               " + langUtils.getString("List.Page").replace("%%currentPage%%", String.valueOf(page == 0 ? 1 : page)).replace("%%maxPage%%", String.valueOf(divide.size())));
@@ -389,111 +426,17 @@ public class FriendCommand extends Command implements TabExecutor {
 			}
 
 			if (args[0].equalsIgnoreCase("lang") || args[0].equalsIgnoreCase("language")) {
-				File folder = this.plugin.getDataFolder();
-				if (!folder.exists()) {
-					folder.mkdir();
+				if (args.length > 1 && args[1].equalsIgnoreCase("update")) {
+					this.plugin.info(player, langUtils.getString("Lang.Updater.Disabled"));
+					return;
 				}
-
-				File languageFolder = new File(folder, "Language");
-				if (!languageFolder.exists()) {
-					languageFolder.mkdir();
+				if (args.length > 1 && (args[1].equalsIgnoreCase("english") || args[1].equalsIgnoreCase("chinese"))) {
+					langUtils.setLanguage(args[1].toLowerCase(java.util.Locale.ROOT));
+					this.plugin.info(player, langUtils.getString("Lang.Update").replace("%lang", langUtils.getLanguage()));
+					return;
 				}
-
-				if (args.length > 1) {
-					if (args[1].equalsIgnoreCase("update")) {
-						if (!player.hasPermission(Permissions.ADMIN)) {
-							this.plugin.info(player, langUtils.getString(Messages.NO_PERMISSION));
-							return;
-						}
-
-						if (args.length > 2) {
-							if (this.availableLanguages.size() == 0) {
-								this.plugin.info(player, langUtils.getString("Lang.Updater.NeedCheck"));
-								return;
-							}
-
-							String lang = null;
-							for (String available : this.availableLanguages) {
-								if (args[2].equalsIgnoreCase(available)) {
-									lang = available;
-								}
-							}
-
-							if (lang == null) {
-								this.plugin.info(player, langUtils.getString("Lang.Updater.Unknown"));
-								return;
-							}
-
-							final String outputLang = lang;
-							ThreadPool.run(() -> {
-								Configuration config;
-								try {
-									config = Config.getConfig(new URL("https://api.simplyrin.net/Bungee-Plugins/BungeeFriends/Languages/Files/" + outputLang + ".yml"));
-								} catch (Exception e) {
-									this.plugin.info(player, langUtils.getString("Lang.Updater.Failed-Connect"));
-									return;
-								}
-
-								File file = new File(languageFolder, outputLang.toLowerCase() + ".yml");
-								Config.saveConfig(config, file);
-
-								langUtils.reloadLanguage(outputLang.toLowerCase());
-								this.plugin.info(player, langUtils.getString("Lang.Updater.Updated").replace("%lang", outputLang));
-							});
-							return;
-						}
-
-						ThreadPool.run(() -> {
-							this.plugin.info(player, langUtils.getString("Lang.Updater.Checking"));
-							Configuration config;
-							try {
-								config = Config.getConfig(new URL("https://api.simplyrin.net/Bungee-Plugins/BungeeFriends/Languages/available.txt"));
-							} catch (Exception e) {
-								e.printStackTrace();
-								this.plugin.info(player, langUtils.getString("Lang.Updater.Failed-Connect"));
-								return;
-							}
-
-							this.availableLanguages = new ArrayList<>();
-
-							this.plugin.info(player, langUtils.getString("Lang.Updater.LastUpdate").replace("%data", config.getString("LastUpdate")));
-							this.plugin.info(player, langUtils.getString("Lang.Updater.Available"));
-							for (String lang : config.getStringList("Langs")) {
-								this.plugin.info(player, "&b- " + lang + " &a(" + config.getString("Percent." + lang) + ")");
-								this.availableLanguages.add(lang);
-							}
-						});
-
-						this.plugin.info(player, langUtils.getString("Lang.Updater.Usage"));
-						return;
-					}
-				}
-
-				List<String> availableList = new ArrayList<>();
-				String available = "";
-				File[] languages = languageFolder.listFiles();
-				for (File languageFile : languages) {
-					Configuration langConfig = Config.getConfig(languageFile, Charsets.UTF_8);
-					if (langConfig.getString("Language").length() > 1) {
-						availableList.add(languageFile.getName().toLowerCase().replace(".yml", ""));
-						available += langConfig.getString("Language") + ", ";
-					}
-				}
-
-				if (args.length > 1) {
-					if (availableList.contains(args[1].toLowerCase())) {
-						langUtils.setLanguage(args[1].toLowerCase());
-						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-						this.plugin.info(player, langUtils.getString("Lang.Update").replace("%lang", langUtils.getLanguage()));
-						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-						return;
-					}
-				}
-
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 				this.plugin.info(player, langUtils.getString("Lang.Usage"));
-				this.plugin.info(player, langUtils.getString("Lang.Available") + " <" + available.substring(0, available.length() - 2) + ">");
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				this.plugin.info(player, langUtils.getString("Lang.Available") + " <English, Chinese>");
 				return;
 			}
 
@@ -583,7 +526,7 @@ public class FriendCommand extends Command implements TabExecutor {
 			}
 
 			if (args[0].equalsIgnoreCase("force-add")) {
-				if (!player.hasPermission(Permissions.ADMIN)) {
+				if (!player.hasPermission(Permissions.ADMIN) && !player.hasPermission(Permissions.FORCE_ADD)) {
 					this.plugin.info(player, langUtils.getString(Messages.NO_PERMISSION));
 					return;
 				}
@@ -740,6 +683,8 @@ public class FriendCommand extends Command implements TabExecutor {
 		this.plugin.info(player, langUtils.getString("Help.Accept"));
 		this.plugin.info(player, langUtils.getString("Help.Deny"));
 		this.plugin.info(player, langUtils.getString("Help.List"));
+		this.plugin.info(player, langUtils.getString("Help.Requests"));
+		this.plugin.info(player, langUtils.getString("Help.Note"));
 		this.plugin.info(player, langUtils.getString("Help.Ignore"));
 		this.plugin.info(player, langUtils.getString("Help.Toggle"));
 		if (player.hasPermission(Permissions.ADMIN)) {
@@ -747,8 +692,21 @@ public class FriendCommand extends Command implements TabExecutor {
 			this.plugin.info(player, langUtils.getString("Help.Force-Add"));
 			this.plugin.info(player, langUtils.getString("Help.Prefix"));
 			this.plugin.info(player, langUtils.getString("Help.Reload"));
+		} else if (player.hasPermission(Permissions.FORCE_ADD)) {
+			this.plugin.info(player, langUtils.getString("Help.Force-Add"));
 		}
 		this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+	}
+
+	private String friendListLine(ProxiedPlayer target, LanguageUtils lang, String displayName) {
+		if (target.getServer() == null || target.getServer().getInfo() == null)
+			return lang.getString("List.Offline").replace("%targetDisplayName", displayName);
+		String server = this.plugin.getServerName(target.getServer().getInfo().getName());
+		net.simplyrin.bungeefriends.utils.StatusManager.Status status =
+				this.plugin.getStatusManager().getStatus(target.getUniqueId());
+		String key = status == net.simplyrin.bungeefriends.utils.StatusManager.Status.ONLINE
+				? "List.Online" : "List.Status." + status.getKey();
+		return lang.getString(key).replace("%targetDisplayName", displayName).replace("%server", server);
 	}
 
 	public void add(ProxiedPlayer player, FriendUtils myFriends, LanguageUtils langUtils, String name) {
@@ -815,29 +773,27 @@ public class FriendCommand extends Command implements TabExecutor {
 		}
 		this.plugin.info(target, targetLangUtils.getString(Messages.HYPHEN));
 
-		ThreadPool.run(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					TimeUnit.MINUTES.sleep(5);
-				} catch (Exception e) {
+		try {
+			this.plugin.scheduleExpiry("friend:" + myFriends.getUniqueId() + ":" + targetFriends.getUniqueId(), new Runnable() {
+				@Override
+				public void run() {
+					try {
+						myFriends.removeRequest(target);
+					} catch (NotAddedException e) {
+						return;
+					}
+					plugin.info(player, langUtils.getString(Messages.HYPHEN));
+					plugin.info(player, langUtils.getString("Add.Expired.YourSelf").replace("%targetDisplayName", targetFriends.getDisplayName()));
+					plugin.info(player, langUtils.getString(Messages.HYPHEN));
+					plugin.info(target, targetLangUtils.getString(Messages.HYPHEN));
+					plugin.info(target, targetLangUtils.getString("Add.Expired.Target").replace("%displayName", myFriends.getDisplayName()));
+					plugin.info(target, targetLangUtils.getString(Messages.HYPHEN));
 				}
-
-				try {
-					myFriends.removeRequest(target);
-				} catch (NotAddedException e) {
-					return;
-				}
-
-				plugin.info(player, langUtils.getString(Messages.HYPHEN));
-				plugin.info(player, langUtils.getString("Add.Expired.YourSelf").replace("%targetDisplayName", targetFriends.getDisplayName()));
-				plugin.info(player, langUtils.getString(Messages.HYPHEN));
-
-				plugin.info(target, targetLangUtils.getString(Messages.HYPHEN));
-				plugin.info(target, targetLangUtils.getString("Add.Expired.Target").replace("%displayName", myFriends.getDisplayName()));
-				plugin.info(target, targetLangUtils.getString(Messages.HYPHEN));
-			}
-		});
+			}, 5, TimeUnit.MINUTES);
+		} catch (IllegalStateException rejected) {
+			try { myFriends.removeRequest(target); } catch (NotAddedException ignored) { }
+			throw rejected;
+		}
 	}
 
 	/**

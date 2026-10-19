@@ -2,6 +2,7 @@ package net.simplyrin.bungeefriends.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 import java.util.UUID;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -41,6 +42,36 @@ public class PartyManager {
 		return new PartyUtils(uniqueId);
 	}
 
+	private synchronized void updateMembers(UUID leader, List<UUID> participants, List<UUID> detached) {
+		if (this.plugin.isEnabledMySQL()) {
+			this.plugin.getMySQLManager().getEditor().updateParty(leader, participants, detached);
+			return;
+		}
+		synchronized (this.plugin.getDataManager()) {
+		List<String> members = new ArrayList<>();
+		for (UUID player : participants) if (!player.equals(leader)) members.add(player.toString());
+		for (UUID player : participants) {
+			String path = "Parties." + player + ".";
+			this.plugin.set(path + "Currently-Joined-Party", leader.toString());
+			this.plugin.set(path + "Party-List", new ArrayList<>(members));
+		}
+		for (UUID player : detached) {
+			String path = "Parties." + player + ".";
+			this.plugin.set(path + "Currently-Joined-Party", "NONE");
+			this.plugin.set(path + "Party-List", new ArrayList<>());
+		}
+		this.plugin.getDataManager().save();
+		}
+	}
+
+	private int maxSize() {
+		try {
+			return Math.max(2, Integer.parseInt(this.plugin.getString("Plugin.Party-Max-Size")));
+		} catch (NumberFormatException e) {
+			return 10;
+		}
+	}
+
 	public class PartyUtils {
 
 		private UUID uuid;
@@ -51,6 +82,7 @@ public class PartyManager {
 			if (plugin.getString("Parties." + this.uuid.toString() + ".Name").equals("")) {
 				ProxiedPlayer player = plugin.getProxy().getPlayer(this.uuid);
 
+				if (player == null) return;
 				plugin.info("Creating data for player " + player.getName() + "...");
 
 				plugin.set("Parties." + this.uuid.toString() + ".Name", player.getName());
@@ -58,6 +90,9 @@ public class PartyManager {
 				plugin.set("Parties." + this.uuid.toString() + ".Party-List", new ArrayList<>());
 				plugin.set("Parties." + this.uuid.toString() + ".Requests", new ArrayList<>());
 				plugin.set("Parties." + this.uuid.toString() + ".Toggle", true);
+				plugin.set("Parties." + this.uuid.toString() + ".AllInvite", false);
+				plugin.set("Parties." + this.uuid.toString() + ".Mute", false);
+				plugin.set("Parties." + this.uuid.toString() + ".Private", false);
 				plugin.getPlayerManager().save();
 			}
 		}
@@ -80,6 +115,11 @@ public class PartyManager {
 		public void partyChat(ProxiedPlayer player, String text) throws NotJoinedException {
 			FriendUtils myFriends = plugin.getFriendManager().getPlayer(player);
 			PartyUtils myParties = this.getPartyLeader();
+			if (plugin.getBoolean("Parties." + myParties.uuid + ".Mute")
+					&& !player.getUniqueId().equals(myParties.uuid)) {
+				plugin.info(player, plugin.getLanguageManager().getPlayer(player).getString("Party-Mute.Muted-1"));
+				return;
+			}
 
 			LanguageUtils langUtils = plugin.getLanguageManager().getPlayer(this.uuid);
 			plugin.info(myParties.getUniqueId(), langUtils.getString("Chat.Channels.Party") + " > " + myFriends.getDisplayName() + "&f: " + text);
@@ -99,15 +139,28 @@ public class PartyManager {
 			try {
 				leader.remove(this.uuid);
 			} catch (NotJoinedException e) {
-			}
-			if (leader.getParties().size() == 0) {
-				plugin.set("Parties." + this.uuid.toString() + ".Currently-Joined-Party", "NONE");
-				plugin.set("Parties." + leader.getUniqueId().toString() + ".Currently-Joined-Party", "NONE");
-
-				plugin.set("Parties." + uuid.toString() + ".Party-List", new ArrayList<>());
-				plugin.set("Parties." + leader.getUniqueId().toString() + ".Party-List", new ArrayList<>());
+				throw new IllegalStateException("Cannot leave the current party", e);
 			}
 			return leader;
+		}
+
+		public void disband() {
+			synchronized (PartyManager.this) {
+			if (!this.uuid.toString().equals(this.getCurrentlyJoinedParty()))
+				throw new IllegalStateException("Only the party leader can disband");
+			List<UUID> detached = new ArrayList<>();
+			detached.add(this.uuid);
+			for (String member : this.getParties()) detached.add(UUID.fromString(member));
+			updateMembers(this.uuid, Collections.emptyList(), detached);
+			for (String request : plugin.getStringList("Parties." + this.uuid + ".Requests"))
+				plugin.cancelExpiry("party:" + this.uuid + ":" + request);
+			plugin.set("Parties." + this.uuid + ".Requests", new ArrayList<>());
+			plugin.set("Parties." + this.uuid + ".AllInvite", false);
+			plugin.set("Parties." + this.uuid + ".Mute", false);
+			plugin.set("Parties." + this.uuid + ".Private", false);
+			plugin.getPartyWarpManager().cancelFor(this.uuid);
+			if (!plugin.isEnabledMySQL()) plugin.getDataManager().save();
+			}
 		}
 
 		public boolean isJoinedParty() {
@@ -126,18 +179,20 @@ public class PartyManager {
 		public String getCurrentlyJoinedParty() {
 			String currentlyJoinedParty = plugin.getString("Parties." + this.uuid.toString() + ".Currently-Joined-Party");
 			if (currentlyJoinedParty == null || currentlyJoinedParty.equals("")) {
-				plugin.set("Parties." + this.uuid.toString() + ".Currently-Joined-Party", "NONE");
+				return "NONE";
 			}
 			return currentlyJoinedParty;
 		}
 
 		public boolean isPartyOwner() throws NotJoinedException {
-			return this.uuid == this.getPartyLeader().getPlayer().getUniqueId();
+			String leader = this.getCurrentlyJoinedParty();
+			if ("NONE".equalsIgnoreCase(leader)) throw new NotJoinedException("Exceptions.Not-Joined");
+			return this.uuid.toString().equals(leader);
 		}
 
 		public PartyUtils setEnabledReceiveRequest(boolean bool) {
 			plugin.set("Parties." + this.uuid.toString() + ".Toggle", bool);
-			plugin.getPlayerManager().save();
+			if (!plugin.isEnabledMySQL()) plugin.getDataManager().save();
 			return this;
 		}
 
@@ -158,34 +213,32 @@ public class PartyManager {
 		}
 
 		public void promote(UUID uniqueId) throws NotJoinedException {
-			if (!this.getParties().contains(uniqueId.toString())) {
+			synchronized (PartyManager.this) {
+			if (!this.uuid.toString().equals(this.getCurrentlyJoinedParty()))
+				throw new NotJoinedException("Disband.Must-Leader");
+			List<String> previous = this.getParties();
+			if (!previous.contains(uniqueId.toString())) {
 				throw new NotJoinedException("Exceptions.Isnt-In-Your-Party");
 			}
-
-			PartyUtils newOwner = plugin.getPartyManager().getPlayer(uniqueId);
-			this.remove(uniqueId);
-			for (String partyPlayerUniqueId : this.getParties()) {
-				PartyUtils targetPlayer = plugin.getPartyManager().getPlayer(partyPlayerUniqueId);
-				try {
-					newOwner.add(targetPlayer.getPlayer());
-				} catch (Exception e) {
-				}
+			List<UUID> participants = new ArrayList<>();
+			participants.add(uniqueId);
+			participants.add(this.uuid);
+			for (String player : previous) if (!player.equals(uniqueId.toString())) participants.add(UUID.fromString(player));
+			boolean allInvite = plugin.getBoolean("Parties." + this.uuid + ".AllInvite");
+			boolean mute = plugin.getBoolean("Parties." + this.uuid + ".Mute");
+			boolean privateParty = plugin.getBoolean("Parties." + this.uuid + ".Private");
+			updateMembers(uniqueId, participants, Collections.emptyList());
+			plugin.set("Parties." + uniqueId + ".AllInvite", allInvite);
+			plugin.set("Parties." + uniqueId + ".Mute", mute);
+			plugin.set("Parties." + uniqueId + ".Private", privateParty);
+			plugin.set("Parties." + this.uuid + ".AllInvite", false);
+			plugin.set("Parties." + this.uuid + ".Mute", false);
+			plugin.set("Parties." + this.uuid + ".Private", false);
+			for (String request : plugin.getStringList("Parties." + this.uuid + ".Requests"))
+				plugin.cancelExpiry("party:" + this.uuid + ":" + request);
+			plugin.set("Parties." + this.uuid + ".Requests", new ArrayList<>());
+			if (!plugin.isEnabledMySQL()) plugin.getDataManager().save();
 			}
-
-			try {
-				newOwner.add(this.uuid);
-			} catch (Exception e) {
-			}
-
-			for (String partyPlayerUniqueId : newOwner.getParties()) {
-				PartyUtils targetPlayer = plugin.getPartyManager().getPlayer(partyPlayerUniqueId);
-
-				plugin.set("Parties." + targetPlayer.getUniqueId() + ".Currently-Joined-Party", uniqueId.toString());
-				plugin.set("Parties." + targetPlayer.getUniqueId() + ".Party-List", this.getParties());
-			}
-
-			plugin.set("Parties." + uniqueId.toString() + ".Currently-Joined-Party", uniqueId.toString());
-			plugin.set("Parties." + uniqueId.toString() + ".Party-List", this.getParties());
 		}
 
 		public void hijack(ProxiedPlayer player) {
@@ -196,13 +249,15 @@ public class PartyManager {
 			if (!this.getParties().contains(uniqueId.toString())) {
 				try {
 					this.add(uniqueId);
-				} catch (Exception e) {
+				} catch (AlreadyJoinedException | FailedAddingException e) {
+					throw new IllegalStateException("Cannot join the party to hijack it", e);
 				}
 			}
 
 			try {
 				this.promote(uniqueId);
-			} catch (Exception e) {
+			} catch (NotJoinedException e) {
+				throw new IllegalStateException("Cannot promote the hijacking player", e);
 			}
 		}
 
@@ -211,6 +266,10 @@ public class PartyManager {
 		}
 
 		public PartyUtils addRequest(UUID uuid) throws AlreadyJoinedException, FailedInvitingException {
+			synchronized (PartyManager.this) {
+			if (!this.uuid.toString().equals(this.getCurrentlyJoinedParty())
+					&& !"NONE".equalsIgnoreCase(this.getCurrentlyJoinedParty()))
+				throw new FailedInvitingException("Disband.Must-Leader");
 			if (this.uuid.toString().equals(uuid.toString())) {
 				throw new FailedInvitingException("Exceptions.Cant-Invite-Self");
 			}
@@ -220,6 +279,8 @@ public class PartyManager {
 			}
 
 			List<String> list = this.getParties();
+			if (list.size() + 1 >= PartyManager.this.maxSize())
+				throw new FailedInvitingException("Exceptions.Party-Full");
 			if (list.contains(uuid.toString())) {
 				throw new AlreadyJoinedException("Exceptions.Already.In");
 			}
@@ -229,12 +290,13 @@ public class PartyManager {
 			}
 
 			List<String> requests = plugin.getStringList("Parties." + this.uuid.toString() + ".Requests");
+			if (requests.size() >= 5) throw new FailedInvitingException("Exceptions.Too-Many-Invites");
 			if (requests.contains(uuid.toString())) {
 				throw new FailedInvitingException("Exceptions.Already.Invited");
 			}
-			requests.add(uuid.toString());
-			plugin.set("Parties." + this.uuid.toString() + ".Requests", requests);
+			plugin.changePartyRequest(this.uuid, uuid, true);
 			return this;
+			}
 		}
 
 		public PartyUtils removeRequest(ProxiedPlayer player) throws NotInvitedException {
@@ -242,17 +304,23 @@ public class PartyManager {
 		}
 
 		public PartyUtils removeRequest(UUID uuid) throws NotInvitedException {
+			synchronized (PartyManager.this) {
 			List<String> requests = plugin.getStringList("Parties." + this.uuid.toString() + ".Requests");
 			if (!requests.contains(uuid.toString())) {
 				throw new NotInvitedException("Exceptions.Havent-Received-Invite");
 			}
-			requests.remove(uuid.toString());
-			plugin.set("Parties." + this.uuid.toString() + ".Requests", requests);
+			plugin.changePartyRequest(this.uuid, uuid, false);
+			plugin.cancelExpiry("party:" + this.uuid + ":" + uuid);
 			return this;
+			}
 		}
 
 		public List<String> getParties() {
 			return plugin.getStringList("Parties." + this.uuid.toString() + ".Party-List");
+		}
+
+		public List<String> getRequests() {
+			return plugin.getStringList("Parties." + this.uuid + ".Requests");
 		}
 
 		public int getOnlinePlayers() {
@@ -274,6 +342,10 @@ public class PartyManager {
 		}
 
 		public PartyUtils add(UUID uuid) throws AlreadyJoinedException, FailedAddingException {
+			synchronized (PartyManager.this) {
+			if (!this.uuid.toString().equals(this.getCurrentlyJoinedParty())
+					&& !"NONE".equalsIgnoreCase(this.getCurrentlyJoinedParty()))
+				throw new FailedAddingException("Exceptions.Not-Joined");
 			if (this.uuid.toString().equals(uuid.toString())) {
 				throw new FailedAddingException("Exceptions.Your-Self-Invite"); // "You can't add yourself to a party!"
 			}
@@ -283,13 +355,18 @@ public class PartyManager {
 				throw new AlreadyJoinedException("Exceptions.Already.In");
 						// plugin.getFriendManager().getPlayer(uuid).getDisplayName() + " &cis already in your party!"
 			}
-			list.add(uuid.toString());
-			plugin.set("Parties." + this.uuid.toString() + ".Party-List", list);
-			plugin.set("Parties." + this.uuid.toString() + ".Currently-Joined-Party", this.uuid.toString());
-
-			plugin.set("Parties." + uuid.toString() + ".Currently-Joined-Party", this.uuid.toString());
-			plugin.set("Parties." + uuid.toString() + ".Party-List", list);
+			if (list.size() + 1 >= PartyManager.this.maxSize())
+				throw new FailedAddingException("Exceptions.Party-Full");
+			String joined = plugin.getString("Parties." + uuid + ".Currently-Joined-Party");
+			if (joined != null && !joined.isEmpty() && !"NONE".equalsIgnoreCase(joined))
+				throw new AlreadyJoinedException("Exceptions.Already.Joined");
+			List<UUID> participants = new ArrayList<>();
+			participants.add(this.uuid);
+			for (String member : list) participants.add(UUID.fromString(member));
+			participants.add(uuid);
+			updateMembers(this.uuid, participants, Collections.emptyList());
 			return this;
+			}
 		}
 
 		public PartyUtils remove(ProxiedPlayer player) throws NotJoinedException {
@@ -297,6 +374,9 @@ public class PartyManager {
 		}
 
 		public PartyUtils remove(UUID uuid) throws NotJoinedException {
+			synchronized (PartyManager.this) {
+			if (!this.uuid.toString().equals(this.getCurrentlyJoinedParty()))
+				throw new NotJoinedException("Disband.Must-Leader");
 			if (this.uuid.toString().equals(uuid.toString())) {
 				throw new NotJoinedException("Exceptions.Cant-Remove-Your-Self"); // "&cYou can't remove yourself! Use /party disaband instead!"
 			}
@@ -307,11 +387,13 @@ public class PartyManager {
 						// plugin.getFriendManager().getPlayer(uuid).getDisplayName() + " &cisn't in your party! Invite them first!"
 			}
 			list.remove(uuid.toString());
-			plugin.set("Parties." + this.uuid.toString() + ".Party-List", list);
-
-			plugin.set("Parties." + uuid.toString() + ".Currently-Joined-Party", "NONE");
-			plugin.set("Parties." + uuid.toString() + ".Party-List", list);
+			List<UUID> participants = new ArrayList<>();
+			participants.add(this.uuid);
+			for (String member : list) participants.add(UUID.fromString(member));
+			if (list.isEmpty()) this.disband();
+			else updateMembers(this.uuid, participants, Collections.singletonList(uuid));
 			return this;
+			}
 		}
 
 	}

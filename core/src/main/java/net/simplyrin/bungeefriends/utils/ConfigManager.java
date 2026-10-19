@@ -38,8 +38,11 @@ public class ConfigManager {
 	}
 
 	public void reload() {
+		if (this.plugin.getPartyWarpManager() != null) this.plugin.getPartyWarpManager().cancelAll();
 		File config = new File(this.plugin.getDataFolder(), "config.yml");
 		this.config = Config.getConfig(config, Charsets.UTF_8);
+		this.ensureP4Defaults();
+		this.save();
 
 		this.plugin.reloadCommandAliases();
 		this.plugin.reloadPartyCmdSender();
@@ -97,7 +100,12 @@ public class ConfigManager {
 		this.resetValue("Plugin.Disable-Aliases./r");
 		this.resetValue("Plugin.Disable-Aliases./reply");
 		this.resetValue("Plugin.Disable-Aliases./fl");
+		this.resetValue("Plugin.Disable-Aliases./block");
+		this.resetValue("Plugin.Disable-Aliases./ignore");
 		this.resetValue("Plugin.Disable-Aliases./pc");
+		this.resetValue("Plugin.Disable-Aliases./ac");
+		this.resetValue("Plugin.Disable-Aliases./achat");
+		this.resetValue("Plugin.Disable-Aliases./pl");
 		this.resetValue("Plugin.Disable-Aliases./w");
 		this.resetValue("Plugin.Disable-Aliases./whisper");
 		this.resetValue("Plugin.Disable-Lang-Command");
@@ -108,6 +116,7 @@ public class ConfigManager {
 		this.resetValue("Plugin.Disable-TabComplete");
 		this.resetValue("Plugin.Disable-PartyCmdSender");
 		this.resetValue("Plugin.Enable-BungeeParties");
+		this.ensureP4Defaults();
 		this.resetValue("Plugin.Enable-Deprecated-PrefixYml");
 		this.resetValue("Plugin.FriendList-NoPrefix");
 
@@ -156,6 +165,18 @@ public class ConfigManager {
 		if (this.config.getString(key).equals("")) {
 			this.config.set(key, value);
 		}
+	}
+
+	private void ensureP4Defaults() {
+		this.resetStringValue("Plugin.Party-Max-Size", "10");
+		if (!this.config.contains("Plugin.Enable-Status")) this.config.set("Plugin.Enable-Status", true);
+		if (!this.config.contains("Plugin.Enable-NoPartyWarp-Servers")) this.config.set("Plugin.Enable-NoPartyWarp-Servers", true);
+		if (!this.config.contains("Plugin.NoPartyWarp-Servers")) this.config.set("Plugin.NoPartyWarp-Servers", new java.util.ArrayList<String>());
+		if (!this.config.contains("Plugin.PartyWarp.Enable-Confirmation")) this.config.set("Plugin.PartyWarp.Enable-Confirmation", false);
+		if (!this.config.contains("Plugin.PartyWarp.Confirm-Timeout")) this.config.set("Plugin.PartyWarp.Confirm-Timeout", 10);
+		if (!this.config.contains("Plugin.PartyWarp.Game-Servers")) this.config.set("Plugin.PartyWarp.Game-Servers", new java.util.ArrayList<String>());
+		this.resetStringValue("Plugin.PartyWarp.Initial-Delay", "0.5");
+		this.resetStringValue("Plugin.PartyWarp.Member-Interval", "0.1");
 	}
 
 	public void resetStringValue(String key, int value) {

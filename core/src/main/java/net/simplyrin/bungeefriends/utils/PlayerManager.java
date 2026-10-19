@@ -60,14 +60,14 @@ public class PlayerManager implements Listener {
 	public UUID getPlayerUniqueId(String name) {
 		UUID uuid = null;
 		try {
-			uuid = UUID.fromString(this.config.getString("Name." + name.toLowerCase()));
+			uuid = UUID.fromString(this.plugin.getString("Name." + name.toLowerCase()));
 		} catch (Exception e) {
 		}
 		return uuid;
 	}
 
 	public String getPlayerName(UUID uuid) {
-		return this.config.getString("UUID." + uuid.toString());
+		return this.plugin.getString("UUID." + uuid.toString());
 	}
 
 	public void save() {

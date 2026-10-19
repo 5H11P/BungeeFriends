@@ -11,6 +11,8 @@ No_Permission: "&c你没有权限使用该指令!"
 Hyphen: "&9&m---------------------------------------------"
 #Exceptions
 Exceptions:
+  Party-Full: "&c队伍已满。"
+  Too-Many-Invites: "&c最多只能有 5 个待处理的组队邀请。"
   AlreadySent: "&c你已经向这位玩家送出了好友请求!"
   AlreadyFriend: "&c你与这位玩家已经成为好友!"
   Ignored: "&c那位玩家已将你置入他们的屏蔽列表中!"
@@ -77,6 +79,10 @@ List:
     One: "&e你还没有任何好友!"
     Two: "&e使用 /friends add <player> 来添加一些好友"
   Online: "&e%targetDisplayName &e在 %server 服务器."
+  Status:
+    Away: "&e%targetDisplayName &e暂时离开 &7- &e%server"
+    Busy: "&e%targetDisplayName &c正忙 &7- &e%server"
+    AppearOffline: "&e%targetDisplayName &7已离线"
   Offline: "&e%targetDisplayName &c此时离线"
   Page: "&6好友列表 (页数 %%currentPage%% / %%maxPage%%)"
   Party-List: "&a组队成员 (%size):"
@@ -85,6 +91,7 @@ Lang:
   Available: "&b可用语言:"
   Update: "&a当前语言: &e%lang"
   Updater:
+    Disabled: "&c当前仅支持内置的中文和英文。"
     LastUpdate: "&a最后更新: %data"
     Usage: "&c用法: /friend lang update <语言>"
     NeedCheck: "&c您需要检查可用语言列表! (/friend lang update)"
@@ -105,6 +112,17 @@ Ignore:
   AlreadyAdded: "&c你已经屏蔽那位玩家了! 使用 &b/ignore remove Player &c取消屏蔽!"
   Removed: "&a已将 %targetDisplayName &a从你的屏蔽列表移除."
   NotAdded: "&c你没有在屏蔽那位玩家! 使用 &b/ignore add Player &c屏蔽玩家!"
+Block:
+  Command: "&a屏蔽命令："
+  add: "&e/block add <玩家> &7- &b屏蔽玩家"
+  help: "&e/block help &7- &b查看命令"
+  list: "&e/block list [页码] &7- &b查看屏蔽列表"
+  remove: "&e/block remove <玩家> &7- &b解除屏蔽"
+  removeall: "&e/block removeall &7- &b解除所有屏蔽"
+  List-Page: "&6屏蔽列表（第 %%currentPage%% / %%maxPage%% 页）"
+  List-Format: "&d%index. &e%targetDisplayName"
+  RemoveAll-Done: "&a已解除所有屏蔽。"
+  Self: "&c不能屏蔽自己。"
 Force-Add:
   Usage: "&c用法: /friend force-add <玩家>"
   YourSelf: "&a你现在与 %targetDisplayName &a成为了好友 &c&l[强制添加]"
@@ -113,9 +131,48 @@ Prefix:
   Usage: "&c用法: /friend prefix <玩家> <前缀>"
   Current: "&7%targetDisplayName &e目前的前缀是 '%prefix&e'"
   To: "&7%targetDisplayName &e的前缀已被更改为 '%prefix&e'"
+Requests:
+  Empty: "&7没有待处理的好友请求。"
+  Entry: "&e%name &7于 %time 发送了好友请求"
+Note:
+  Usage: "&c用法: /friend note <好友> [前缀|reset]"
+  MustBeFriends: "&c该玩家不在你的好友列表中。"
+  Current: "&e你的私有备注前缀: &f%prefix"
+  Updated: "&a已更新好友备注。"
+  Cleared: "&a已清除好友备注。"
+  Confirm: "&e输入 /friend note resetall confirm 清除全部备注。"
+  TooLong: "&c备注前缀不能超过 255 个字符。"
+Party-Mute:
+  Enabled: "&e%displayName 开启了队伍聊天静音。"
+  Disabled: "&e%displayName 关闭了队伍聊天静音。"
+  Muted-1: "&c队伍聊天已被静音。"
+Party-AllInvite:
+  Enabled: "&e%displayName 允许所有队员邀请玩家。"
+  Disabled: "&e%displayName 只允许队长邀请玩家。"
+  No-Invite-Permission: "&c只有队长可以邀请玩家。"
+Party-Private:
+  Enabled: "&e%displayName 开启了私有队伍模式。"
+  Disabled: "&e%displayName 关闭了私有队伍模式。"
+  No-Permission: "&c你无权修改私有队伍模式。"
+Party-Setting:
+  Usage: "&c用法: /party setting <allinvite|mute|private>"
 Toggle:
   Enabled: "&e你&a开启&e了好友请求接收功能."
   Disabled: "&e你&c关闭&e了好友请求接收功能."
+Status:
+  ActionBar:
+    Online: "&e%targetDisplayName &a当前在线"
+    Away: "&e%targetDisplayName &e当前离开"
+    Busy: "&e%targetDisplayName &c当前忙碌"
+    AppearOffline: "&e%targetDisplayName &7当前隐身"
+  ChatBar:
+    Online: "&e%targetDisplayName &a当前在线"
+    Away: "&e%targetDisplayName &e当前离开"
+    Busy: "&e%targetDisplayName &c当前忙碌"
+    AppearOffline: "&e%targetDisplayName &7当前隐身"
+Status-Command:
+  Usage: "&c用法：/status <online|away|busy|appear offline>"
+  Disabled: "&c状态功能已关闭。"
 Reload:
   Usage: "&cUsage: /friend reload <all|config|lang>"
   Config: "&aReloaded config.yml file."
@@ -127,6 +184,8 @@ Help:
   Help: "&e/friend help &7- &b显示此帮助"
   Lang: "&e/friend lang <语言> &7- &b更改显示语言"
   Add: "&e/friend add <玩家> &7- &b添加玩家为好友"
+  Requests: "&e/friend requests &7- &b查看待处理请求"
+  Note: "&e/friend note &7- &b设置私有好友备注"
   Remove: "&e/friend remove <玩家> &7- &b从好友列表中移除玩家"
   RemoveAll: "&e/friend removeall &7- &b删除你的所有好友"
   Accept: "&e/friend accept <玩家> &7- &b接受好友请求"
@@ -157,6 +216,7 @@ Chat:
   Channels:
     All: "&6全体"
     Party: "&6组队"
+    Staff: "&6员工"
 Invite:
   Usage: "&c无效指令! 用法: '/party invite <玩家>'"
   All-Left: "&e该组队被解散, 因为所有邀请已到期, 所有成员已离开."
@@ -183,6 +243,11 @@ Remove-Party:  #and Kick
 KickOffline:
   AllOnline: "&cThere are no offline players to remove."
 Warp:
+  Confirm: "&e有 %count% 名队员仍在游戏服务器（%servers%）。"
+  Confirm-Usage: "&e请在 %time% 秒内再次输入 /party warp 确认。"
+  Disabled: "&c组队传送已关闭。"
+  No-Server: "&c当前服务器不可用。"
+  Blocked: "&c此服务器不允许组队传送。"
   Summon: "&e队长 %displayName &e传送你到他所在的服务器."
   Sending: "&aSending you to %server%&a."
 Accept-Party:
@@ -199,6 +264,7 @@ Promote:
   Usage: "&c无效指令! '/party promote <player>'"
   Promoted: "%displayName &e将 %targetDisplayName &e提升为队长!"
 Hijack:
+  Failed: "&c无法接管该队伍。请先退出当前队伍。"
   Usage: "&c无效指令! /party hijack <player>"
   PlayerNotJoined: "&c该玩家没有组队."
   You: "&c你劫持了这个队伍."
@@ -208,6 +274,7 @@ Logout:
   Two: "&e五分钟后，随机一名队伍成员将成为队长."
   Become: "%displayName &e成为了队长."
 Help-Party:
+  Setting: "&e/party setting &7- &b修改队伍设置"
   Command: "&a组队命令:"
   Help: "&e/party help &7- &b显示此帮助"
   Lang: "&e/party lang &7- &b更改显示语言"

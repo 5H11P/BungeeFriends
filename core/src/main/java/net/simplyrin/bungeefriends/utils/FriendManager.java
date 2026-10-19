@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.cacheddata.CachedMetaData;
@@ -85,6 +86,11 @@ public class FriendManager {
 			return this.getPrefix() + this.getName();
 		}
 
+		public String getDisplayNameFor(UUID viewer) {
+			String personal = plugin.getFriendCustomPrefix(viewer, this.uuid);
+			return (personal == null || personal.isEmpty() ? this.getPrefix() : personal) + this.getName();
+		}
+
 		public String getPrefixColor() {
 			String prefix = this.getPrefix();
 			if (prefix.length() >= 2) {
@@ -122,7 +128,8 @@ public class FriendManager {
 				String prefix = null;
 				if (player == null) {
 					try {
-						prefix = api.getUserManager().loadUser(this.uuid).get().getCachedData().getMetaData().getPrefix();
+						prefix = api.getUserManager().loadUser(this.uuid).get(3, TimeUnit.SECONDS)
+								.getCachedData().getMetaData().getPrefix();
 					} catch (Exception e) {
 						// e.printStackTrace();
 					}
@@ -203,7 +210,9 @@ public class FriendManager {
 
 			ProxiedPlayer player = this.getPlayer();
 			if (player != null) {
-				if (this.getPlayer().hasPermission("friends.limit." + this.getFriends().size()) && !this.getPlayer().hasPermission(Permissions.ADMIN)) {
+				if (this.getPlayer().hasPermission("friends.limit." + this.getFriends().size())
+						&& !this.getPlayer().hasPermission(Permissions.ADMIN)
+						&& !this.getPlayer().hasPermission(Permissions.LIMIT_BYPASS)) {
 					throw new FriendSlotLimitException();
 				}
 			}
@@ -222,8 +231,7 @@ public class FriendManager {
 			if (requests.contains(uuid.toString())) {
 				throw new FailedAddingException();
 			}
-			requests.add(uuid.toString());
-			plugin.set("Player." + this.uuid.toString() + ".Requests", requests);
+			plugin.changeFriendRequest(this.uuid, uuid, true);
 			return this;
 		}
 
@@ -236,8 +244,8 @@ public class FriendManager {
 			if (!requests.contains(uuid.toString())) {
 				throw new NotAddedException();
 			}
-			requests.remove(uuid.toString());
-			plugin.set("Player." + this.uuid.toString() + ".Requests", requests);
+			plugin.changeFriendRequest(this.uuid, uuid, false);
+			plugin.cancelExpiry("friend:" + this.uuid + ":" + uuid);
 			return this;
 		}
 
@@ -258,6 +266,7 @@ public class FriendManager {
 		}
 
 		public FriendUtils add(UUID uuid) throws AlreadyAddedException, FailedAddingException {
+			synchronized (FriendManager.this) {
 			if (this.uuid.toString().equals(uuid.toString())) {
 				throw new FailedAddingException();
 			}
@@ -266,19 +275,26 @@ public class FriendManager {
 			if (list.contains(uuid.toString())) {
 				throw new AlreadyAddedException();
 			}
-			list.add(uuid.toString());
-			plugin.set("Player." + this.uuid.toString() + ".Friends", list);
-
 			FriendUtils targetFriends = plugin.getFriendManager().getPlayer(uuid);
 			List<String> targetList = targetFriends.getFriends();
 			if (targetList.contains(this.uuid.toString())) {
 				throw new AlreadyAddedException();
 			}
+			list.add(uuid.toString());
 			targetList.add(this.uuid.toString());
-			plugin.set("Player." + uuid.toString() + ".Friends", targetList);
-
-			plugin.getConfigManager().save();
+			if (plugin.isEnabledMySQL()) plugin.getMySQLManager().getEditor().changeFriendship(this.uuid, uuid, true);
+			else {
+				synchronized (plugin.getDataManager()) {
+				plugin.set("Player." + this.uuid.toString() + ".Friends", list);
+				plugin.set("Player." + uuid.toString() + ".Friends", targetList);
+				String since = String.valueOf(System.currentTimeMillis());
+				plugin.set("Player." + this.uuid + ".FriendSince." + uuid, since);
+				plugin.set("Player." + uuid + ".FriendSince." + this.uuid, since);
+				plugin.getDataManager().save();
+				}
+			}
 			return this;
+			}
 		}
 
 		public FriendUtils remove(ProxiedPlayer player) throws NotAddedException, SelfException {
@@ -286,6 +302,7 @@ public class FriendManager {
 		}
 
 		public FriendUtils remove(UUID uuid) throws NotAddedException, SelfException {
+			synchronized (FriendManager.this) {
 			if (this.uuid.toString().equals(uuid.toString())) {
 				throw new SelfException();
 			}
@@ -294,19 +311,25 @@ public class FriendManager {
 			if (!list.contains(uuid.toString())) {
 				throw new NotAddedException();
 			}
-			list.remove(uuid.toString());
-			plugin.set("Player." + this.uuid.toString() + ".Friends", list);
-
 			FriendUtils targetFriends = plugin.getFriendManager().getPlayer(uuid);
 			List<String> targetList = targetFriends.getFriends();
 			if (!targetList.contains(this.uuid.toString())) {
 				throw new NotAddedException();
 			}
+			list.remove(uuid.toString());
 			targetList.remove(this.uuid.toString());
-			plugin.set("Player." + uuid.toString() + ".Friends", targetList);
-
-			plugin.getConfigManager().save();
+			if (plugin.isEnabledMySQL()) plugin.getMySQLManager().getEditor().changeFriendship(this.uuid, uuid, false);
+			else {
+				synchronized (plugin.getDataManager()) {
+				plugin.set("Player." + this.uuid.toString() + ".Friends", list);
+				plugin.set("Player." + uuid.toString() + ".Friends", targetList);
+					plugin.getDataManager().getConfig().set("Player." + this.uuid + ".FriendSince." + uuid, null);
+					plugin.getDataManager().getConfig().set("Player." + uuid + ".FriendSince." + this.uuid, null);
+					plugin.getDataManager().save();
+				}
+			}
 			return this;
+			}
 		}
 
 		public List<String> getIgnoreList() {

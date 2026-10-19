@@ -15,6 +15,8 @@ Hyphen: "&9&m---------------------------------------------"
 
 # Exceptions
 Exceptions:
+  Party-Full: "&cThe party is full."
+  Too-Many-Invites: "&cYou can have at most 5 pending party invitations."
   AlreadySent: "&cYou've already sent a friend request to this person!"
   AlreadyFriend: "&cYou're already friends with this person!"
   Ignored: "&cThat player has added you to their ignored players list!"
@@ -89,6 +91,10 @@ List:
     One: "&eYou don't have any friends yet!"
     Two: "&eAdd some with /friend add <player>"
   Online: "&e%targetDisplayName &eis in a %server Server."
+  Status:
+    Away: "&e%targetDisplayName &eis away &7- &e%server"
+    Busy: "&e%targetDisplayName &cis busy &7- &e%server"
+    AppearOffline: "&e%targetDisplayName &7is offline"
   Offline: "&e%targetDisplayName &cis currently offline"
   Page: "&6Friends (Page %%currentPage%% of %%maxPage%%)"
   Party-List: "&aParty members (%size):"
@@ -98,6 +104,7 @@ Lang:
   Available: "&bCurrently available languages:"
   Update: "&aSelected language: &e%lang&a!"
   Updater:
+    Disabled: "&cOnly the bundled English and Chinese languages are supported."
     LastUpdate: "&aLast update: %data"
     Usage: "&cInvalid usage! '/friend lang update <language>'"
     NeedCheck: "&cYou need check available languages list! (/friend lang update)"
@@ -120,6 +127,18 @@ Ignore:
   Removed: "&aRemoved %targetDisplayName &afrom your ignore list."
   NotAdded: "&cYou aren't ignoring that player! &b/ignore add Player &cto ignore!"
 
+Block:
+  Command: "&aBlock commands:"
+  add: "&e/block add <player> &7- &bBlock a player"
+  help: "&e/block help &7- &bShow commands"
+  list: "&e/block list [page] &7- &bList blocked players"
+  remove: "&e/block remove <player> &7- &bUnblock a player"
+  removeall: "&e/block removeall &7- &bUnblock everyone"
+  List-Page: "&6Blocked players (page %%currentPage%% of %%maxPage%%)"
+  List-Format: "&d%index. &e%targetDisplayName"
+  RemoveAll-Done: "&aAll players have been unblocked."
+  Self: "&cYou cannot block yourself."
+
 Force-Add:
   Usage: "&cUsage: /friend force-add <player>"
   YourSelf: "&aYou are now friends with %targetDisplayName &c&l[FORCE]"
@@ -129,10 +148,50 @@ Prefix:
   Usage: "&cUsage: /friend prefix <player> <prefix>"
   Current: "&7%targetDisplayName&e's currently prefix is '%prefix&e'"
   To: "&7%targetDisplayName&e's prefix has been changed to '%prefix&e'"
+Requests:
+  Empty: "&7No pending friend requests."
+  Entry: "&e%name &7sent a request at %time"
+Note:
+  Usage: "&cUsage: /friend note <friend> [prefix|reset]"
+  MustBeFriends: "&cThat player is not on your friends list."
+  Current: "&eYour note prefix: &f%prefix"
+  Updated: "&aFriend note updated."
+  Cleared: "&aFriend note cleared."
+  Confirm: "&eUse /friend note resetall confirm to clear all notes."
+  TooLong: "&cThe note prefix must be at most 255 characters."
+Party-Mute:
+  Enabled: "&e%displayName enabled party chat mute."
+  Disabled: "&e%displayName disabled party chat mute."
+  Muted-1: "&cParty chat is muted."
+Party-AllInvite:
+  Enabled: "&e%displayName enabled invitations for all members."
+  Disabled: "&e%displayName restricted invitations to the leader."
+  No-Invite-Permission: "&cOnly the party leader can invite players."
+Party-Private:
+  Enabled: "&e%displayName enabled private party mode."
+  Disabled: "&e%displayName disabled private party mode."
+  No-Permission: "&cYou cannot change private party mode."
+Party-Setting:
+  Usage: "&cUsage: /party setting <allinvite|mute|private>"
 
 Toggle:
   Enabled: "&eFriend Request Receipt: &aEnabled"
   Disabled: "&eFriend Request Receipt: &cDisabled"
+
+Status:
+  ActionBar:
+    Online: "&e%targetDisplayName &ais online"
+    Away: "&e%targetDisplayName &eis away"
+    Busy: "&e%targetDisplayName &cis busy"
+    AppearOffline: "&e%targetDisplayName &7is appearing offline"
+  ChatBar:
+    Online: "&e%targetDisplayName &ais online"
+    Away: "&e%targetDisplayName &eis away"
+    Busy: "&e%targetDisplayName &cis busy"
+    AppearOffline: "&e%targetDisplayName &7is appearing offline"
+Status-Command:
+  Usage: "&cUsage: /status <online|away|busy|appear offline>"
+  Disabled: "&cStatus is disabled."
 
 Reload:
   Usage: "&cUsage: /friend reload <all|config|lang>"
@@ -146,6 +205,8 @@ Help:
   Help: "&e/friend help &7- &bPrints this help message"
   Lang: "&e/friend lang &7- &bChange the displayed language"
   Add: "&e/friend add &7- &bAdd a player as a friend"
+  Requests: "&e/friend requests &7- &bList pending requests"
+  Note: "&e/friend note &7- &bSet a private friend prefix"
   Remove: "&e/friend remove &7- &bRemove a player from your friends"
   RemoveAll: "&e/friend removeall &7- &bRemove all your friends."
   Accept: "&e/friend accept &7- &bAccept a friend request"
@@ -179,6 +240,7 @@ Chat:
   Channels:
     All: "&6All"
     Party: "&6Party"
+    Staff: "&6Staff"
 
 Invite:
   Usage: "&cInvalid usage! '/party invite <player>'"
@@ -210,6 +272,11 @@ KickOffline:
   AllOnline: "&cThere are no offline players to remove."
 
 Warp:
+  Confirm: "&e%count% party members are on game servers (%servers%)."
+  Confirm-Usage: "&eType /party warp again within %time% seconds to confirm."
+  Disabled: "&cParty warp is disabled."
+  No-Server: "&cYour current server is unavailable."
+  Blocked: "&cParty warp is not available on this server."
   Summon: "&eThe party leader %displayName &esummoned you to their server."
   Sending: "&aSending you to %server%&a."
 
@@ -231,6 +298,7 @@ Promote:
   Promoted: "%displayName &ehas promoted %targetDisplayName &eto party leader!"
 
 Hijack:
+  Failed: "&cCould not take over this party. Leave your current party first."
   Usage: "&cInvalid usage! /party hijack <player>"
   PlayerNotJoined: "&cThis player has no party."
   You: "&cYou hijacked the party."
@@ -242,6 +310,7 @@ Logout:
   Become: "%displayName &ehas become the party leader."
 
 Help-Party:
+  Setting: "&e/party setting &7- &bChange party settings"
   Command: "&aParty Commands:"
   Help: "&e/party help &7- &bPrints this help message"
   Lang: "&e/party lang &7- &bChange the displayed language"

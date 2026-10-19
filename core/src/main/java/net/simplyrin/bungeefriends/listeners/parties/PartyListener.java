@@ -39,6 +39,7 @@ public class PartyListener implements Listener {
 	@EventHandler
 	public void onLogin(PostLoginEvent event) {
 		ProxiedPlayer player = event.getPlayer();
+		this.plugin.cancelExpiry("party-logout:" + player.getUniqueId());
 
 		this.plugin.getPartyManager().getPlayer(player);
 
@@ -60,6 +61,7 @@ public class PartyListener implements Listener {
 
 		ProxiedPlayer player = (ProxiedPlayer) event.getSender();
 
+		if (this.plugin.getChatCommand().isGlobalMessage(player.getUniqueId(), event.getMessage())) return;
 		Channel channel = this.plugin.getChatCommand().getChannels().get(player.getUniqueId());
 		if (channel == null) {
 			return;
@@ -68,6 +70,9 @@ public class PartyListener implements Listener {
 		if (channel.equals(Channel.PARTY)) {
 			PartyUtils myParties = this.plugin.getPartyManager().getPlayer(player);
 			if (!myParties.isJoinedParty()) {
+				event.setCancelled(true);
+				this.plugin.getChatCommand().getChannels().remove(player.getUniqueId());
+				this.plugin.info(player, this.plugin.getLanguageManager().getPlayer(player).getString("Chat.NeedInAParty"));
 				return;
 			}
 
@@ -135,6 +140,7 @@ public class PartyListener implements Listener {
 	@EventHandler
 	public void onDisconnect(PlayerDisconnectEvent event) {
 		ProxiedPlayer player = event.getPlayer();
+		this.plugin.getPartyWarpManager().cancelFor(player.getUniqueId());
 		PartyUtils myParties = this.plugin.getPartyManager().getPlayer(player);
 
 		if (myParties == null) {
@@ -165,19 +171,21 @@ public class PartyListener implements Listener {
 				this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString(Messages.HYPHEN));
 			}
 
-			try {
-				TimeUnit.MINUTES.sleep(5);
-				// TimeUnit.SECONDS.sleep(5);
-			} catch (Exception e) {
-			}
+		});
+		this.plugin.scheduleExpiry("party-logout:" + myParties.getUniqueId(), () -> {
 
-			if (myParties.getPlayer() != null) {
+			if (myParties.getPlayer() != null || !myParties.getUniqueId().toString().equals(myParties.getCurrentlyJoinedParty())) {
 				return;
 			}
 
-			if (myParties.getOnlinePlayers() >= 2) {
-				String uniqueId = myParties.getParties().get(0);
-				myParties.getParties().remove(0);
+			String uniqueId = null;
+			for (String memberId : myParties.getParties()) {
+				if (this.plugin.getProxy().getPlayer(UUID.fromString(memberId)) != null) {
+					uniqueId = memberId;
+					break;
+				}
+			}
+			if (uniqueId != null) {
 
 				try {
 					myParties.promote(UUID.fromString(uniqueId));
@@ -207,12 +215,10 @@ public class PartyListener implements Listener {
 					this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString("Disband.Disbanded").replace("%displayName", myParties.getDisplayName()));
 					this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString(Messages.HYPHEN));
 
-					this.plugin.set("Parties." + targetPlayer.getUniqueId() + ".Currently-Joined-Party", "NONE");
-					this.plugin.set("Parties." + targetPlayer.getUniqueId() + ".Party-List", new ArrayList<>());
-					this.plugin.set("Parties." + targetPlayer.getUniqueId() + ".Requests", new ArrayList<>());
 				}
+				myParties.disband();
 			}
-		});
+		}, 5, TimeUnit.MINUTES);
 	}
 
 	@EventHandler
@@ -228,30 +234,23 @@ public class PartyListener implements Listener {
 			return;
 		}
 
-		String serverName = player.getServer().getInfo().getName().toLowerCase();
-		if (serverName == null || serverName.equals("")) {
+		if (player.getServer() == null || player.getServer().getInfo() == null) return;
+		String serverName = player.getServer().getInfo().getName();
+		if (serverName == null || serverName.isEmpty()) {
 			return;
 		}
-		if (serverName.contains(this.plugin.getString("Plugin.Bypass-Lobby-Name-Contains").toLowerCase())) {
+		String lobbyFilter = this.plugin.getString("Plugin.Bypass-Lobby-Name-Contains");
+		if (lobbyFilter != null && !lobbyFilter.isEmpty()
+				&& serverName.toLowerCase(java.util.Locale.ROOT).contains(lobbyFilter.toLowerCase(java.util.Locale.ROOT))) {
 			return;
 		}
+		if (this.plugin.isPartyWarpBlocked(serverName)) return;
 
 		if (this.plugin.getBoolean("Plugin.Disable-PartyWarp")) {
 			return;
 		}
 
-		List<String> parties = partyUtils.getParties();
-		for (String partyPlayerUniqueId : parties) {
-			ProxiedPlayer targetPlayer = this.plugin.getProxy().getPlayer(UUID.fromString(partyPlayerUniqueId));
-			if (targetPlayer != null) {
-				LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(targetPlayer);
-
-				String name = this.plugin.getServerName(player.getServer().getInfo().getName());
-
-				this.plugin.info(targetPlayer, targetLangUtils.getString("Warp.Sending").replace("%server%", name));
-				targetPlayer.connect(player.getServer().getInfo());
-			}
-		}
+		this.plugin.getPartyWarpManager().startWarp(player, partyUtils, false);
 	}
 
 }

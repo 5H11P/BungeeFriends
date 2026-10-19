@@ -143,6 +143,15 @@ public class PartyCommand extends Command {
 						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 						return;
 					}
+					try {
+						if (!myParties.isPartyOwner()) {
+							this.plugin.info(player, langUtils.getString("Disband.Must-Leader"));
+							return;
+						}
+					} catch (NotJoinedException e) {
+						this.plugin.info(player, langUtils.getString(e.getMessage()));
+						return;
+					}
 
 					UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[1]);
 					if (target == null) {
@@ -251,7 +260,7 @@ public class PartyCommand extends Command {
 			}
 
 			if (args[0].equalsIgnoreCase("hijack")) {
-				if (!player.hasPermission(Permissions.ADMIN)) {
+				if (!player.hasPermission(Permissions.ADMIN) && !player.hasPermission(Permissions.PARTY_HIJACK)) {
 					this.plugin.info(player, langUtils.getString(Messages.NO_PERMISSION));
 					return;
 				}
@@ -280,7 +289,12 @@ public class PartyCommand extends Command {
 						return;
 					}
 
-					targetParty.hijack(player);
+					try {
+						targetParty.hijack(player);
+					} catch (IllegalStateException e) {
+						this.plugin.info(player, langUtils.getString("Hijack.Failed"));
+						return;
+					}
 
 					for (String partyPlayerUniqueId : targetParty.getParties()) {
 						PartyUtils targetPlayer = this.plugin.getPartyManager().getPlayer(partyPlayerUniqueId);
@@ -305,6 +319,10 @@ public class PartyCommand extends Command {
 			}
 
 			if (args[0].equalsIgnoreCase("warp")) {
+				if (this.plugin.getBoolean("Plugin.Disable-PartyWarp")) {
+					this.plugin.info(player, langUtils.getString("Warp.Disabled"));
+					return;
+				}
 				try {
 					if (!myParties.isPartyOwner()) {
 						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
@@ -318,23 +336,26 @@ public class PartyCommand extends Command {
 					this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 					return;
 				}
+				if (player.getServer() == null || player.getServer().getInfo() == null) {
+					this.plugin.info(player, langUtils.getString("Warp.No-Server"));
+					return;
+				}
+				String destination = player.getServer().getInfo().getName();
+				if (destination == null || destination.isEmpty()) {
+					this.plugin.info(player, langUtils.getString("Warp.No-Server"));
+					return;
+				}
+				if (this.plugin.isPartyWarpBlocked(destination)) {
+					this.plugin.info(player, langUtils.getString("Warp.Blocked"));
+					return;
+				}
+				if (!this.plugin.getPartyWarpManager().confirmOrPrompt(player, myParties, langUtils)) return;
 
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 				this.plugin.info(player, langUtils.getString("Warp.Summon").replace("%displayName", myParties.getDisplayName()));
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 
-				for (String partyPlayerUniqueId : myParties.getParties()) {
-					ProxiedPlayer targetPlayer = this.plugin.getProxy().getPlayer(UUID.fromString(partyPlayerUniqueId));
-					if (targetPlayer != null) {
-						targetPlayer.connect(myParties.getPlayer().getServer().getInfo());
-
-						LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(targetPlayer);
-
-						this.plugin.info(targetPlayer, targetLangUtils.getString(Messages.HYPHEN));
-						this.plugin.info(targetPlayer, targetLangUtils.getString("Warp.Summon").replace("%displayName", myParties.getDisplayName()));
-						this.plugin.info(targetPlayer, targetLangUtils.getString(Messages.HYPHEN));
-					}
-				}
+				this.plugin.getPartyWarpManager().startWarp(player, myParties, true);
 				return;
 			}
 
@@ -348,13 +369,27 @@ public class PartyCommand extends Command {
 						return;
 					}
 					PartyUtils targetParties = this.plugin.getPartyManager().getPlayer(target);
-
+					String sent = this.plugin.getPartyRequestCreatedAt(target, player.getUniqueId());
+					long sentAt;
+					try { sentAt = Long.parseLong(sent); } catch (NumberFormatException e) { sentAt = 0; }
+					boolean validLeader;
+					try { validLeader = targetParties.isPartyOwner(); }
+					catch (NotJoinedException e) { validLeader = false; }
+					if (!validLeader || !targetParties.getRequests().contains(player.getUniqueId().toString())
+							|| sentAt <= 0 || System.currentTimeMillis() - sentAt > TimeUnit.MINUTES.toMillis(1)) {
+						if (targetParties.getRequests().contains(player.getUniqueId().toString())) {
+							try { targetParties.removeRequest(player); } catch (NotInvitedException ignored) { }
+						}
+						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+						this.plugin.info(player, langUtils.getString("Exceptions.Havent-Received-Invite"));
+						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+						return;
+					}
 					try {
+						targetParties.add(player);
 						targetParties.removeRequest(player);
-					} catch (NotInvitedException e) {
-						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+					} catch (Exception e) {
 						this.plugin.info(player, langUtils.getString(e.getMessage()));
-						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 						return;
 					}
 
@@ -362,7 +397,7 @@ public class PartyCommand extends Command {
 					this.plugin.info(player, langUtils.getString("Accept-Party.You-Joined").replace("%targetDisplayName", targetParties.getDisplayName()));
 					this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 
-					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(targetParties.getPlayer());
+					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(targetParties.getUniqueId());
 
 					this.plugin.info(targetParties.getPlayer(), targetLangUtils.getString(Messages.HYPHEN));
 					this.plugin.info(targetParties.getPlayer(), targetLangUtils.getString("Accept-Party.Joined").replace("%displayName", myParties.getDisplayName()));
@@ -370,25 +405,49 @@ public class PartyCommand extends Command {
 
 					for (String partyPlayerUniqueId : targetParties.getParties()) {
 						PartyUtils targetPlayer = this.plugin.getPartyManager().getPlayer(partyPlayerUniqueId);
-						targetLangUtils = this.plugin.getLanguageManager().getPlayer(targetPlayer.getPlayer());
+						targetLangUtils = this.plugin.getLanguageManager().getPlayer(targetPlayer.getUniqueId());
 
 						this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString(Messages.HYPHEN));
 						this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString("Accept-Party.Joined").replace("%displayName", myParties.getDisplayName()));
 						this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString(Messages.HYPHEN));
 					}
 
-					try {
-						targetParties.add(player);
-					} catch (Exception e) {
-						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-						this.plugin.info(player, langUtils.getString(e.getMessage()).replace("%targetDisplayName", targetParties.getDisplayName()));
-						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-					}
 					return;
 				}
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 				this.plugin.info(player, langUtils.getString("Accept-Party.Usage"));
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				return;
+			}
+
+			if (args[0].equalsIgnoreCase("setting")) {
+				if (args.length != 2 || !(args[1].equalsIgnoreCase("allinvite")
+						|| args[1].equalsIgnoreCase("mute") || args[1].equalsIgnoreCase("private"))) {
+					this.plugin.info(player, langUtils.getString("Party-Setting.Usage"));
+					return;
+				}
+				try {
+					if (!myParties.isPartyOwner()) {
+						this.plugin.info(player, langUtils.getString("Disband.Must-Leader"));
+						return;
+					}
+				} catch (NotJoinedException e) {
+					this.plugin.info(player, langUtils.getString(e.getMessage()));
+					return;
+				}
+				if (args[1].equalsIgnoreCase("private") && !player.hasPermission(Permissions.PARTY_PRIVATE)
+						&& !player.hasPermission(Permissions.ADMIN)) {
+					this.plugin.info(player, langUtils.getString("Party-Private.No-Permission"));
+					return;
+				}
+				String field = args[1].equalsIgnoreCase("allinvite") ? "AllInvite"
+						: args[1].equalsIgnoreCase("mute") ? "Mute" : "Private";
+				String key = "Parties." + myParties.getUniqueId() + "." + field;
+				boolean enabled = !this.plugin.getBoolean(key);
+				this.plugin.set(key, enabled);
+				if (!this.plugin.isEnabledMySQL()) this.plugin.getDataManager().save();
+				myParties.broadcast(langUtils.getString("Party-" + field + "." + (enabled ? "Enabled" : "Disabled"))
+						.replace("%displayName", myParties.getDisplayName()));
 				return;
 			}
 
@@ -435,12 +494,9 @@ public class PartyCommand extends Command {
 					this.plugin.info(targetPlayer.getUniqueId(), targetLangUtils.getString("Disband.Disbanded").replace("%displayName", myParties.getDisplayName()));
 					this.plugin.info(targetPlayer.getUniqueId(), targetLangUtils.getString(Messages.HYPHEN));
 
-					this.plugin.set("Parties." + targetPlayer.getUniqueId() + ".Currently-Joined-Party", "NONE");
-					this.plugin.set("Parties." + targetPlayer.getUniqueId() + ".Party-List", new ArrayList<>());
 				}
 
-				this.plugin.set("Parties." + myParties.getUniqueId() + ".Currently-Joined-Party", "NONE");
-				this.plugin.set("Parties." + myParties.getUniqueId() + ".Party-List", new ArrayList<>());
+				myParties.disband();
 				return;
 			}
 
@@ -565,7 +621,8 @@ public class PartyCommand extends Command {
 		this.plugin.info(player, langUtils.getString("Help-Party.Disband"));
 		this.plugin.info(player, langUtils.getString("Help-Party.Promote"));
 		this.plugin.info(player, langUtils.getString("Help-Party.KickOffline"));
-		if (player.hasPermission(Permissions.ADMIN)) {
+		this.plugin.info(player, langUtils.getString("Help-Party.Setting"));
+		if (player.hasPermission(Permissions.ADMIN) || player.hasPermission(Permissions.PARTY_HIJACK)) {
 			this.plugin.info(player, langUtils.getString("Help-Party.Hijack"));
 		}
 		this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
@@ -573,6 +630,16 @@ public class PartyCommand extends Command {
 
 	private void invite(ProxiedPlayer player, PartyUtils myParties, String args) {
 		LanguageUtils langUtils = this.plugin.getLanguageManager().getPlayer(player);
+		PartyUtils leader = myParties;
+		if (myParties.isJoinedParty()) {
+			try { leader = myParties.getPartyLeader(); } catch (NotJoinedException ignored) { }
+		}
+		if (!leader.getUniqueId().equals(player.getUniqueId())
+				&& !this.plugin.getBoolean("Parties." + leader.getUniqueId() + ".AllInvite")) {
+			this.plugin.info(player, langUtils.getString("Party-AllInvite.No-Invite-Permission"));
+			return;
+		}
+		final PartyUtils invitationParty = leader;
 
 		UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args);
 		if (target == null) {
@@ -584,16 +651,6 @@ public class PartyCommand extends Command {
 		PartyUtils targetParties = this.plugin.getPartyManager().getPlayer(target);
 		LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(target);
 
-		try {
-			if (!myParties.isPartyOwner()) {
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-				this.plugin.info(player, langUtils.getString("Disband.Must-Leader"));
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-				return;
-			}
-		} catch (NotJoinedException e) {
-		}
-
 		if (targetParties.getPlayer() == null) {
 			this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 			this.plugin.info(player, langUtils.getString("Tell-Command.Offline").replace("%targetDisplayName", targetParties.getDisplayName()));
@@ -602,7 +659,7 @@ public class PartyCommand extends Command {
 		}
 
 		try {
-			myParties.addRequest(target);
+			invitationParty.addRequest(target);
 		} catch (Exception e) {
 			this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 			this.plugin.info(player, langUtils.getString(e.getMessage()).replace("%targetDisplayName", targetParties.getDisplayName()));
@@ -611,40 +668,38 @@ public class PartyCommand extends Command {
 		}
 
 		this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-		this.plugin.info(player, langUtils.getString("Invite.Request.Sent.Invited").replace("%displayName", myParties.getDisplayName()).replace("%targetDisplayName", targetParties.getDisplayName()));
+		this.plugin.info(player, langUtils.getString("Invite.Request.Sent.Invited").replace("%displayName", invitationParty.getDisplayName()).replace("%targetDisplayName", targetParties.getDisplayName()));
 		this.plugin.info(player, langUtils.getString("Invite.Request.Sent.60-Seconds"));
 		this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 
-		for (String partyPlayerUniqueId : myParties.getParties()) {
+		for (String partyPlayerUniqueId : invitationParty.getParties()) {
 			UUID uniqueId = UUID.fromString(partyPlayerUniqueId);
 			LanguageUtils pLangUtils = this.plugin.getLanguageManager().getPlayer(uniqueId);
 			this.plugin.info(uniqueId, pLangUtils.getString(Messages.HYPHEN));
-			this.plugin.info(uniqueId, pLangUtils.getString("Invite.Request.Sent.Invited").replace("%displayName", myParties.getDisplayName()).replace("%targetDisplayName", targetParties.getDisplayName()));
+			this.plugin.info(uniqueId, pLangUtils.getString("Invite.Request.Sent.Invited").replace("%displayName", invitationParty.getDisplayName()).replace("%targetDisplayName", targetParties.getDisplayName()));
 			this.plugin.info(uniqueId, pLangUtils.getString(Messages.HYPHEN));
 		}
 
 		this.plugin.info(target, targetLangUtils.getString(Messages.HYPHEN));
-		this.plugin.info(target, targetLangUtils.getString("Invite.Request.Click-here.Receive").replace("%displayName", myParties.getDisplayName()));
+		this.plugin.info(target, targetLangUtils.getString("Invite.Request.Click-here.Receive").replace("%displayName", invitationParty.getDisplayName()));
 		if (targetParties.getPlayer() != null) {
 			TextComponent prefix = MessageBuilder.get(this.plugin.getPrefix());
 
 			String clickHere = targetLangUtils.getString("Invite.Request.Click-here.Here");
-			String clickToRun = targetLangUtils.getString("Invite.Request.Click-here.Command").replace("%name", player.getName());
+			String leaderName = this.plugin.getString("Parties." + invitationParty.getUniqueId() + ".Name");
+			String clickToRun = targetLangUtils.getString("Invite.Request.Click-here.Command").replace("%name", leaderName);
 
-			TextComponent invite = MessageBuilder.get(clickHere, "/party accept " + player.getName(), ChatColor.GOLD, clickToRun, false);
-			TextComponent message = MessageBuilder.get(targetLangUtils.getString("Invite.Request.Click-here.Accept"), "/party accept " + player.getName(), ChatColor.YELLOW, clickToRun, false);
+			TextComponent invite = MessageBuilder.get(clickHere, "/party accept " + leaderName, ChatColor.GOLD, clickToRun, false);
+			TextComponent message = MessageBuilder.get(targetLangUtils.getString("Invite.Request.Click-here.Accept"), "/party accept " + leaderName, ChatColor.YELLOW, clickToRun, false);
 			targetParties.getPlayer().sendMessage(prefix, invite, message);
 		}
 		this.plugin.info(target, targetLangUtils.getString(Messages.HYPHEN));
 
-		ThreadPool.run(() -> {
-			try {
-				TimeUnit.MINUTES.sleep(1);
-			} catch (Exception e) {
-			}
+		try {
+			this.plugin.scheduleExpiry("party:" + invitationParty.getUniqueId() + ":" + targetParties.getUniqueId(), () -> {
 
 			try {
-				myParties.removeRequest(target);
+				invitationParty.removeRequest(target);
 			} catch (NotInvitedException e) {
 				return;
 			}
@@ -653,16 +708,20 @@ public class PartyCommand extends Command {
 			plugin.info(player, langUtils.getString("Invite.Request.Expired.Your-Self").replace("%targetDisplayName", targetParties.getDisplayName()));
 			plugin.info(player, langUtils.getString(Messages.HYPHEN));
 
-			if (myParties.getParties().size() == 0) {
+			if (invitationParty.getParties().size() == 0) {
 				plugin.info(player, langUtils.getString(Messages.HYPHEN));
 				plugin.info(player, langUtils.getString("Invite.All-Left"));
 				plugin.info(player, langUtils.getString(Messages.HYPHEN));
 			}
 
 			plugin.info(target, targetLangUtils.getString(Messages.HYPHEN));
-			plugin.info(target, targetLangUtils.getString("Invite.Request.Expired.Target").replace("%displayName", myParties.getDisplayName()));
+			plugin.info(target, targetLangUtils.getString("Invite.Request.Expired.Target").replace("%displayName", invitationParty.getDisplayName()));
 			plugin.info(target, targetLangUtils.getString(Messages.HYPHEN));
-		});
+			}, 1, TimeUnit.MINUTES);
+		} catch (IllegalStateException rejected) {
+			try { invitationParty.removeRequest(target); } catch (NotInvitedException ignored) { }
+			throw rejected;
+		}
 	}
 
 }

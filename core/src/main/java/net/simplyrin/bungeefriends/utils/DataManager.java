@@ -2,12 +2,16 @@ package net.simplyrin.bungeefriends.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import com.google.common.base.Charsets;
 
 import lombok.Getter;
 import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
 import net.simplyrin.bungeefriends.Main;
 import net.simplyrin.bungeefriends.tools.Config;
 
@@ -43,7 +47,7 @@ public class DataManager {
 			} catch (IOException e) {
 			}
 			Config.saveConfig(manager.getConfig(), configF);
-			this.config = Config.getConfig(configF, Charsets.UTF_8);
+			this.config = loadData(configF);
 			this.config.set("Plugin", null);
 			this.config.set("BungeeParties", null);
 			this.config.set("UUID", null);
@@ -56,18 +60,32 @@ public class DataManager {
 			manager.save();
 		}
 
-		this.config = Config.getConfig(configF, Charsets.UTF_8);
+		this.config = loadData(configF);
 
-		for (String value : this.config.getSection("Parties").getKeys()) {
-			this.config.set("Parties." + value + ".Currently-Joined-Party", "NONE");
-			this.config.set("Parties." + value + ".Party-List", new ArrayList<>());
-		}
-		this.save();
 	}
 
-	public void save() {
-		File config = new File(this.plugin.getDataFolder(), "data.yml");
-		Config.saveConfig(this.config, config);
+	static Configuration loadData(File file) {
+		Configuration loaded = Config.getConfig(file, Charsets.UTF_8);
+		if (loaded == null) throw new IllegalStateException("Cannot load data.yml");
+		return loaded;
+	}
+
+	public synchronized void save() {
+		persist(this.config, new File(this.plugin.getDataFolder(), "data.yml"));
+	}
+
+	static void persist(Configuration data, File config) {
+		File temporary = new File(config.getParentFile(), config.getName() + ".tmp");
+		try {
+			ConfigurationProvider.getProvider(YamlConfiguration.class).save(data, temporary);
+			try {
+				Files.move(temporary.toPath(), config.toPath(), StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+			} catch (AtomicMoveNotSupportedException e) {
+				Files.move(temporary.toPath(), config.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			}
+		} catch (IOException e) {
+			throw new IllegalStateException("Cannot save data.yml", e);
+		}
 	}
 
 }

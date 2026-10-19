@@ -10,7 +10,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 import net.simplyrin.bungeefriends.Main;
 import net.simplyrin.bungeefriends.tools.Config;
-import net.simplyrin.bungeefriends.tools.ThreadPool;
 
 /**
  * Created by SimplyRin on 2018/08/29.
@@ -26,6 +25,7 @@ public class LanguageManager {
 	private HashMap<String, Configuration> configMap;
 
 	private Configuration latestEnglishConfig;
+	private Configuration latestChineseConfig;
 
 	private HashMap<String, String> localLangMap = new HashMap<>();
 
@@ -43,11 +43,12 @@ public class LanguageManager {
 			languageFolder.mkdir();
 		}
 
-		ThreadPool.run(() -> {
+		{
 			this.plugin.info("Copying language files from plugin.");
 
 			try {
 				this.latestEnglishConfig = Config.getConfig(this.getClass().getResourceAsStream("/English.yml"));
+				this.latestChineseConfig = Config.getConfig(this.getClass().getResourceAsStream("/Chinese.yml"));
 			} catch (Exception e) {
 				e.printStackTrace();
 				this.plugin.info("Failed loadgin file from plugin.");
@@ -72,7 +73,7 @@ public class LanguageManager {
 					this.plugin.info("&aCopied the " + lang + " language.");
 				}
 			}
-		});
+		}
 	}
 
 	public LanguageUtils getPlayer(ProxiedPlayer player) {
@@ -112,12 +113,15 @@ public class LanguageManager {
 				} else {
 					key = key.substring(0, 1).toUpperCase() + key.substring(1, key.length());
 				}
+				if (!"Chinese".equalsIgnoreCase(key) && !"English".equalsIgnoreCase(key)) key = "English";
 				localLangMap.put("Player." + this.uuid.toString() + ".Language", key);
 			}
 			return localLangMap.get("Player." + this.uuid.toString() + ".Language");
 		}
 
 		public void setLanguage(String key) {
+			if (!"Chinese".equalsIgnoreCase(key) && !"English".equalsIgnoreCase(key))
+				throw new IllegalArgumentException("Unsupported language: " + key);
 			localLangMap.put("Player." + this.uuid.toString() + ".Language", key);
 			plugin.set("Player." + this.uuid.toString() + ".Language", key);
 		}
@@ -136,13 +140,15 @@ public class LanguageManager {
 
 			if (config == null) {
 				File file = new File(this.getLanguagesFolder(), this.getLanguage().toLowerCase() + ".yml");
-				configMap.put(this.getLanguage().toLowerCase(), Config.getConfig(file, Charsets.UTF_8));
+				configMap.put(this.getLanguage().toLowerCase(), file.exists() ? Config.getConfig(file, Charsets.UTF_8) : latestEnglishConfig);
 			}
 
 			String result = configMap.get(this.getLanguage().toLowerCase()).getString(configKey);
 			if (result == null || result.equals("")) {
 				try {
-					String value = latestEnglishConfig.getString(configKey);
+					Configuration bundled = "Chinese".equalsIgnoreCase(this.getLanguage()) ? latestChineseConfig : latestEnglishConfig;
+					String value = bundled.getString(configKey);
+					if (value == null || value.isEmpty()) value = latestEnglishConfig.getString(configKey);
 					return value;
 				} catch (Exception e) {
 					plugin.info("&cAn error occured! You need remove 'english.yml' or set '" + configKey + "'!");

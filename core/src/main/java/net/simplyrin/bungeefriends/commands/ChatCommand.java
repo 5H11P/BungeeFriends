@@ -1,7 +1,9 @@
 package net.simplyrin.bungeefriends.commands;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 import lombok.Getter;
 import net.md_5.bungee.api.CommandSender;
@@ -23,7 +25,27 @@ public class ChatCommand extends Command {
 
 	private Main plugin;
 	@Getter
-	private HashMap<UUID, Channel> channels = new HashMap<>();
+	private Map<UUID, Channel> channels = new ConcurrentHashMap<>();
+	private final Map<UUID, GlobalMessage> globalMessages = new ConcurrentHashMap<>();
+
+	private static final class GlobalMessage {
+		final String text;
+		final long expiresAt;
+		GlobalMessage(String text, long expiresAt) { this.text = text; this.expiresAt = expiresAt; }
+	}
+
+	public void sendGlobal(ProxiedPlayer player, String message) {
+		GlobalMessage marker = new GlobalMessage(message, System.currentTimeMillis() + 2000);
+		globalMessages.put(player.getUniqueId(), marker);
+		plugin.getProxy().getScheduler().schedule(plugin,
+				() -> globalMessages.remove(player.getUniqueId(), marker), 2, TimeUnit.SECONDS);
+		player.chat(message);
+	}
+
+	public boolean isGlobalMessage(UUID player, String text) {
+		GlobalMessage marker = globalMessages.get(player);
+		return marker != null && marker.expiresAt >= System.currentTimeMillis() && marker.text.equals(text);
+	}
 
 	public ChatCommand(Main plugin, String cmd) {
 		super(cmd, null);
@@ -53,13 +75,19 @@ public class ChatCommand extends Command {
 				return;
 			}
 			if (args[0].equalsIgnoreCase("party") || args[0].equalsIgnoreCase("p")) {
+				if (this.plugin.getPartyManager() == null
+						|| !this.plugin.getPartyManager().getPlayer(player).isJoinedParty()) {
+					this.plugin.info(player, langUtils.getString("Chat.NeedInAParty"));
+					return;
+				}
 				this.channels.put(player.getUniqueId(), Channel.PARTY);
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 				this.plugin.info(player, langUtils.getString("Chat.Update").replace("%CHANNEL%", langUtils.getString("Chat.Channels.Party")));
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 				return;
 			}
-			if (args[0].equalsIgnoreCase("staff") || args[0].equalsIgnoreCase("s") && player.hasPermission(Permissions.ADMIN)) {
+			if ((args[0].equalsIgnoreCase("staff") || args[0].equalsIgnoreCase("s"))
+					&& (player.hasPermission(Permissions.STAFF_CHAT) || player.hasPermission(Permissions.ADMIN))) {
 				this.channels.put(player.getUniqueId(), Channel.STAFF);
 				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 				this.plugin.info(player, langUtils.getString("Chat.Update").replace("%CHANNEL%", langUtils.getString("Chat.Channels.Staff")));

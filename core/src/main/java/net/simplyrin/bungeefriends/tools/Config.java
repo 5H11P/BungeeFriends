@@ -61,8 +61,8 @@ public class Config {
 	}
 
 	public static Configuration getConfig(File file, Charset charset) {
-		try {
-			return getProvider().load(new InputStreamReader(new FileInputStream(file), charset));
+		try (InputStreamReader reader = new InputStreamReader(new FileInputStream(file), charset)) {
+			return getProvider().load(reader);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
