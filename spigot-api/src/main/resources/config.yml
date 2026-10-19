@@ -1,0 +1,2 @@
+# Commands must be allowed on both the proxy and the destination server.
+allowed-commands: []
