@@ -12,6 +12,8 @@ public class StatusManagerTest {
 	public void parsesStatusAliasesAndRejectsExtraArguments() {
 		assertEquals(Status.APPEAR_OFFLINE, Status.fromArgs(new String[] {"appear", "offline"}));
 		assertEquals(Status.APPEAR_OFFLINE, Status.fromArgs(new String[] {"appear-offline"}));
+		assertEquals(Status.APPEAR_OFFLINE, Status.fromArgs(new String[] {"offline"}));
+		assertEquals(Status.APPEAR_OFFLINE, Status.fromArgs(new String[] {"appearoffline"}));
 		assertEquals(Status.BUSY, Status.fromArgs(new String[] {"BUSY"}));
 		assertNull(Status.fromArgs(new String[] {"online", "unexpected"}));
 		assertNull(Status.fromArgs(new String[] {"appear"}));

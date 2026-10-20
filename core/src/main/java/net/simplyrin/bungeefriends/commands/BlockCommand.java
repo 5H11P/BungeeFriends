@@ -103,9 +103,18 @@ public class BlockCommand extends Command implements TabExecutor {
 	@Override
 	public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
 		List<String> matches = new ArrayList<>();
-		if (plugin.getBoolean("Plugin.Disable-TabComplete") || args.length != 1) return matches;
-		for (String choice : new String[] {"add", "help", "list", "remove", "removeall"})
-			if (choice.startsWith(args[0].toLowerCase(Locale.ROOT))) matches.add(choice);
+		if (plugin.getBoolean("Plugin.Disable-TabComplete") || args == null || args.length == 0) return matches;
+		String input = args[args.length - 1].toLowerCase(Locale.ROOT);
+		if (args.length == 1) {
+			for (String choice : new String[] {"add", "help", "list", "remove", "removeall"})
+				if (choice.startsWith(input)) matches.add(choice);
+		} else if (args.length == 2 && (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove"))
+				&& sender instanceof ProxiedPlayer && !input.isEmpty() && ((ProxiedPlayer) sender).getServer() != null) {
+			String server = ((ProxiedPlayer) sender).getServer().getInfo().getName();
+			for (ProxiedPlayer player : plugin.getProxy().getPlayers())
+				if (player.getServer() != null && player.getServer().getInfo().getName().equals(server)
+						&& player.getName().toLowerCase(Locale.ROOT).startsWith(input)) matches.add(player.getName());
+		}
 		return matches;
 	}
 }

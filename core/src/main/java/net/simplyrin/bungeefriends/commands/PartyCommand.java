@@ -10,6 +10,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.TabExecutor;
 import net.simplyrin.bungeefriends.Main;
 import net.simplyrin.bungeefriends.exceptions.parties.NotInvitedException;
 import net.simplyrin.bungeefriends.exceptions.parties.NotJoinedException;
@@ -27,13 +28,46 @@ import net.simplyrin.bungeefriends.utils.PartyManager.PartyUtils;
  * license: LGPL v3
  * copyright: Copyright (c) 2021 SimplyRin
  */
-public class PartyCommand extends Command {
+public class PartyCommand extends Command implements TabExecutor {
 
 	private Main plugin;
 
 	public PartyCommand(Main plugin) {
 		super("party", null, "p");
 		this.plugin = plugin;
+	}
+
+	@Override
+	public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
+		List<String> matches = new ArrayList<>();
+		if (plugin.getBoolean("Plugin.Disable-TabComplete") || args == null || args.length == 0) return matches;
+		String input = args[args.length - 1] == null ? "" : args[args.length - 1].toLowerCase(java.util.Locale.ROOT);
+		if (args.length == 1) {
+			for (String command : new String[] {"invite", "leave", "list", "remove", "kick", "promote", "disband", "accept", "hijack", "setting", "warp", "toggle", "chat", "kickoffline", "help"})
+				if (command.startsWith(input) && (!command.equals("hijack") || sender.hasPermission(Permissions.ADMIN) || sender.hasPermission(Permissions.PARTY_HIJACK))) matches.add(command);
+			if (!matches.isEmpty() || input.isEmpty()) return matches;
+			return playerMatches(sender, input);
+		}
+		String command = args[0].toLowerCase(java.util.Locale.ROOT);
+		if (command.equals("setting") && args.length == 2) {
+			for (String option : new String[] {"allinvite", "mute", "private", "help"})
+				if (option.startsWith(input) && (!option.equals("private") || sender.hasPermission(Permissions.ADMIN) || sender.hasPermission(Permissions.PARTY_PRIVATE))) matches.add(option);
+		} else if (args.length == 2 && (command.equals("invite") || command.equals("remove") || command.equals("kick")
+				|| command.equals("promote") || command.equals("accept") || command.equals("hijack"))) {
+			if (command.equals("hijack") && !sender.hasPermission(Permissions.ADMIN) && !sender.hasPermission(Permissions.PARTY_HIJACK)) return matches;
+			return playerMatches(sender, input);
+		}
+		return matches;
+	}
+
+	private List<String> playerMatches(CommandSender sender, String input) {
+		List<String> matches = new ArrayList<>();
+		if (!(sender instanceof ProxiedPlayer) || input.isEmpty() || ((ProxiedPlayer) sender).getServer() == null) return matches;
+		String server = ((ProxiedPlayer) sender).getServer().getInfo().getName();
+		for (ProxiedPlayer player : plugin.getProxy().getPlayers())
+			if (player.getServer() != null && player.getServer().getInfo().getName().equals(server)
+					&& player.getName().toLowerCase(java.util.Locale.ROOT).startsWith(input)) matches.add(player.getName());
+		return matches;
 	}
 
 	@Override

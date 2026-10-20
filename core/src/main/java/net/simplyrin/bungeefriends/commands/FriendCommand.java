@@ -5,9 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -56,52 +54,62 @@ public class FriendCommand extends Command implements TabExecutor {
 		this.plugin = plugin;
 	}
 
-	private Map<String, String> previousCommand = new HashMap<>();
-	private Map<String, Integer> previousLength = new HashMap<>();
-
 	@Override
 	public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
 		List<String> list = new ArrayList<>();
-		if (this.plugin.getBoolean("Plugin.Disable-TabComplete")) {
-			return list;
-		}
-
-		String name = args[args.length - 1];
-		// System.out.println(args.length + ": " + name);
+		if (this.plugin.getBoolean("Plugin.Disable-TabComplete") || args == null || args.length == 0) return list;
+		String input = args[args.length - 1] == null ? "" : args[args.length - 1].toLowerCase(Locale.ROOT);
 		if (args.length == 1) {
-			list.addAll(Arrays.asList("add", "remove", "accept", "deny", "requests", "note", "lang", "language", "toggle", "help"));
+			String[] commands = {"add", "remove", "removeall", "accept", "deny", "requests", "note", "list", "lang", "language", "ignore", "toggle", "help"};
+			for (String command : commands) addIfMatches(list, command, input);
+			if (sender.hasPermission(Permissions.FORCE_ADD) || sender.hasPermission(Permissions.ADMIN)) addIfMatches(list, "force-add", input);
 			if (sender.hasPermission(Permissions.ADMIN)) {
-				list.addAll(Arrays.asList("force-add", "prefix", "reload"));
-			} else if (sender.hasPermission(Permissions.FORCE_ADD)) {
-				list.add("force-add");
+				addIfMatches(list, "prefix", input);
+				addIfMatches(list, "reload", input);
 			}
+			if (!list.isEmpty() || input.isEmpty()) return list;
+			return playerMatches(sender, input);
 		}
-
-		if (args.length >= 2) {
-			if (this.previousLength != null
-					&& this.previousLength.get(sender.getName()) != null
-					&& this.previousLength.get(sender.getName()) == 1
-					&& this.previousCommand != null
-					&& this.previousCommand.get(sender.getName()) != null
-					&& (this.previousCommand.get(sender.getName()).equalsIgnoreCase("lang")
-							|| this.previousCommand.get(sender.getName()).equalsIgnoreCase("language"))) {
-				list.addAll(Arrays.asList("english", "chinese"));
-			}
-		}
-
-		if (name != null) {
-			for (ProxiedPlayer player : this.plugin.getProxy().getPlayers()) {
-				if (player.getName().toLowerCase().startsWith(name.toLowerCase())) {
-					list.add(player.getName());
-				}
-			}
-		}
-
-		if (args.length < 2) {
-			this.previousLength.put(sender.getName(), args.length);
-			this.previousCommand.put(sender.getName(), name);
+		String command = args[0].toLowerCase(Locale.ROOT);
+		if ((command.equals("lang") || command.equals("language")) && args.length == 2) {
+			addIfMatches(list, "english", input);
+			addIfMatches(list, "chinese", input);
+		} else if (command.equals("reload") && args.length == 2 && sender.hasPermission(Permissions.ADMIN)) {
+			for (String option : new String[] {"all", "config", "lang"}) addIfMatches(list, option, input);
+		} else if (command.equals("removeall") && args.length == 2) {
+			addIfMatches(list, "confirm", input);
+		} else if (command.equals("ignore") && args.length == 2) {
+			for (String option : new String[] {"add", "remove", "list"}) addIfMatches(list, option, input);
+		} else if (command.equals("ignore") && args.length == 3
+				&& (args[1].equalsIgnoreCase("add") || args[1].equalsIgnoreCase("remove"))) {
+			return playerMatches(sender, input);
+		} else if (command.equals("note") && args.length == 2) {
+			return playerMatches(sender, input);
+		} else if (command.equals("note") && args.length == 3) {
+			addIfMatches(list, "reset", input);
+			addIfMatches(list, "confirm", input);
+		} else if (args.length == 2 && (command.equals("add") || command.equals("remove") || command.equals("accept")
+				|| command.equals("deny") || command.equals("force-add") || command.equals("prefix"))) {
+			return playerMatches(sender, input);
 		}
 		return list;
+	}
+
+	private void addIfMatches(List<String> list, String value, String input) {
+		if (value.startsWith(input)) list.add(value);
+	}
+
+	private List<String> playerMatches(CommandSender sender, String input) {
+		List<String> matches = new ArrayList<>();
+		if (!(sender instanceof ProxiedPlayer) || input.isEmpty()) return matches;
+		ProxiedPlayer source = (ProxiedPlayer) sender;
+		if (source.getServer() == null) return matches;
+		String server = source.getServer().getInfo().getName();
+		for (ProxiedPlayer player : this.plugin.getProxy().getPlayers()) {
+			if (player.getServer() != null && player.getServer().getInfo().getName().equals(server)
+					&& player.getName().toLowerCase(Locale.ROOT).startsWith(input)) matches.add(player.getName());
+		}
+		return matches;
 	}
 
 	@Override

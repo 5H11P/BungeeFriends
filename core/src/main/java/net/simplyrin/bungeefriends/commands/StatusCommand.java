@@ -92,7 +92,7 @@ public class StatusCommand extends Command implements TabExecutor {
 	public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
 		List<String> matches = new ArrayList<>();
 		if (plugin.getBoolean("Plugin.Disable-TabComplete")) return matches;
-		String[] choices = args.length == 1 ? new String[] {"online", "away", "busy", "appear", "appearoffline"}
+		String[] choices = args.length == 1 ? new String[] {"online", "away", "busy", "offline", "appear", "appear-offline", "appearoffline"}
 				: args.length == 2 && "appear".equalsIgnoreCase(args[0]) ? new String[] {"offline"} : new String[0];
 		String input = args.length == 0 ? "" : args[args.length - 1].toLowerCase(java.util.Locale.ROOT);
 		for (String choice : choices) if (choice.startsWith(input)) matches.add(choice);
