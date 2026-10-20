@@ -377,12 +377,14 @@ public class FriendManager {
 		}
 
 		public FriendUtils addIgnore(UUID uuid) throws AlreadyAddedException {
-			List<String> ignoreList = plugin.getStringList("Player." + this.uuid.toString() + ".IgnoreList");
-			if (ignoreList.contains(uuid.toString())) {
-				throw new AlreadyAddedException();
+			synchronized (plugin.getDataManager()) {
+				if (this.uuid.equals(uuid)) throw new IllegalArgumentException("A player cannot ignore themselves");
+				List<String> ignoreList = plugin.getStringList("Player." + this.uuid.toString() + ".IgnoreList");
+				if (ignoreList.contains(uuid.toString())) throw new AlreadyAddedException();
+				ignoreList.add(uuid.toString());
+				plugin.set("Player." + this.uuid.toString() + ".IgnoreList", ignoreList);
+				if (!plugin.isEnabledMySQL()) plugin.getDataManager().save();
 			}
-			ignoreList.add(uuid.toString());
-			plugin.set("Player." + this.uuid.toString() + ".IgnoreList", ignoreList);
 			return this;
 		}
 
@@ -391,12 +393,13 @@ public class FriendManager {
 		}
 
 		public FriendUtils removeIgnore(UUID uuid) throws NotAddedException {
-			List<String> ignoreList = plugin.getStringList("Player." + this.uuid.toString() + ".IgnoreList");
-			if (!ignoreList.contains(uuid.toString())) {
-				throw new NotAddedException();
+			synchronized (plugin.getDataManager()) {
+				List<String> ignoreList = plugin.getStringList("Player." + this.uuid.toString() + ".IgnoreList");
+				if (!ignoreList.contains(uuid.toString())) throw new NotAddedException();
+				ignoreList.remove(uuid.toString());
+				plugin.set("Player." + this.uuid.toString() + ".IgnoreList", ignoreList);
+				if (!plugin.isEnabledMySQL()) plugin.getDataManager().save();
 			}
-			ignoreList.remove(uuid.toString());
-			plugin.set("Player." + this.uuid.toString() + ".IgnoreList", ignoreList);
 			return this;
 		}
 

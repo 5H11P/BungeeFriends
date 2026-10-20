@@ -66,7 +66,10 @@ public class BlockCommand extends Command implements TabExecutor {
 			return;
 		}
 		if ("removeall".equals(action)) {
-			plugin.set("Player." + player.getUniqueId() + ".IgnoreList", new ArrayList<String>());
+			synchronized (plugin.getDataManager()) {
+				plugin.set("Player." + player.getUniqueId() + ".IgnoreList", new ArrayList<String>());
+				if (!plugin.isEnabledMySQL()) plugin.getDataManager().save();
+			}
 			plugin.info(player, language.getString("Block.RemoveAll-Done"));
 			return;
 		}

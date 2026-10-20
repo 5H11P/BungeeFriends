@@ -68,6 +68,13 @@ public class EventListener implements Listener {
 				}
 			}
 		}
+		for (UUID requester : this.plugin.getPendingFriendRequesters(player.getUniqueId())) {
+			FriendUtils requesterFriends = this.plugin.getFriendManager().getPlayer(requester);
+			String createdAt = this.plugin.getFriendRequestCreatedAt(requester, player.getUniqueId());
+			this.plugin.info(player, this.plugin.getLanguageManager().getPlayer(player).getString("Requests.Entry")
+					.replace("%name", requesterFriends.getDisplayNameFor(player.getUniqueId()))
+					.replace("%time", createdAt == null || createdAt.isEmpty() ? "?" : createdAt));
+		}
 	}
 
 	@EventHandler
@@ -147,6 +154,11 @@ public class EventListener implements Listener {
 		String uniqueId = player.getUniqueId().toString();
 
 		String server = player.getServer().getInfo().getName();
+		if (this.plugin.getBoolean("Plugin.Enable-Status")
+				&& this.plugin.getStringList("Plugin.PartyWarp.Game-Servers").stream().anyMatch(server::equalsIgnoreCase)
+				&& this.plugin.getStatusManager().getStatus(player.getUniqueId()) != net.simplyrin.bungeefriends.utils.StatusManager.Status.ONLINE) {
+			this.plugin.getStatusManager().setStatus(player.getUniqueId(), net.simplyrin.bungeefriends.utils.StatusManager.Status.ONLINE);
+		}
 		String previousServer = this.previousServer.get(uniqueId);
 
 		if (previousServer == null) {

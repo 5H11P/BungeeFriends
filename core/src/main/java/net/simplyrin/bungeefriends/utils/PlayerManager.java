@@ -3,6 +3,8 @@ package net.simplyrin.bungeefriends.utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.Locale;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import com.google.common.base.Charsets;
 
@@ -58,12 +60,13 @@ public class PlayerManager implements Listener {
 	}
 
 	public UUID getPlayerUniqueId(String name) {
-		UUID uuid = null;
-		try {
-			uuid = UUID.fromString(this.plugin.getString("Name." + name.toLowerCase()));
-		} catch (Exception e) {
-		}
-		return uuid;
+		if (name == null || name.trim().isEmpty()) return null;
+		String candidate = name.trim();
+		try { return UUID.fromString(candidate); } catch (IllegalArgumentException ignored) { }
+		for (ProxiedPlayer player : this.plugin.getProxy().getPlayers())
+			if (player.getName().equalsIgnoreCase(candidate)) return player.getUniqueId();
+		String value = this.plugin.getString("Name." + candidate.toLowerCase(Locale.ROOT));
+		try { return value == null ? null : UUID.fromString(value); } catch (IllegalArgumentException ignored) { return null; }
 	}
 
 	public String getPlayerName(UUID uuid) {

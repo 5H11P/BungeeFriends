@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -47,7 +48,7 @@ public class FriendCommand extends Command implements TabExecutor {
 
 	private Main plugin;
 	@Getter
-	private List<String> availableLanguages = Collections.unmodifiableList(Arrays.asList("English", "Chinese"));
+	private List<String> availableLanguages = new CopyOnWriteArrayList<>(Arrays.asList("English", "Chinese"));
 
 	public FriendCommand(Main plugin, String command) {
 		super(command, null);

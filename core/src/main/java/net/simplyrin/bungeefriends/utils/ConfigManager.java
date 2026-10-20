@@ -50,7 +50,7 @@ public class ConfigManager {
 		this.ensureFeatureDefaults();
 		this.save();
 
-		this.plugin.reloadCommandAliases();
+		this.plugin.reloadPartyFeatures();
 		this.plugin.reloadPartyCmdSender();
 		this.plugin.getPriority().update();
 	}

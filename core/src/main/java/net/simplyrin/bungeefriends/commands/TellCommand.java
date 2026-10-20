@@ -14,6 +14,7 @@ import net.simplyrin.bungeefriends.messages.Permissions;
 import net.simplyrin.bungeefriends.tools.ThreadPool;
 import net.simplyrin.bungeefriends.utils.FriendManager.FriendUtils;
 import net.simplyrin.bungeefriends.utils.LanguageManager.LanguageUtils;
+import net.simplyrin.bungeefriends.utils.ReplyTargetUtils;
 
 /**
  * Created by SimplyRin on 2018/09/14.
@@ -111,7 +112,7 @@ public class TellCommand extends Command implements TabExecutor {
 				this.plugin.info(player, langUtils.getString("Tell-Command.YourSelf").replace("%targetDisplayName", targetFriends.getDisplayName()).replace("%message", message));
 				this.plugin.info(targetFriends.getPlayer(), targetLangUtils.getString("Tell-Command.Target").replace("%displayName", myFriends.getDisplayName()).replace("%message", message));
 
-				this.plugin.getReplyTargetMap().put(targetFriends.getUniqueId(), player.getUniqueId());
+				ReplyTargetUtils.recordConversation(this.plugin.getReplyTargetMap(), player.getUniqueId(), targetFriends.getUniqueId());
 				return;
 			}
 		}

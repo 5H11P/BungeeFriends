@@ -20,6 +20,7 @@ import net.simplyrin.bungeefriends.messages.Messages;
 import net.simplyrin.bungeefriends.tools.ThreadPool;
 import net.simplyrin.bungeefriends.utils.LanguageManager.LanguageUtils;
 import net.simplyrin.bungeefriends.utils.PartyManager.PartyUtils;
+import net.simplyrin.bungeefriends.utils.PartyCommandMatcher;
 
 /**
  * Created by SimplyRin on 2018/07/31.
@@ -98,7 +99,8 @@ public class PartyListener implements Listener {
 
 	@EventHandler
 	public void partyCmdSender(ChatEvent event) {
-		if (!event.isCommand()) {
+		if (!event.isCommand() || this.plugin.getBoolean("Plugin.Disable-PartyCmdSender")
+				|| !(event.getSender() instanceof ProxiedPlayer)) {
 			return;
 		}
 
@@ -110,8 +112,8 @@ public class PartyListener implements Listener {
 			String key = entry.getKey();
 			String value = entry.getValue();
 
-			if (cmd.startsWith(key)) {
-				String gameId = cmd.replace(key, "").trim();
+			String gameId = PartyCommandMatcher.arguments(cmd, key);
+			if (gameId != null) {
 				String memberSend = value.replace("$args", gameId);
 
 				ProxiedPlayer player = (ProxiedPlayer) event.getSender();

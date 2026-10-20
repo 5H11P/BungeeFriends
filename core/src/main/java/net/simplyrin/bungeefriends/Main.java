@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import org.bstats.bungeecord.Metrics;
@@ -80,6 +81,8 @@ public class Main extends Plugin {
 	private PartyCommand partyCommand;
 	private ChatCommand chatCommand;
 	private PartyChatCommand partyChatCommand;
+	private PartyChatCommand partyPChatCommand;
+	private PartyChatCommand partyChatAliasCommand;
 	private StatusCommand statusCommand;
 	private BlockCommand blockCommand;
 	private BlockCommand ignoreCommand;
@@ -124,30 +127,15 @@ public class Main extends Plugin {
 		this.friendConsoleCommand = new FriendConsoleCommand(this, "friendconsole");
 		this.getProxy().getPluginManager().registerCommand(this, this.friendConsoleCommand);
 
-		this.reloadCommandAliases();
 		this.statusCommand = new StatusCommand(this);
 		this.getProxy().getPluginManager().registerCommand(this, this.statusCommand);
 
-		if (this.configManager.getConfig().getBoolean("Plugin.Enable-BungeeParties")) {
-			this.partyManager = new PartyManager(this);
-
-			this.getProxy().getPluginManager().registerCommand(this, new PartyChatCommand(this, "pchat"));
-			this.getProxy().getPluginManager().registerCommand(this, new PartyChatCommand(this, "partychat"));
-
-			this.partyCommand = new PartyCommand(this);
-			this.getProxy().getPluginManager().registerCommand(this, this.partyCommand);
-
-			this.partyListener = new PartyListener(this);
-			this.getProxy().getPluginManager().registerListener(this, this.partyListener);
-
-			this.chatCommand = new ChatCommand(this, "chat");
-			this.getProxy().getPluginManager().registerCommand(this, this.chatCommand);
-		}
+		this.reloadPartyFeatures();
 
 		this.eventListener = new EventListener(this);
 		this.getProxy().getPluginManager().registerListener(this, this.eventListener);
 
-		this.replyTargetMap = new HashMap<>();
+		this.replyTargetMap = new ConcurrentHashMap<>();
 		this.isEnabledMySQL = this.mySQLManager.getConfig().getBoolean("Enable");
 
 		if (this.getProxy().getPluginManager().getPlugin("LuckPerms") != null
@@ -222,7 +210,17 @@ public class Main extends Plugin {
 		this.allChatCommand = null;
 		this.acCommand = null;
 		this.partyListCommand = null;
+		if (this.partyChatCommand != null) this.getProxy().getPluginManager().unregisterCommand(this.partyChatCommand);
+		if (this.partyPChatCommand != null) this.getProxy().getPluginManager().unregisterCommand(this.partyPChatCommand);
+		if (this.partyChatAliasCommand != null) this.getProxy().getPluginManager().unregisterCommand(this.partyChatAliasCommand);
+		this.partyChatCommand = null;
+		this.partyPChatCommand = null;
+		this.partyChatAliasCommand = null;
 		if (this.configManager.getConfig().getBoolean("Plugin.Enable-BungeeParties")) {
+			this.partyPChatCommand = new PartyChatCommand(this, "pchat");
+			this.partyChatAliasCommand = new PartyChatCommand(this, "partychat");
+			this.getProxy().getPluginManager().registerCommand(this, this.partyPChatCommand);
+			this.getProxy().getPluginManager().registerCommand(this, this.partyChatAliasCommand);
 			if (!this.configManager.getConfig().getBoolean("Plugin.Disable-Aliases./achat")) {
 				this.allChatCommand = new AllChatCommand(this, "achat");
 				this.getProxy().getPluginManager().registerCommand(this, this.allChatCommand);
@@ -325,10 +323,38 @@ public class Main extends Plugin {
 		this.languageManager = new LanguageManager(this);
 	}
 
-	private HashMap<String, String> partyCmdSenderMap = new HashMap<>();
+	public void reloadPartyFeatures() {
+		if (!this.configManager.getConfig().getBoolean("Plugin.Enable-BungeeParties")) {
+			if (this.partyCommand != null) this.getProxy().getPluginManager().unregisterCommand(this.partyCommand);
+			if (this.chatCommand != null) this.getProxy().getPluginManager().unregisterCommand(this.chatCommand);
+			if (this.partyListener != null) this.getProxy().getPluginManager().unregisterListener(this.partyListener);
+			this.partyCommand = null;
+			this.chatCommand = null;
+			this.partyListener = null;
+			this.partyManager = null;
+			this.reloadCommandAliases();
+			return;
+		}
+		if (this.partyManager == null) this.partyManager = new PartyManager(this);
+		if (this.partyCommand == null) {
+			this.partyCommand = new PartyCommand(this);
+			this.getProxy().getPluginManager().registerCommand(this, this.partyCommand);
+		}
+		if (this.chatCommand == null) {
+			this.chatCommand = new ChatCommand(this, "chat");
+			this.getProxy().getPluginManager().registerCommand(this, this.chatCommand);
+		}
+		if (this.partyListener == null) {
+			this.partyListener = new PartyListener(this);
+			this.getProxy().getPluginManager().registerListener(this, this.partyListener);
+		}
+		this.reloadCommandAliases();
+	}
+
+	private volatile Map<String, String> partyCmdSenderMap = new ConcurrentHashMap<>();
 
 	public void reloadPartyCmdSender() {
-		this.partyCmdSenderMap.clear();
+		Map<String, String> mappings = new ConcurrentHashMap<>();
 
 		String base = "Plugin.BungeeParties.PartyCmdSender";
 		for (String key : this.getConfigManager().getConfig().getSection("Plugin.BungeeParties.PartyCmdSender").getKeys()) {
@@ -336,9 +362,10 @@ public class Main extends Plugin {
 			String member = this.getString(base + "." + key + ".Member");
 
 			if (!leader.equals("") && !member.equals("")) {
-				this.partyCmdSenderMap.put(leader, member);
+				mappings.put(leader, member);
 			}
 		}
+		this.partyCmdSenderMap = mappings;
 	}
 
 	public String getServerName(String serverName) {
@@ -591,7 +618,7 @@ public class Main extends Plugin {
 	}
 
 	public void info(String player, String args) {
-		if (args.equals("") || args == null) {
+		if (args == null || args.equals("")) {
 			return;
 		}
 		this.info(this.getProxy().getPlayer(player), args);
@@ -599,7 +626,7 @@ public class Main extends Plugin {
 
 	@SuppressWarnings("deprecation")
 	public void info(ProxiedPlayer player, String args) {
-		if (player == null || args.equals("") || args == null) {
+		if (player == null || args == null || args.equals("")) {
 			return;
 		}
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getPrefix() + args));
@@ -607,7 +634,7 @@ public class Main extends Plugin {
 
 	@SuppressWarnings("deprecation")
 	public void info(UUID uuid, String args) {
-		if (args.equals("") || args == null) {
+		if (uuid == null || args == null || args.equals("")) {
 			return;
 		}
 		ProxiedPlayer player = this.getProxy().getPlayer(uuid);
@@ -617,7 +644,7 @@ public class Main extends Plugin {
 	}
 
 	public void info(ProxiedPlayer player, TextComponent args) {
-		if (args.getText().equals("") || args == null) {
+		if (player == null || args == null || args.getText().equals("")) {
 			return;
 		}
 		player.sendMessage(MessageBuilder.get(this.getPrefix()), args);
