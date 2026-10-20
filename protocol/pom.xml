@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>net.simplyrin.bungeefriends</groupId>
+    <artifactId>BungeeFriends-parent</artifactId>
+    <version>2.4</version>
+  </parent>
+  <groupId>net.simplyrin.bungeefriends.api</groupId>
+  <artifactId>BungeeFriends-Protocol</artifactId>
+  <packaging>jar</packaging>
+  <name>BungeeFriends API Protocol</name>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <resources>
+      <resource><directory>src/main/resources</directory></resource>
+      <resource><directory>${project.basedir}/..</directory><includes><include>LICENSE.md</include></includes><filtering>false</filtering></resource>
+    </resources>
+  </build>
+</project>

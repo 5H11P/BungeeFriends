@@ -1,2 +1,61 @@
+# Build output
 **/target/
+**/build/
+**/out/
+**/dist/
+**/bin/
+
+# IDE metadata
+.idea/
+.vscode/
+.settings/
+.classpath
+.project
+*.iml
+*.iws
+*.ipr
+nbproject/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+# Maven generated files
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
 **/dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Logs and local runtime files
+*.log
+logs/
+run/
+captures/
+profiles/
+hs_err_pid*
+replay_pid*
+
+# Local tools and OS files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.DS_Store
+Thumbs.db
+
+# Local AI CLI state
+.codex/
+.claude/
+.gemini/
+.opencode/
+.qwen/
+.goose/
+.copilot/
+.aider/
+.aider.chat.history.md
+.aider.input.history
+.aider.llm.history
+.aider.tags.cache.*

@@ -1,6 +1,0 @@
-# Only commands listed here may be forwarded. Proxy and Spigot API allowlists must also allow their labels.
-commands: []
-# Example after enabling "say" on both API endpoints:
-# commands:
-#   - "say"
-#   - "bw join $args"

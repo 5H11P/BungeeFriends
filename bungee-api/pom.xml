@@ -8,13 +8,16 @@
   <dependencies>
     <dependency><groupId>junit</groupId><artifactId>junit</artifactId><version>4.13.2</version><scope>test</scope></dependency>
     <dependency><groupId>net.simplyrin.bungeefriends</groupId><artifactId>BungeeFriends</artifactId><version>${project.version}</version><scope>provided</scope></dependency>
+    <dependency><groupId>net.simplyrin.bungeefriends.api</groupId><artifactId>BungeeFriends-Protocol</artifactId><version>${project.version}</version><optional>true</optional></dependency>
     <dependency><groupId>net.md-5</groupId><artifactId>bungeecord-api</artifactId><version>1.15-SNAPSHOT</version><scope>provided</scope></dependency>
   </dependencies>
   <build><plugins><plugin>
-    <groupId>org.codehaus.mojo</groupId><artifactId>build-helper-maven-plugin</artifactId><version>3.0.0</version>
-    <executions><execution><id>shared-protocol</id><phase>generate-sources</phase><goals><goal>add-source</goal></goals>
-      <configuration><sources><source>${project.basedir}/../protocol/src/main/java</source></sources></configuration>
-    </execution></executions>
+    <groupId>org.apache.maven.plugins</groupId><artifactId>maven-shade-plugin</artifactId><version>3.1.0</version>
+    <configuration>
+      <createDependencyReducedPom>false</createDependencyReducedPom>
+      <artifactSet><includes><include>net.simplyrin.bungeefriends.api:BungeeFriends-Protocol</include></includes></artifactSet>
+    </configuration>
+    <executions><execution><phase>package</phase><goals><goal>shade</goal></goals></execution></executions>
   </plugin></plugins><resources>
     <resource><directory>src/main/resources</directory></resource>
     <resource><directory>${project.basedir}/..</directory><includes><include>LICENSE.md</include></includes><filtering>false</filtering></resource>

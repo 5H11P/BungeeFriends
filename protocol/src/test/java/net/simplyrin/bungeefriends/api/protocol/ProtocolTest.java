@@ -1,4 +1,4 @@
-package net.simplyrin.bungeefriends.api.bungee;
+package net.simplyrin.bungeefriends.api.protocol;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
