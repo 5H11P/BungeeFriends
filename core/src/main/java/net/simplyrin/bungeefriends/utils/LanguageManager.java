@@ -20,6 +20,7 @@ import net.simplyrin.bungeefriends.tools.Config;
  * copyright: Copyright (c) 2021 SimplyRin
  */
 public class LanguageManager {
+	private static final String BUNDLED_LANGUAGE_PATH = "/languages/";
 	private static final Map<String, String> LEGACY_KEYS = new HashMap<>();
 	static {
 		LEGACY_KEYS.put("Logout.Disband-When-Empty", "Logout.Three");
@@ -67,22 +68,22 @@ public class LanguageManager {
 			this.plugin.info("Copying language files from plugin.");
 
 			try {
-				this.latestEnglishConfig = Config.getConfig(this.getClass().getResourceAsStream("/English.yml"));
-				this.latestChineseConfig = Config.getConfig(this.getClass().getResourceAsStream("/Chinese.yml"));
+				this.latestEnglishConfig = Config.getConfig(this.getClass().getResourceAsStream(BUNDLED_LANGUAGE_PATH + "English.yml"));
+				this.latestChineseConfig = Config.getConfig(this.getClass().getResourceAsStream(BUNDLED_LANGUAGE_PATH + "Chinese.yml"));
 			} catch (Exception e) {
 				e.printStackTrace();
 				this.plugin.info("Failed loadgin file from plugin.");
 				return;
 			}
 
-			Configuration config = Config.getConfig(this.getClass().getResourceAsStream("/available.yml"));
+			Configuration config = Config.getConfig(this.getClass().getResourceAsStream(BUNDLED_LANGUAGE_PATH + "available.yml"));
 			for (String lang : config.getStringList("Langs")) {
 				File file = new File(languageFolder, lang.toLowerCase() + ".yml");
 				if (!file.exists()) {
 					this.plugin.info("&7" + lang + " found! Copying...");
 					Configuration langConfig;
 					try {
-						langConfig = Config.getConfig(this.getClass().getResourceAsStream("/" + lang + ".yml"));
+						langConfig = Config.getConfig(this.getClass().getResourceAsStream(BUNDLED_LANGUAGE_PATH + lang + ".yml"));
 					} catch (Exception e) {
 						return;
 					}

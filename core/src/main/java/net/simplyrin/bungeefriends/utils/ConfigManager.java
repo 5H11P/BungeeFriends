@@ -2,6 +2,8 @@ package net.simplyrin.bungeefriends.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +45,7 @@ public class ConfigManager {
 		if (this.plugin.getPartyWarpManager() != null) this.plugin.getPartyWarpManager().cancelAll();
 		File config = new File(this.plugin.getDataFolder(), "config.yml");
 		this.config = Config.getConfig(config, Charsets.UTF_8);
+		migrateBungeeParties(this.config);
 		this.ensureP4Defaults();
 		this.ensureFeatureDefaults();
 		this.save();
@@ -53,46 +56,9 @@ public class ConfigManager {
 	}
 
 	public void createConfig() {
-		File folder = this.plugin.getDataFolder();
-		if (!folder.exists()) {
-			folder.mkdir();
-		}
-
-		File config = new File(folder, "config.yml");
-		if (!config.exists()) {
-			try {
-				config.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			this.config = Config.getConfig(config, Charsets.UTF_8);
-
-			this.config.set("Plugin.Prefix", "&7[&cFriends&7] &r");
-
-			this.config.set("Plugin.Disable-Aliases./msg", false);
-			this.config.set("Plugin.Disable-Aliases./f", false);
-			this.config.set("Plugin.Disable-Aliases./r", false);
-			this.config.set("Plugin.Disable-Aliases./reply", false);
-			this.config.set("Plugin.Disable-Aliases./fl", false);
-			this.config.set("Plugin.Default-Language", "english");
-
-			/** this.config.set("Player.b0bb65a2-832f-4a5d-854e-873b7c4522ed.Name", "SimplyRin");
-			this.config.set("Player.b0bb65a2-832f-4a5d-854e-873b7c4522ed.Language", "english");
-			this.config.set("Player.b0bb65a2-832f-4a5d-854e-873b7c4522ed.Prefix", "&c[CREATOR] ");
-			this.config.set("Player.b0bb65a2-832f-4a5d-854e-873b7c4522ed.Toggle", true);
-			this.config.set("Player.b0bb65a2-832f-4a5d-854e-873b7c4522ed.Friends", (List<String>) Arrays.asList("64636120-8633-4541-aa5f-412b42ddb04d"));
-
-			this.config.set("Player.64636120-8633-4541-aa5f-412b42ddb04d.Name", "SimplyFoxy");
-			this.config.set("Player.64636120-8633-4541-aa5f-412b42ddb04d.Language", "english");
-			this.config.set("Player.64636120-8633-4541-aa5f-412b42ddb04d.Prefix", "&c[CREATOR] ");
-			this.config.set("Player.64636120-8633-4541-aa5f-412b42ddb04d.Toggle", true);
-			this.config.set("Player.64636120-8633-4541-aa5f-412b42ddb04d.Friends", (List<String>) Arrays.asList("b0bb65a2-832f-4a5d-854e-873b7c4522ed")); */
-
-			Config.saveConfig(this.config, config);
-		}
-
-		this.config = Config.getConfig(config, Charsets.UTF_8);
+		File config = new File(this.plugin.getDataFolder(), "config.yml");
+		this.config = loadOrCreateConfig(config);
+		migrateBungeeParties(this.config);
 
 		this.config.set("Plugin.Disable-Alias", null);
 
@@ -155,14 +121,29 @@ public class ConfigManager {
 		this.config.set("Plugin.Disable-Lang-Command", null);
 		this.config.set("Plugin.Use-LuckPerms-API", null);
 
-		if (this.config.getBoolean("BungeeParties.Enable")) {
-			this.config.set("Plugin.Enable-BungeeParties", true);
-			this.config.set("BungeeParties.Enable", null);
-		} else {
-			this.config.set("BungeeParties.Enable", null);
-		}
-
 		this.save();
+	}
+
+	static Configuration loadOrCreateConfig(File file) {
+		if (!file.exists()) {
+			try {
+				Files.createDirectories(file.toPath().getParent());
+				try (InputStream template = ConfigManager.class.getResourceAsStream("/config.yml")) {
+					if (template == null) throw new IllegalStateException("Bundled config.yml is missing");
+					Files.copy(template, file.toPath());
+				}
+			} catch (IOException e) {
+				throw new IllegalStateException("Cannot create " + file, e);
+			}
+		}
+		return Config.getConfig(file, Charsets.UTF_8);
+	}
+
+	static void migrateBungeeParties(Configuration config) {
+		if (config.contains("BungeeParties.Enable") && !config.contains("Plugin.Enable-BungeeParties")) {
+			config.set("Plugin.Enable-BungeeParties", config.getBoolean("BungeeParties.Enable"));
+		}
+		config.set("BungeeParties.Enable", null);
 	}
 
 	public void resetStringValue(String key, String value) {

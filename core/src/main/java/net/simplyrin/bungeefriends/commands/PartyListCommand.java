@@ -13,8 +13,17 @@ public class PartyListCommand extends Command {
 		this.plugin = plugin;
 	}
 
+	static boolean canDelegate(PartyCommand partyCommand) {
+		return partyCommand != null;
+	}
+
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		ThreadPool.run(() -> plugin.getPartyCommand().async(sender, new String[] {"list"}));
+		PartyCommand partyCommand = plugin.getPartyCommand();
+		if (!canDelegate(partyCommand)) {
+			plugin.getLogger().warning("Ignoring /pl because party support is not initialized");
+			return;
+		}
+		ThreadPool.run(() -> partyCommand.async(sender, new String[] {"list"}));
 	}
 }

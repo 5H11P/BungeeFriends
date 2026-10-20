@@ -91,7 +91,7 @@ write("config-key", scan_java(fork_root, config_pattern), scan_java(source_root,
 
 for name in ("English", "Chinese"):
     write("message-key-" + name.lower(),
-          language_keys(fork_root / f"src/main/resources/{name}.yml"),
+          language_keys(fork_root / f"src/main/resources/languages/{name}.yml"),
           language_keys(source_root / f"src/main/resources/{name}.yml"),
           lambda relation, key: "P4: migrate/check translation" if relation != "fork-only" else "P4: retain if still referenced", "compare locale keys and render message")
 

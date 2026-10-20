@@ -25,10 +25,11 @@
         <directory>src/main/resources</directory>
         <includes>
           <include>plugin.yml</include>
+          <include>config.yml</include>
           <include>LICENSE.md</include>
-          <include>available.yml</include>
-          <include>English.yml</include>
-          <include>Chinese.yml</include>
+          <include>languages/available.yml</include>
+          <include>languages/English.yml</include>
+          <include>languages/Chinese.yml</include>
         </includes>
       </resource>
       <resource>

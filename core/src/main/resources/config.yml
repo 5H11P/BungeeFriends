@@ -1,0 +1,75 @@
+Plugin:
+  Prefix: '&7[&cFriends&7] &r'
+  Default-Language: english
+  Disable-Aliases:
+    /msg: false
+    /tell: false
+    /message: false
+    /f: false
+    /r: false
+    /reply: false
+    /fl: false
+    /block: false
+    /ignore: false
+    /pc: false
+    /ac: false
+    /achat: false
+    /pl: false
+    /w: false
+    /whisper: false
+  Disable-ServerSwitchNotifer: false
+  Disable-PartyWarp: false
+  Disable-LuckPerms-API: false
+  Disable-Hyphen: false
+  Disable-TabComplete: false
+  Disable-PartyCmdSender: false
+  Enable-BungeeParties: false
+  Enable-Status: true
+  Enable-NoPartyWarp-Servers: true
+  NoPartyWarp-Servers: []
+  Enable-Deprecated-PrefixYml: false
+  FriendList-NoPrefix: false
+  Bypass-Lobby-Name-Contains: lobby
+  Party-Max-Size: '10'
+  Party-Disband-Delay-Minutes: 5
+  Party-Offline-Member-Kick-Delay-Minutes: 5
+  Notify-Removed-Friend: true
+  FriendList-Time:
+    Format: yyyy-MM-dd HH:mm:ss
+  LuckPerms:
+    OfflinePrefixCacheMinutes: 30
+    OfflinePrefixLoadTimeoutSeconds: 2
+  PartyWarp:
+    Enable-Confirmation: false
+    Confirm-Timeout: 10
+    Game-Servers: []
+    Initial-Delay: '0.5'
+    Member-Interval: '0.1'
+  ServerName:
+    1:
+      Type: startsWith
+      ServerName: lobby-
+      ReplaceName: Lobby
+    2:
+      Type: contains
+      ServerName: game
+      ReplaceName: Game
+    3:
+      Type: equalsIgnoreCase
+      ServerName: sw-1
+      ReplaceName: SkyWars
+  BungeeParties:
+    PartyCmdSender:
+      1:
+        Leader: /join
+        Member: '/join $args'
+      2:
+        Leader: /sw join
+        Member: '/sw join $args'
+  FriendList-Sort:
+    1:
+      NoColorPrefix: '[ADMIN]'
+      Priority: 1
+    2:
+      NoColorPrefix: '[MOD]'
+      Priority: 2

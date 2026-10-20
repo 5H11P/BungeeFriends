@@ -2,6 +2,7 @@ package net.simplyrin.bungeefriends.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -25,7 +26,7 @@ public class LanguageResourcesTest {
 	public void builtInLanguagesContainNewCommandMessages() throws java.io.IOException {
 		Set<String> englishKeys = null;
 		for (String language : Arrays.asList("English", "Chinese")) {
-			try (InputStream stream = getClass().getResourceAsStream("/" + language + ".yml")) {
+			try (InputStream stream = getClass().getResourceAsStream("/languages/" + language + ".yml")) {
 				Configuration config = Config.getConfig(stream);
 				for (String key : Arrays.asList("Block.Self", "Block.List-Format", "Block.RemoveAll-Done",
 						"Status-Command.Usage", "Status-Command.Disabled", "Status.ChatBar.Busy",
@@ -40,9 +41,12 @@ public class LanguageResourcesTest {
 				else assertEquals("Chinese and English message keys differ", englishKeys, keys);
 			}
 		}
-		try (InputStream stream = getClass().getResourceAsStream("/available.yml")) {
+		try (InputStream stream = getClass().getResourceAsStream("/languages/available.yml")) {
 			assertEquals(Arrays.asList("Chinese", "English"), Config.getConfig(stream).getStringList("Langs"));
 		}
+		assertNull(getClass().getResourceAsStream("/English.yml"));
+		assertNull(getClass().getResourceAsStream("/Chinese.yml"));
+		assertNull(getClass().getResourceAsStream("/languages/Arabic.yml"));
 	}
 
 	private void collectKeys(Configuration section, String prefix, Set<String> keys) {
@@ -56,8 +60,8 @@ public class LanguageResourcesTest {
 
 	@Test
 	public void newMessagesAndPlaceholdersMatchAcrossLanguages() {
-		Configuration english = Config.getConfig(getClass().getResourceAsStream("/English.yml"));
-		Configuration chinese = Config.getConfig(getClass().getResourceAsStream("/Chinese.yml"));
+		Configuration english = Config.getConfig(getClass().getResourceAsStream("/languages/English.yml"));
+		Configuration chinese = Config.getConfig(getClass().getResourceAsStream("/languages/Chinese.yml"));
 		for (String key : Arrays.asList("List.Hover-Online", "List.Hover-Offline", "List.Now", "List.None",
 				"List.Party-Header", "List.Party-Leader", "List.Party-Members", "List.Page",
 				"Pagination.Previous", "Pagination.Next", "Party-Mute.Restricted-Chat-Info",
@@ -101,7 +105,7 @@ public class LanguageResourcesTest {
 	@Test
 	public void fixedLanguageKeysUsedByCoreExist() throws Exception {
 		Configuration english;
-		try (InputStream stream = getClass().getResourceAsStream("/English.yml")) {
+		try (InputStream stream = getClass().getResourceAsStream("/languages/English.yml")) {
 			english = Config.getConfig(stream);
 		}
 		Path source = Files.exists(Paths.get("src/main/java")) ? Paths.get("src/main/java") : Paths.get("core/src/main/java");
