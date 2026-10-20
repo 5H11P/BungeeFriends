@@ -184,4 +184,36 @@ public class MySQLTest {
 			assertEquals("", editor.getPartyRequestCreatedAt(UUID.fromString(A), UUID.fromString(B)));
 		}
 	}
+
+	@Test
+	public void partyAcceptanceCommitsMembershipAndRequestRemovalTogether() throws Exception {
+		try (Connection db = open("party_accept_" + UUID.randomUUID().toString().replace("-", ""))) {
+			MySQL.Editor editor = new MySQL(db).connect();
+			editor.changePartyRequest(UUID.fromString(A), UUID.fromString(B), true);
+			editor.acceptPartyRequest(UUID.fromString(A), Arrays.asList(UUID.fromString(A), UUID.fromString(B)), UUID.fromString(B));
+			assertEquals(A, editor.get("Parties." + B + ".Currently-Joined-Party"));
+			assertEquals(Collections.singletonList(B), editor.getList("Parties." + A + ".Party-List"));
+			assertEquals(Collections.emptyList(), editor.getList("Parties." + A + ".Requests"));
+			assertEquals("", editor.getPartyRequestCreatedAt(UUID.fromString(A), UUID.fromString(B)));
+		}
+	}
+
+	@Test
+	public void partyAcceptanceRollsBackMembershipWhenRequestCommitFails() throws Exception {
+		try (Connection db = open("party_accept_rollback_" + UUID.randomUUID().toString().replace("-", ""))) {
+			MySQL.Editor editor = new MySQL(db).connect();
+			editor.changePartyRequest(UUID.fromString(A), UUID.fromString(B), true);
+			try (Statement st = db.createStatement()) {
+				st.executeUpdate("ALTER TABLE bungeefriends_party_members ADD CONSTRAINT reject_b CHECK (member_uuid <> '" + B + "')");
+			}
+			try {
+				editor.acceptPartyRequest(UUID.fromString(A), Arrays.asList(UUID.fromString(A), UUID.fromString(B)), UUID.fromString(B));
+				fail("Expected failed party acceptance");
+			} catch (IllegalStateException expected) {
+				assertTrue(expected.getCause() != null);
+			}
+			assertEquals("", editor.get("Parties." + A + ".Currently-Joined-Party"));
+			assertEquals(Collections.singletonList(B), editor.getList("Parties." + A + ".Requests"));
+		}
+	}
 }

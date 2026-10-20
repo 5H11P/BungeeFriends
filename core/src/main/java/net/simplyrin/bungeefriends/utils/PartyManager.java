@@ -48,6 +48,12 @@ public class PartyManager {
 			return;
 		}
 		synchronized (this.plugin.getDataManager()) {
+			this.updateMembersInMemory(leader, participants, detached);
+			this.plugin.getDataManager().save();
+		}
+	}
+
+	private void updateMembersInMemory(UUID leader, List<UUID> participants, List<UUID> detached) {
 		List<String> members = new ArrayList<>();
 		for (UUID player : participants) if (!player.equals(leader)) members.add(player.toString());
 		for (UUID player : participants) {
@@ -59,8 +65,6 @@ public class PartyManager {
 			String path = "Parties." + player + ".";
 			this.plugin.set(path + "Currently-Joined-Party", "NONE");
 			this.plugin.set(path + "Party-List", new ArrayList<>());
-		}
-		this.plugin.getDataManager().save();
 		}
 	}
 
@@ -79,7 +83,8 @@ public class PartyManager {
 		public PartyUtils(UUID uuid) {
 			this.uuid = uuid;
 
-			if (plugin.getString("Parties." + this.uuid.toString() + ".Name").equals("")) {
+			String existingName = plugin.getString("Parties." + this.uuid.toString() + ".Name");
+			if (existingName == null || existingName.isEmpty()) {
 				ProxiedPlayer player = plugin.getProxy().getPlayer(this.uuid);
 
 				if (player == null) return;
@@ -93,7 +98,7 @@ public class PartyManager {
 				plugin.set("Parties." + this.uuid.toString() + ".AllInvite", false);
 				plugin.set("Parties." + this.uuid.toString() + ".Mute", false);
 				plugin.set("Parties." + this.uuid.toString() + ".Private", false);
-				plugin.getPlayerManager().save();
+				if (!plugin.isEnabledMySQL()) plugin.getDataManager().save();
 			}
 		}
 
@@ -153,9 +158,7 @@ public class PartyManager {
 			detached.add(this.uuid);
 			for (String member : this.getParties()) detached.add(UUID.fromString(member));
 			updateMembers(this.uuid, Collections.emptyList(), detached);
-			for (String request : plugin.getStringList("Parties." + this.uuid + ".Requests"))
-				plugin.cancelExpiry("party:" + this.uuid + ":" + request);
-			plugin.set("Parties." + this.uuid + ".Requests", new ArrayList<>());
+			clearRequests();
 			plugin.set("Parties." + this.uuid + ".AllInvite", false);
 			plugin.set("Parties." + this.uuid + ".Mute", false);
 			plugin.set("Parties." + this.uuid + ".Private", false);
@@ -189,6 +192,94 @@ public class PartyManager {
 			String leader = this.getCurrentlyJoinedParty();
 			if ("NONE".equalsIgnoreCase(leader)) throw new NotJoinedException("Exceptions.Not-Joined");
 			return this.uuid.toString().equals(leader);
+		}
+
+		/**
+		 * Accept an invitation and commit the party/request transition together.
+		 * A player whose current party is NONE is a valid prospective leader.
+		 */
+		public void acceptRequest(UUID invited) throws NotInvitedException, AlreadyJoinedException, FailedAddingException {
+			synchronized (PartyManager.this) {
+				List<String> requests = plugin.getStringList("Parties." + this.uuid + ".Requests");
+				if (!requests.contains(invited.toString())) {
+					throw new NotInvitedException("Exceptions.Havent-Received-Invite");
+				}
+
+				String sent = plugin.getPartyRequestCreatedAt(this.uuid, invited);
+				long sentAt;
+				try { sentAt = Long.parseLong(sent); } catch (NumberFormatException e) { sentAt = 0; }
+				if (sentAt <= 0 || System.currentTimeMillis() - sentAt > 60_000L) {
+					removeRequestState(invited);
+					if (!plugin.isEnabledMySQL()) plugin.getDataManager().save();
+					throw new NotInvitedException("Exceptions.Havent-Received-Invite");
+				}
+
+				String current = this.getCurrentlyJoinedParty();
+				if (!isNone(current) && !this.uuid.toString().equals(current)) {
+					throw new FailedAddingException("Exceptions.Not-Joined");
+				}
+				List<String> currentMembers = this.getParties();
+				if (isNone(current) && !currentMembers.isEmpty()) {
+					throw new FailedAddingException("Exceptions.Not-Joined");
+				}
+				if (currentMembers.contains(invited.toString())) {
+					throw new AlreadyJoinedException("Exceptions.Already.In");
+				}
+				if (!isNone(plugin.getString("Parties." + invited + ".Currently-Joined-Party"))) {
+					throw new AlreadyJoinedException("Exceptions.Already.Joined");
+				}
+				if (currentMembers.size() + 1 >= PartyManager.this.maxSize()) {
+					throw new FailedAddingException("Exceptions.Party-Full");
+				}
+
+				List<UUID> participants = new ArrayList<>();
+				participants.add(this.uuid);
+				for (String member : currentMembers) participants.add(UUID.fromString(member));
+				participants.add(invited);
+
+				if (plugin.isEnabledMySQL()) {
+					plugin.getMySQLManager().getEditor().acceptPartyRequest(this.uuid, participants, invited);
+				} else {
+					synchronized (plugin.getDataManager()) {
+						updateMembersInMemory(this.uuid, participants, Collections.emptyList());
+						removeRequestState(invited);
+						plugin.getDataManager().save();
+					}
+				}
+			}
+		}
+
+		private boolean isNone(String value) {
+			return value == null || value.isEmpty() || "NONE".equalsIgnoreCase(value);
+		}
+
+		private void removeRequestState(UUID target) {
+			if (plugin.isEnabledMySQL()) {
+				plugin.changePartyRequest(this.uuid, target, false);
+				plugin.cancelExpiry("party:" + this.uuid + ":" + target);
+				return;
+			}
+			String path = "Parties." + this.uuid + ".";
+			List<String> requests = new ArrayList<>(plugin.getStringList(path + "Requests"));
+			requests.remove(target.toString());
+			plugin.getDataManager().getConfig().set(path + "Requests", requests);
+			plugin.getDataManager().getConfig().set(path + "RequestSentAt." + target, null);
+			plugin.cancelExpiry("party:" + this.uuid + ":" + target);
+		}
+
+		private void clearRequests() {
+			List<String> requests = new ArrayList<>(plugin.getStringList("Parties." + this.uuid + ".Requests"));
+			for (String request : requests) plugin.cancelExpiry("party:" + this.uuid + ":" + request);
+			if (plugin.isEnabledMySQL()) {
+				plugin.set("Parties." + this.uuid + ".Requests", new ArrayList<>());
+				return;
+			}
+			synchronized (plugin.getDataManager()) {
+				plugin.set("Parties." + this.uuid + ".Requests", new ArrayList<>());
+				for (String request : requests)
+					plugin.getDataManager().getConfig().set("Parties." + this.uuid + ".RequestSentAt." + request, null);
+				plugin.getDataManager().save();
+			}
 		}
 
 		public PartyUtils setEnabledReceiveRequest(boolean bool) {
@@ -235,9 +326,7 @@ public class PartyManager {
 			plugin.set("Parties." + this.uuid + ".AllInvite", false);
 			plugin.set("Parties." + this.uuid + ".Mute", false);
 			plugin.set("Parties." + this.uuid + ".Private", false);
-			for (String request : plugin.getStringList("Parties." + this.uuid + ".Requests"))
-				plugin.cancelExpiry("party:" + this.uuid + ":" + request);
-			plugin.set("Parties." + this.uuid + ".Requests", new ArrayList<>());
+			clearRequests();
 			if (!plugin.isEnabledMySQL()) plugin.getDataManager().save();
 			}
 		}
@@ -286,7 +375,7 @@ public class PartyManager {
 				throw new AlreadyJoinedException("Exceptions.Already.In");
 			}
 
-			if (!plugin.getString("Parties." + uuid.toString() + ".Currently-Joined-Party").equals("NONE")) {
+			if (!isNone(plugin.getString("Parties." + uuid.toString() + ".Currently-Joined-Party"))) {
 				throw new AlreadyJoinedException("Exceptions.Already.Joined");
 			}
 

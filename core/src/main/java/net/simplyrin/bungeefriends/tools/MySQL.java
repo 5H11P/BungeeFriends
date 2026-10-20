@@ -419,6 +419,27 @@ public class MySQL {
 			}
 		}
 
+		public synchronized void acceptPartyRequest(UUID leader, List<UUID> participants, UUID invited) {
+			if (!participants.contains(leader)) throw new IllegalArgumentException("Leader must be a participant");
+			Set<UUID> active = new LinkedHashSet<>(participants);
+			if (active.size() != participants.size()) throw new IllegalArgumentException("Duplicate party participant");
+			if (!active.contains(invited)) throw new IllegalArgumentException("Invited player must be a participant");
+			try {
+				ensureConnected();
+				transaction(() -> {
+					for (UUID player : active) writePartyPlayer(player, leader.toString(), active);
+					try (PreparedStatement ps = connection.prepareStatement(
+							"DELETE FROM bungeefriends_party_requests WHERE owner_uuid = ? AND invited_uuid = ?")) {
+						ps.setString(1, leader.toString());
+						ps.setString(2, invited.toString());
+						if (ps.executeUpdate() != 1) throw new SQLException("Party request was not found");
+					}
+				});
+			} catch (SQLException e) {
+				throw failure("party acceptance", leader + "/" + invited, e);
+			}
+		}
+
 		private void writePartyPlayer(UUID player, String leader, Set<UUID> active) throws SQLException {
 			try (PreparedStatement ps = connection.prepareStatement("INSERT INTO " + DATA
 					+ " (uuid, party_current) VALUES (?, ?) ON DUPLICATE KEY UPDATE party_current = VALUES(party_current)")) {

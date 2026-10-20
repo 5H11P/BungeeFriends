@@ -404,27 +404,12 @@ public class PartyCommand extends Command implements TabExecutor {
 						return;
 					}
 					PartyUtils targetParties = this.plugin.getPartyManager().getPlayer(target);
-					String sent = this.plugin.getPartyRequestCreatedAt(target, player.getUniqueId());
-					long sentAt;
-					try { sentAt = Long.parseLong(sent); } catch (NumberFormatException e) { sentAt = 0; }
-					boolean validLeader;
-					try { validLeader = targetParties.isPartyOwner(); }
-					catch (NotJoinedException e) { validLeader = false; }
-					if (!validLeader || !targetParties.getRequests().contains(player.getUniqueId().toString())
-							|| sentAt <= 0 || System.currentTimeMillis() - sentAt > TimeUnit.MINUTES.toMillis(1)) {
-						if (targetParties.getRequests().contains(player.getUniqueId().toString())) {
-							try { targetParties.removeRequest(player); } catch (NotInvitedException ignored) { }
-						}
-						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-						this.plugin.info(player, langUtils.getString("Exceptions.Havent-Received-Invite"));
-						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-						return;
-					}
 					try {
-						targetParties.add(player);
-						targetParties.removeRequest(player);
+						targetParties.acceptRequest(player.getUniqueId());
 					} catch (Exception e) {
-						this.plugin.info(player, langUtils.getString(e.getMessage()));
+						String messageKey = e.getMessage();
+						if (messageKey == null) messageKey = "Exceptions.Havent-Received-Invite";
+						this.plugin.info(player, langUtils.getString(messageKey));
 						return;
 					}
 

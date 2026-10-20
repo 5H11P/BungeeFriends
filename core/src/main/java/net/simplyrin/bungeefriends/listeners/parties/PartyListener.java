@@ -48,6 +48,7 @@ public class PartyListener implements Listener {
 
 		this.plugin.set("Name." + player.getName().toLowerCase(), player.getUniqueId().toString());
 		this.plugin.set("UUID." + player.getUniqueId().toString(), player.getName().toLowerCase());
+		if (!this.plugin.isEnabledMySQL()) this.plugin.getPlayerManager().save();
 		this.notifyConnection(player.getUniqueId(), "Party-Connection.Rejoin");
 	}
 
