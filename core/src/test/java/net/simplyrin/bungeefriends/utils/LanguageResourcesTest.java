@@ -97,18 +97,48 @@ public class LanguageResourcesTest {
 
 	@Test
 	public void mergedMessagesKeepNewlinesAndCanonicalKeysOnly() {
-		Configuration english = Config.getConfig(getClass().getResourceAsStream("/languages/English.yml"));
-		Set<String> keys = new HashSet<>();
-		collectKeys(english, "", keys);
-		assertFalse(keys.contains("Ingame_Only"));
-		assertFalse(keys.contains("No_Permission"));
-		assertFalse(keys.contains("Logout.One"));
-		assertFalse(keys.contains("Logout.Two"));
-		assertFalse(keys.contains("Add.5-Minutes"));
-		assertFalse(keys.contains("Invite.Request.Sent.Invited"));
-		assertTrue(english.getString("Add.Sent").contains("\n"));
-		assertTrue(english.getString("Logout.Leader-Disconnected").contains("\n"));
-		assertTrue(english.getString("Invite.Request.Sent").contains("\n"));
+		for (String language : Arrays.asList("English", "Chinese")) {
+			Configuration config = Config.getConfig(getClass().getResourceAsStream("/languages/" + language + ".yml"));
+			Set<String> keys = new HashSet<>();
+			collectKeys(config, "", keys);
+			assertFalse(language + " contains Ingame_Only", keys.contains("Ingame_Only"));
+			assertFalse(language + " contains No_Permission", keys.contains("No_Permission"));
+			assertFalse(language + " contains Logout.One", keys.contains("Logout.One"));
+			assertFalse(language + " contains Logout.Two", keys.contains("Logout.Two"));
+			assertFalse(language + " contains Logout.Three", keys.contains("Logout.Three"));
+			assertFalse(language + " contains Add.5-Minutes", keys.contains("Add.5-Minutes"));
+			assertFalse(language + " contains Invite.Request.Sent.Invited", keys.contains("Invite.Request.Sent.Invited"));
+			assertFalse(language + " contains Invite.Request.Sent.60-Seconds", keys.contains("Invite.Request.Sent.60-Seconds"));
+			assertFalse(language + " contains Warp.Confirm-Usage", keys.contains("Warp.Confirm-Usage"));
+			assertFalse(language + " contains Party-Mute.Info-Enabled", keys.contains("Party-Mute.Info-Enabled"));
+			assertFalse(language + " contains Party-Mute.Muted-1", keys.contains("Party-Mute.Muted-1"));
+			assertFalse(language + " contains Party-Mute.Muted-2", keys.contains("Party-Mute.Muted-2"));
+			assertFalse(language + " contains List.DontHave.One", keys.contains("List.DontHave.One"));
+			assertFalse(language + " contains List.DontHave.Two", keys.contains("List.DontHave.Two"));
+			assertFalse(language + " contains Ignore.Havent.One", keys.contains("Ignore.Havent.One"));
+			assertFalse(language + " contains Ignore.Havent.Two", keys.contains("Ignore.Havent.Two"));
+			assertFalse(language + " contains Prefix.Reset", keys.contains("Prefix.Reset"));
+			assertFalse(language + " contains Prefix.ResetAll", keys.contains("Prefix.ResetAll"));
+			assertTrue(language + " Add.Sent has no newline", config.getString("Add.Sent").contains("\n"));
+			assertTrue(language + " Logout.Leader-Disconnected has no newline", config.getString("Logout.Leader-Disconnected").contains("\n"));
+			assertTrue(language + " Invite.Request.Sent has no newline", config.getString("Invite.Request.Sent").contains("\n"));
+		}
+	}
+
+	@Test
+	public void chinesePartyAndFriendTranslationsUseCanonicalPlaceholders() {
+		Configuration chinese = Config.getConfig(getClass().getResourceAsStream("/languages/Chinese.yml"));
+		assertTrue(chinese.getString("List.Hover-Online").contains("添加时间"));
+		assertTrue(chinese.getString("List.Hover-Online").contains("最后上线"));
+		assertTrue(chinese.getString("List.Hover-Online").contains("距今"));
+		assertTrue(chinese.getString("List.Hover-Offline").contains("状态: &c离线"));
+		assertTrue(chinese.getString("Warp.Confirm").contains("%count%"));
+		assertTrue(chinese.getString("Warp.Confirm").contains("%servers%"));
+		assertTrue(chinese.getString("Warp.Confirm").contains("%duration%"));
+		assertTrue(chinese.getString("Logout.Leader-Disconnected").contains("%duration%"));
+		assertTrue(chinese.getString("Logout.Disband-When-Empty").contains("%duration%"));
+		assertFalse(chinese.getString("Logout.Leader-Disconnected").contains("%time"));
+		assertFalse(chinese.getString("Logout.Disband-When-Empty").contains("%time"));
 	}
 
 	private Set<String> placeholders(String message) {

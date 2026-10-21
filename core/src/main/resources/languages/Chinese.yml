@@ -88,8 +88,8 @@ List:
     Busy: "&e%targetDisplayName &c忙碌 &7- &e%server"
     AppearOffline: "&e%targetDisplayName &7隐身"
   Offline: "&e%targetDisplayName &c此时离线"
-  Hover-Online: "&e好友: %targetDisplayName\n&7状态: &f%status\n&7服务器: &f%server\n&7成为好友: &f%friendSince\n&7最后在线: &f%lastOnline\n&7距上次在线: &f%lastOnlineAgo"
-  Hover-Offline: "&e好友: %targetDisplayName\n&7UUID: &f%targetUUID\n&7成为好友: &f%friendSince\n&7最后在线: &f%lastOnline\n&7距上次在线: &f%lastOnlineAgo"
+  Hover-Online: "&e好友: %targetDisplayName\n&7状态: &a%status\n&7服务器: &f%server\n&7添加时间: &f%friendSince\n&7最后上线: &f%lastOnline\n&7距今: &f%lastOnlineAgo"
+  Hover-Offline: "&e好友: %targetDisplayName\n&7状态: &c离线\n&7UUID: &f%targetUUID\n&7添加时间: &f%friendSince\n&7最后上线: &f%lastOnline\n&7距今: &f%lastOnlineAgo"
   Unknown: "未知"
   Now: "当前在线"
   None: "暂无其他成员"
@@ -153,8 +153,8 @@ Note:
 Pagination:
   Previous: "&a« 上一页"
   Next: "&a下一页 »"
-  Previous-Hover: "&e查看第 %%previousPage%% 页"
-  Next-Hover: "&e查看第 %%nextPage%% 页"
+  Previous-Hover: "&e当前第 %%currentPage%% 页，点击查看第 %%previousPage%% 页"
+  Next-Hover: "&e当前第 %%currentPage%% 页，点击查看第 %%nextPage%% 页"
 Party-Mute:
   Enabled: "%displayName &e启用了&c全员禁言"
   Disabled: "%displayName &e禁用了&a全员禁言"
@@ -259,7 +259,7 @@ Remove-Party:  #and Kick
 KickOffline:
   AllOnline: "&cThere are no offline players to remove."
 Warp:
-  Confirm: "&e队伍中有 %count% 名队员仍在游戏服务器（%servers%）。\n&e请在 &c%duration% 内再次输入 &b/p warp&e 来确认传送！"
+  Confirm: "&e队伍中有 %count% 名队员仍在游戏中（服务器：%servers%）。\n&e请在 &c%duration% 内再次输入 &b/p warp&e 来确认召集所有队员！"
   Disabled: "&c组队传送已关闭。"
   No-Server: "&c当前服务器不可用。"
   Blocked: "&c此服务器不允许组队传送。"
@@ -286,7 +286,7 @@ Hijack:
   Other: "%displayName &c劫持了你的队伍！"
 Logout:
   Leader-Disconnected: "%displayName &e离开了服务器。\n&e%duration%后，随机一名队伍成员将成为队长。"
-  Disband-When-Empty: "&e如果没有其他成员，队伍将在%duration%后解散."
+  Disband-When-Empty: "&e如果没有其他成员，队伍将在%duration%后解散。"
   Become: "%displayName &e成为了队长."
 Party-Connection:
   Offline: "%displayName&e已断开连接，若&c%duration%&e内未重新连接则移出组队。"
