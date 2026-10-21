@@ -148,7 +148,7 @@ public class Main extends Plugin {
 		this.isEnabledMySQL = this.mySQLManager.getConfig().getBoolean("Enable");
 
 		if (this.getProxy().getPluginManager().getPlugin("LuckPerms") != null
-				&& !this.configManager.getConfig().getBoolean("Plugin.Disable-LuckPerms-API")) {
+				&& this.configManager.getConfig().getBoolean("Plugin.Enable-LuckPerms-API")) {
 			try {
 				this.luckPermsApi = LuckPermsProvider.get();
 				this.info("&aLoaded LuckPerms API.");
@@ -230,15 +230,15 @@ public class Main extends Plugin {
 			this.partyChatAliasCommand = new PartyChatCommand(this, "partychat");
 			this.getProxy().getPluginManager().registerCommand(this, this.partyPChatCommand);
 			this.getProxy().getPluginManager().registerCommand(this, this.partyChatAliasCommand);
-			if (!this.configManager.getConfig().getBoolean("Plugin.Disable-Aliases./achat")) {
+			if (this.configManager.getConfig().getBoolean("Plugin.Enable-Aliases./achat")) {
 				this.allChatCommand = new AllChatCommand(this, "achat");
 				this.getProxy().getPluginManager().registerCommand(this, this.allChatCommand);
 			}
-			if (!this.configManager.getConfig().getBoolean("Plugin.Disable-Aliases./ac")) {
+			if (this.configManager.getConfig().getBoolean("Plugin.Enable-Aliases./ac")) {
 				this.acCommand = new AllChatCommand(this, "ac");
 				this.getProxy().getPluginManager().registerCommand(this, this.acCommand);
 			}
-			if (!this.configManager.getConfig().getBoolean("Plugin.Disable-Aliases./pl")) {
+			if (this.configManager.getConfig().getBoolean("Plugin.Enable-Aliases./pl")) {
 				this.partyListCommand = new PartyListCommand(this);
 				this.getProxy().getPluginManager().registerCommand(this, this.partyListCommand);
 			}
@@ -247,71 +247,71 @@ public class Main extends Plugin {
 		if (this.ignoreCommand != null) this.getProxy().getPluginManager().unregisterCommand(this.ignoreCommand);
 		this.blockCommand = null;
 		this.ignoreCommand = null;
-		if (!this.configManager.getConfig().getBoolean("Plugin.Disable-Aliases./block")) {
+		if (this.configManager.getConfig().getBoolean("Plugin.Enable-Aliases./block")) {
 			this.blockCommand = new BlockCommand(this, "block");
 			this.getProxy().getPluginManager().registerCommand(this, this.blockCommand);
 		}
-		if (!this.configManager.getConfig().getBoolean("Plugin.Disable-Aliases./ignore")) {
+		if (this.configManager.getConfig().getBoolean("Plugin.Enable-Aliases./ignore")) {
 			this.ignoreCommand = new BlockCommand(this, "ignore");
 			this.getProxy().getPluginManager().registerCommand(this, this.ignoreCommand);
 		}
-		if (!this.configManager.getConfig().getBoolean("Plugin.Disable-Aliases./msg")) {
+		if (this.configManager.getConfig().getBoolean("Plugin.Enable-Aliases./msg")) {
 			this.tellMsgCommand = new TellCommand(this, "msg");
 			this.getProxy().getPluginManager().registerCommand(this, this.tellMsgCommand);
 		} else if(this.tellMsgCommand != null) {
 			this.getProxy().getPluginManager().unregisterCommand(this.tellMsgCommand);
 		}
 
-		if (!this.configManager.getConfig().getBoolean("Plugin.Disable-Aliases./tell")) {
+		if (this.configManager.getConfig().getBoolean("Plugin.Enable-Aliases./tell")) {
 			this.tellCommand = new TellCommand(this, "tell");
 			this.getProxy().getPluginManager().registerCommand(this, this.tellCommand);
 		} else if(this.tellCommand != null) {
 			this.getProxy().getPluginManager().unregisterCommand(this.tellCommand);
 		}
 
-		if (!this.configManager.getConfig().getBoolean("Plugin.Disable-Aliases./w")) {
+		if (this.configManager.getConfig().getBoolean("Plugin.Enable-Aliases./w")) {
 			this.tellWCommand = new TellCommand(this, "w");
 			this.getProxy().getPluginManager().registerCommand(this, this.tellWCommand);
 		} else if(this.tellWCommand != null) {
 			this.getProxy().getPluginManager().unregisterCommand(this.tellWCommand);
 		}
 
-		if (!this.configManager.getConfig().getBoolean("Plugin.Disable-Aliases./whisper")) {
+		if (this.configManager.getConfig().getBoolean("Plugin.Enable-Aliases./whisper")) {
 			this.tellWhisperCommand = new TellCommand(this, "whisper");
 			this.getProxy().getPluginManager().registerCommand(this, this.tellWhisperCommand);
 		} else if(this.tellWhisperCommand != null) {
 			this.getProxy().getPluginManager().unregisterCommand(this.tellWhisperCommand);
 		}
 
-		if (!this.configManager.getConfig().getBoolean("Plugin.Disable-Aliases./message")) {
+		if (this.configManager.getConfig().getBoolean("Plugin.Enable-Aliases./message")) {
 			this.tellMessageCommand = new TellCommand(this, "message");
 			this.getProxy().getPluginManager().registerCommand(this, this.tellMessageCommand);
 		} else if(this.tellMessageCommand != null) {
 			this.getProxy().getPluginManager().unregisterCommand(this.tellMessageCommand);
 		}
 
-		if (!this.configManager.getConfig().getBoolean("Plugin.Disable-Aliases./f")) {
+		if (this.configManager.getConfig().getBoolean("Plugin.Enable-Aliases./f")) {
 			this.friendFCommand = new FriendCommand(this, "f");
 			this.getProxy().getPluginManager().registerCommand(this, this.friendFCommand);
 		} else if(this.friendFCommand != null) {
 			this.getProxy().getPluginManager().unregisterCommand(this.friendFCommand);
 		}
 
-		if (!this.configManager.getConfig().getBoolean("Plugin.Disable-Aliases./r")) {
+		if (this.configManager.getConfig().getBoolean("Plugin.Enable-Aliases./r")) {
 			this.replyRCommand = new ReplyCommand(this, "r");
 			this.getProxy().getPluginManager().registerCommand(this, this.replyRCommand);
 		} else if(this.replyRCommand != null) {
 			this.getProxy().getPluginManager().unregisterCommand(this.replyRCommand);
 		}
 
-		if (!this.configManager.getConfig().getBoolean("Plugin.Disable-Aliases./reply")) {
+		if (this.configManager.getConfig().getBoolean("Plugin.Enable-Aliases./reply")) {
 			this.replyCommand = new ReplyCommand(this, "reply");
 			this.getProxy().getPluginManager().registerCommand(this, this.replyCommand);
 		} else if(this.replyCommand != null) {
 			this.getProxy().getPluginManager().unregisterCommand(this.replyCommand);
 		}
 
-		if (!this.configManager.getConfig().getBoolean("Plugin.Disable-Aliases./fl")) {
+		if (this.configManager.getConfig().getBoolean("Plugin.Enable-Aliases./fl")) {
 			this.flCommand = new FLCommand(this);
 			this.getProxy().getPluginManager().registerCommand(this, this.flCommand);
 		} else if(this.flCommand != null) {
@@ -319,7 +319,7 @@ public class Main extends Plugin {
 		}
 
 		if (this.configManager.getConfig().getBoolean("Plugin.Enable-Bungee-Parties")) {
-			if (!this.configManager.getConfig().getBoolean("Plugin.Disable-Aliases./pc")) {
+			if (this.configManager.getConfig().getBoolean("Plugin.Enable-Aliases./pc")) {
 				this.partyChatCommand = new PartyChatCommand(this, "pc");
 				this.getProxy().getPluginManager().registerCommand(this, this.partyChatCommand);
 			} else if(this.partyChatCommand != null) {
@@ -378,27 +378,37 @@ public class Main extends Plugin {
 	}
 
 	public String getServerName(String serverName) {
-		for (String key : this.getConfigManager().getConfig().getSection("Plugin.Server-Name").getKeys()) {
-			String type = this.getString("Plugin.Server-Name." + key + ".Type");
-			String name = this.getString("Plugin.Server-Name." + key + ".Server-Name");
-			String replaceName = this.getString("Plugin.Server-Name." + key + ".Replace-Name");
-
-			if (!type.equals("") && !name.equals("") && !replaceName.equals("")) {
-				if (type.equals("startsWith") && serverName.startsWith(name)) {
-					serverName = replaceName;
-				} else if (type.equals("contains") && serverName.contains(name)) {
-					serverName = replaceName;
-				} else if ((type.equals("equals") || type.equals("equalsIgnoreCase")) && serverName.equalsIgnoreCase(name)) {
-					serverName = replaceName;
-				}
-			}
+		if (serverName == null) return null;
+		List<?> rules = this.getConfigManager().getConfig().getList("Plugin.Server-Name-Display.Rules");
+		for (Object value : rules) {
+			if (!(value instanceof Map)) continue;
+			Map<?, ?> rule = (Map<?, ?>) value;
+			Object rawMode = rule.get("Match-Mode");
+			Object rawPattern = rule.get("Pattern");
+			Object rawDisplayName = rule.get("Display-Name");
+			if (rawMode == null || rawPattern == null || rawDisplayName == null) continue;
+			String mode = String.valueOf(rawMode);
+			String pattern = String.valueOf(rawPattern);
+			String displayName = String.valueOf(rawDisplayName);
+			if (pattern.isEmpty() || displayName.isEmpty()) continue;
+			if (matchesServerName(serverName, pattern, mode)) return displayName;
 		}
 		return serverName;
 	}
 
+	static boolean matchesServerName(String serverName, String pattern, String mode) {
+		switch (mode) {
+		case "PREFIX": return serverName.startsWith(pattern);
+		case "CONTAINS": return serverName.contains(pattern);
+		case "EXACT": return serverName.equals(pattern);
+		case "EXACT_IGNORE_CASE": return serverName.equalsIgnoreCase(pattern);
+		default: return false;
+		}
+	}
+
 	public boolean isPartyWarpBlocked(String serverName) {
-		if (serverName == null || !this.getBoolean("Plugin.Party-Warp.Server-Blocklist.Enabled")) return false;
-		for (String blocked : this.getStringList("Plugin.Party-Warp.Server-Blocklist.Servers")) {
+		if (serverName == null || !this.getBoolean("Plugin.Party-Warp.Enable-Server-Blocklist")) return false;
+		for (String blocked : this.getStringList("Plugin.Party-Warp.Server-Blocklist")) {
 			if (serverName.equalsIgnoreCase(blocked.trim())) return true;
 		}
 		return false;
@@ -687,8 +697,8 @@ public class Main extends Plugin {
 	}
 
 	private boolean shouldFrame(MessageFrame.MessageId messageId) {
-		if (messageId == null || this.getBoolean("Plugin.Disable-Hyphen")) return false;
-		String categoryPath = "Plugin.Hyphen.Categories." + messageId.getCategory().configKey();
+		if (messageId == null || !this.getBoolean("Plugin.Enable-Hyphen")) return false;
+		String categoryPath = "Plugin.Hyphen.Categories.Enable-" + messageId.getCategory().configKey();
 		boolean categoryEnabled = this.getConfigManager().getConfig().getBoolean(categoryPath, true);
 		String overridePath = "Plugin.Hyphen.Messages." + messageId.name();
 		Boolean override = this.getConfigManager().getConfig().contains(overridePath)

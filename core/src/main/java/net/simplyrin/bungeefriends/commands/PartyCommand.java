@@ -41,7 +41,7 @@ public class PartyCommand extends Command implements TabExecutor {
 	@Override
 	public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
 		List<String> matches = new ArrayList<>();
-		if (plugin.getBoolean("Plugin.Disable-Tab-Complete") || args == null || args.length == 0) return matches;
+		if (!plugin.getBoolean("Plugin.Enable-Tab-Complete") || args == null || args.length == 0) return matches;
 		String input = args[args.length - 1] == null ? "" : args[args.length - 1].toLowerCase(java.util.Locale.ROOT);
 		if (args.length == 1) {
 			for (String command : new String[] {"invite", "leave", "list", "remove", "kick", "promote", "disband", "accept", "hijack", "setting", "warp", "toggle", "chat", "kickoffline", "help"})
@@ -341,7 +341,7 @@ public class PartyCommand extends Command implements TabExecutor {
 			}
 
 			if (args[0].equalsIgnoreCase("warp")) {
-				if (this.plugin.getBoolean("Plugin.Disable-Party-Warp")) {
+				if (!this.plugin.getBoolean("Plugin.Enable-Party-Warp")) {
 					this.plugin.info(player, langUtils.getString("Warp.Disabled"));
 					return;
 				}

@@ -9,6 +9,13 @@ DisplayLanguage: 简体中文
 In-Game-Only: "&c该指令仅在游戏中可用！"
 No-Permission: "&c你没有权限使用该指令！"
 Hyphen: '&9&m----------------------------------------------------'
+Duration-Units:
+  Separator: ""
+  Day: 天
+  Hour: 小时
+  Minute: 分
+  Second: 秒
+  Millisecond: 毫秒
 #Exceptions
 Exceptions:
   Party-Full: "&c组队人数已达上限！无法添加更多玩家！"
@@ -262,7 +269,7 @@ Remove-Party:  #and Kick
 KickOffline:
   AllOnline: "&cThere are no offline players to remove."
 Warp:
-  Confirm: "&e队伍中有 %count% 名队员仍在游戏服务器（%servers%）。\n&e请在 &c%time% 秒内再次输入 &b/p warp&e 来确认传送！"
+  Confirm: "&e队伍中有 %count% 名队员仍在游戏服务器（%servers%）。\n&e请在 &c%duration% 内再次输入 &b/p warp&e 来确认传送！"
   Disabled: "&c组队传送已关闭。"
   No-Server: "&c当前服务器不可用。"
   Blocked: "&c此服务器不允许组队传送。"
@@ -288,11 +295,11 @@ Hijack:
   You: "&c你劫持了这个队伍."
   Other: "%displayName &c劫持了你的队伍！"
 Logout:
-  Leader-Disconnected: "%displayName &e离开了服务器。\n&e%time%分钟后，随机一名队伍成员将成为队长。"
-  Disband-When-Empty: "&e如果没有其他成员，队伍将在%time%分钟后解散."
+  Leader-Disconnected: "%displayName &e离开了服务器。\n&e%duration%后，随机一名队伍成员将成为队长。"
+  Disband-When-Empty: "&e如果没有其他成员，队伍将在%duration%后解散."
   Become: "%displayName &e成为了队长."
 Party-Connection:
-  Offline: "%displayName&e已断开连接，若&c%time%&e分钟内未重新连接则移出组队。"
+  Offline: "%displayName&e已断开连接，若&c%duration%&e内未重新连接则移出组队。"
   Offline-No-Auto-Kick: "%displayName &e已断开连接。"
   Rejoin: "%displayName&e重新连接。"
 Help-Party:

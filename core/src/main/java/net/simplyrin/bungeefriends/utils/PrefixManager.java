@@ -28,7 +28,7 @@ public class PrefixManager {
 	public PrefixManager(Main plugin) {
 		this.plugin = plugin;
 
-		if (this.plugin.getBoolean("Plugin.Enable-Deprecated-Prefix-YML")) {
+		if (this.plugin.getBoolean("Plugin.Enable-Legacy-Prefix-YML")) {
 			this.createConfig();
 			this.reload();
 		} else {

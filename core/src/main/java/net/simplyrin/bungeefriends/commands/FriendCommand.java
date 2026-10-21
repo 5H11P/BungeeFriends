@@ -59,7 +59,7 @@ public class FriendCommand extends Command implements TabExecutor {
 	@Override
 	public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
 		List<String> list = new ArrayList<>();
-		if (this.plugin.getBoolean("Plugin.Disable-Tab-Complete") || args == null || args.length == 0) return list;
+		if (!this.plugin.getBoolean("Plugin.Enable-Tab-Complete") || args == null || args.length == 0) return list;
 		String input = args[args.length - 1] == null ? "" : args[args.length - 1].toLowerCase(Locale.ROOT);
 		if (args.length == 1) {
 			String[] commands = {"add", "remove", "removeall", "accept", "deny", "requests", "note", "list", "lang", "language", "ignore", "toggle", "help"};
@@ -162,7 +162,7 @@ public class FriendCommand extends Command implements TabExecutor {
 					this.plugin.infoFramed(player, langUtils.getString("Remove.YourSelf").replace("%targetDisplayName", targetFriends.getDisplayName()),
 							MessageFrame.MessageId.FRIEND_REMOVE_DONE);
 
-					if (this.plugin.getBoolean("Plugin.Notify-Removed-Friend")) {
+					if (this.plugin.getBoolean("Plugin.Enable-Friend-Removal-Notifications")) {
 						this.plugin.infoFramed(target, targetLangUtils.getString("Remove.Target").replace("%displayName", myFriends.getDisplayName()),
 								MessageFrame.MessageId.FRIEND_REMOVE_TARGET);
 					}
@@ -321,7 +321,7 @@ public class FriendCommand extends Command implements TabExecutor {
 				List<TextComponent> online = new ArrayList<>();
 				List<TextComponent> offline = new ArrayList<>();
 
-				boolean colorOnly = this.plugin.getBoolean("Plugin.Friend-List.No-Prefix");
+				boolean colorOnly = this.plugin.getBoolean("Plugin.Friend-List.Enable-Color-Only-Prefix");
 
 				Priority priority = this.plugin.getPriority();
 				List<Priority.Item> items = priority.getPriorities();

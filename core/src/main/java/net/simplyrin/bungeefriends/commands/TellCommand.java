@@ -36,7 +36,7 @@ public class TellCommand extends Command implements TabExecutor {
 	@Override
 	public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
 		List<String> list = new ArrayList<>();
-		if (plugin.getBoolean("Plugin.Disable-Tab-Complete") || !(sender instanceof ProxiedPlayer) || args == null || args.length != 1
+		if (!plugin.getBoolean("Plugin.Enable-Tab-Complete") || !(sender instanceof ProxiedPlayer) || args == null || args.length != 1
 				|| args[0].isEmpty() || ((ProxiedPlayer) sender).getServer() == null) return list;
 		String server = ((ProxiedPlayer) sender).getServer().getInfo().getName();
 		if (args.length == 1) {

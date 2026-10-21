@@ -57,7 +57,7 @@ public class MessageFrameTest {
 		try {
 			MessageFrame.writeDocumentation(file.toFile());
 			String doc = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
-			assertTrue(doc.contains("Plugin.Disable-Hyphen"));
+			assertTrue(doc.contains("Plugin.Enable-Hyphen"));
 			assertTrue(doc.contains("PARTY_MUTE_DENIED"));
 			assertTrue(doc.contains("WARP-NOTIFICATIONS"));
 		} finally {

@@ -21,6 +21,7 @@ import net.simplyrin.bungeefriends.messages.Messages;
 import net.simplyrin.bungeefriends.tools.ThreadPool;
 import net.simplyrin.bungeefriends.utils.LanguageManager.LanguageUtils;
 import net.simplyrin.bungeefriends.utils.PartyManager.PartyUtils;
+import net.simplyrin.bungeefriends.utils.TickDuration;
 import net.simplyrin.bungeefriends.utils.PartyCommandMatcher;
 
 /**
@@ -101,7 +102,7 @@ public class PartyListener implements Listener {
 
 	@EventHandler
 	public void partyCmdSender(ChatEvent event) {
-		if (!event.isCommand() || this.plugin.getBoolean("Plugin.Disable-Party-Command-Sender")
+		if (!event.isCommand() || !this.plugin.getBoolean("Plugin.Enable-Party-Command-Sender")
 				|| !(event.getSender() instanceof ProxiedPlayer)) {
 			return;
 		}
@@ -156,9 +157,9 @@ public class PartyListener implements Listener {
 
 		try {
 			if (!myParties.isPartyOwner()) {
-				int minutes = this.plugin.getConfigManager().getConfig().getInt("Plugin.Party.Offline-Member-Kick-Delay-Minutes", 5);
-				this.notifyConnection(player.getUniqueId(), minutes == 0 ? "Party-Connection.Offline-No-Auto-Kick" : "Party-Connection.Offline",
-						minutes == 0 ? MessageFrame.MessageId.PARTY_CONNECTION_OFFLINE_NO_KICK : MessageFrame.MessageId.PARTY_CONNECTION_OFFLINE);
+				int ticks = this.plugin.getConfigManager().getConfig().getInt("Plugin.Party.Offline-Member-Kick-Delay-Ticks", 6000);
+				this.notifyConnection(player.getUniqueId(), ticks == 0 ? "Party-Connection.Offline-No-Auto-Kick" : "Party-Connection.Offline",
+						ticks == 0 ? MessageFrame.MessageId.PARTY_CONNECTION_OFFLINE_NO_KICK : MessageFrame.MessageId.PARTY_CONNECTION_OFFLINE);
 				this.scheduleOfflineMemberKick(player.getUniqueId(), myParties);
 				return;
 			}
@@ -166,7 +167,7 @@ public class PartyListener implements Listener {
 			return;
 		}
 		if (myParties.getParties().isEmpty()) return;
-		final int disbandMinutes = this.plugin.getConfigManager().getConfig().getInt("Plugin.Party.Disband-Delay-Minutes", 5);
+		final int disbandTicks = this.plugin.getConfigManager().getConfig().getInt("Plugin.Party.Disband-Delay-Ticks", 6000);
 
 		ThreadPool.run(() -> {
 			for (String partyPlayerUniqueId : myParties.getParties()) {
@@ -176,10 +177,10 @@ public class PartyListener implements Listener {
 				if (targetPlayer.getPlayer() == null) continue;
 				String message = targetLangUtils.getString("Logout.Leader-Disconnected")
 						.replace("%displayName", myParties.getDisplayName())
-						.replace("%time%", String.valueOf(disbandMinutes));
+						.replace("%duration%", TickDuration.format(disbandTicks, targetLangUtils));
 				if (myParties.getOnlinePlayers() <= 1)
 					message += "\n" + targetLangUtils.getString("Logout.Disband-When-Empty")
-							.replace("%time%", String.valueOf(disbandMinutes));
+							.replace("%duration%", TickDuration.format(disbandTicks, targetLangUtils));
 				this.plugin.infoFramed(targetPlayer.getPlayer(), message, MessageFrame.MessageId.PARTY_LOGOUT_LEADER_DISCONNECTED);
 			}
 
@@ -244,13 +245,14 @@ public class PartyListener implements Listener {
 			LanguageUtils language = this.plugin.getLanguageManager().getPlayer(recipientId);
 			this.plugin.infoFramed(recipientId, language.getString(key)
 					.replace("%displayName", this.plugin.getFriendManager().getPlayer(playerId).getDisplayNameFor(recipientId))
-					.replace("%time%", String.valueOf(this.plugin.getConfigManager().getConfig().getInt("Plugin.Party.Offline-Member-Kick-Delay-Minutes", 5))), messageId);
+					.replace("%duration%", TickDuration.format(
+							this.plugin.getConfigManager().getConfig().getInt("Plugin.Party.Offline-Member-Kick-Delay-Ticks", 6000), language)), messageId);
 		}
 	}
 
 	private void scheduleOfflineMemberKick(UUID playerId, PartyUtils member) {
-		int minutes = this.plugin.getConfigManager().getConfig().getInt("Plugin.Party.Offline-Member-Kick-Delay-Minutes", 5);
-		if (minutes == 0) return;
+		int ticks = this.plugin.getConfigManager().getConfig().getInt("Plugin.Party.Offline-Member-Kick-Delay-Ticks", 6000);
+		if (ticks == 0) return;
 		PartyUtils leader;
 		try { leader = member.getPartyLeader(); } catch (NotJoinedException e) { return; }
 		UUID leaderId = leader.getUniqueId();
@@ -274,7 +276,7 @@ public class PartyListener implements Listener {
 					}
 				}
 			} catch (NotJoinedException ignored) { }
-		}, minutes, TimeUnit.MINUTES);
+		}, TickDuration.toMillis(ticks), TimeUnit.MILLISECONDS);
 	}
 
 	@EventHandler
@@ -302,7 +304,7 @@ public class PartyListener implements Listener {
 		}
 		if (this.plugin.isPartyWarpBlocked(serverName)) return;
 
-		if (this.plugin.getBoolean("Plugin.Disable-Party-Warp")) {
+		if (!this.plugin.getBoolean("Plugin.Enable-Party-Warp")) {
 			return;
 		}
 

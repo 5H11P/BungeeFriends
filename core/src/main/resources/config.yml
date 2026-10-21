@@ -1,42 +1,42 @@
 Plugin:
   Prefix: '&7[&cFriends&7] &r'
   Default-Language: english
-  Disable-Aliases:
-    /msg: false
-    /tell: false
-    /message: false
-    /f: false
-    /r: false
-    /reply: false
-    /fl: false
-    /block: false
-    /ignore: false
-    /pc: false
-    /ac: false
-    /achat: false
-    /pl: false
-    /w: false
-    /whisper: false
-  Disable-Server-Switch-Notifier: false
-  Disable-Party-Warp: false
-  Disable-LuckPerms-API: false
-  Disable-Hyphen: false
+  Enable-Aliases:
+    /msg: true
+    /tell: true
+    /message: true
+    /f: true
+    /r: true
+    /reply: true
+    /fl: true
+    /block: true
+    /ignore: true
+    /pc: true
+    /ac: true
+    /achat: true
+    /pl: true
+    /w: true
+    /whisper: true
+  Enable-Server-Switch-Notifier: true
+  Enable-Party-Warp: true
+  Enable-LuckPerms-API: true
+  Enable-Hyphen: true
   Hyphen:
     Categories:
-      Command-Results: true
-      Lists: true
-      Party-Notifications: true
-      Warp-Notifications: true
+      Enable-Command-Results: true
+      Enable-Lists: true
+      Enable-Party-Notifications: true
+      Enable-Warp-Notifications: true
     # Message-specific values override the category setting. Valid IDs are declared by the plugin.
     # Example: PARTY_MUTE_DENIED: false
     Messages: {}
-  Disable-Tab-Complete: false
-  Disable-Party-Command-Sender: false
+  Enable-Tab-Complete: true
+  Enable-Party-Command-Sender: true
   Enable-Bungee-Parties: false
   Enable-Status: true
-  Enable-Deprecated-Prefix-YML: false
+  Enable-Legacy-Prefix-YML: false
   Friend-List:
-    No-Prefix: false
+    Enable-Color-Only-Prefix: false
     Time-Format: yyyy-MM-dd HH:mm:ss
     Sort:
       1:
@@ -45,37 +45,37 @@ Plugin:
       2:
         No-Color-Prefix: '[MOD]'
         Priority: 2
+  # All duration and interval values use ticks (1 tick = 50 ms).
   Party:
     Max-Size: 10
-    Disband-Delay-Minutes: 5
-    Offline-Member-Kick-Delay-Minutes: 5
-  Notify-Removed-Friend: true
+    Disband-Delay-Ticks: 6000
+    Offline-Member-Kick-Delay-Ticks: 6000
+  Enable-Friend-Removal-Notifications: true
   LuckPerms:
-    Offline-Prefix-Cache-Minutes: 30
-    Offline-Prefix-Load-Timeout-Seconds: 2
+    Offline-Prefix-Cache-Ticks: 36000
+    Offline-Prefix-Load-Timeout-Ticks: 40
   Party-Warp:
     Enable-Confirmation: false
-    Confirm-Timeout-Seconds: 10
+    Confirm-Timeout-Ticks: 200
     Game-Servers: []
-    Initial-Delay-Seconds: '0.5'
-    Member-Interval-Seconds: '0.1'
+    Initial-Delay-Ticks: 10
+    Member-Interval-Ticks: 2
     Lobby-Server-Name-Contains: lobby
-    Server-Blocklist:
-      Enabled: true
-      Servers: []
-  Server-Name:
-    1:
-      Type: startsWith
-      Server-Name: lobby-
-      Replace-Name: Lobby
-    2:
-      Type: contains
-      Server-Name: game
-      Replace-Name: Game
-    3:
-      Type: equalsIgnoreCase
-      Server-Name: sw-1
-      Replace-Name: SkyWars
+    Enable-Server-Blocklist: true
+    Server-Blocklist: []
+  # Rules are checked in order; the first matching rule supplies the display name.
+  # PREFIX, CONTAINS, and EXACT are case-sensitive. EXACT_IGNORE_CASE ignores letter case.
+  Server-Name-Display:
+    Rules:
+      - Match-Mode: PREFIX
+        Pattern: lobby-
+        Display-Name: Lobby
+      - Match-Mode: CONTAINS
+        Pattern: game
+        Display-Name: Game
+      - Match-Mode: EXACT_IGNORE_CASE
+        Pattern: sw-1
+        Display-Name: SkyWars
   Bungee-Parties:
     Party-Command-Sender:
       1:

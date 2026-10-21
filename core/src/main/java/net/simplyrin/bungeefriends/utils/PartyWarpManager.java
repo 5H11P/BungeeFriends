@@ -45,16 +45,15 @@ public class PartyWarpManager {
 				&& current.destination.equalsIgnoreCase(destination) && current.gameMembers.equals(gameMembers)
 				&& confirmations.remove(leaderId, current)) return true;
 
-		long seconds = plugin.getConfigManager().getConfig().getInt("Plugin.Party-Warp.Confirm-Timeout-Seconds", 10);
-		if (seconds <= 0 || seconds > 300) seconds = 10;
+		int timeoutTicks = plugin.getConfigManager().getConfig().getInt("Plugin.Party-Warp.Confirm-Timeout-Ticks", 200);
 		confirmations.put(leaderId, new Confirmation(destination, gameMembers,
-				System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(seconds)));
+				System.currentTimeMillis() + TickDuration.toMillis(timeoutTicks)));
 		Set<String> servers = new HashSet<>();
 		for (String entry : gameMembers) servers.add(plugin.getServerName(entry.substring(entry.indexOf('@') + 1)));
 		plugin.infoFramed(leader, language.getString("Warp.Confirm")
 				.replace("%count%", String.valueOf(gameMembers.size()))
 				.replace("%servers%", String.join(", ", servers))
-				.replace("%time%", String.valueOf(seconds)), MessageFrame.MessageId.WARP_CONFIRM);
+				.replace("%duration%", TickDuration.format(timeoutTicks, language)), MessageFrame.MessageId.WARP_CONFIRM);
 		return false;
 	}
 
@@ -68,8 +67,8 @@ public class PartyWarpManager {
 		generations.put(leaderId, generation);
 		Set<String> scheduled = ConcurrentHashMap.newKeySet();
 		tasks.put(leaderId, scheduled);
-		long initial = delayMillis("Plugin.Party-Warp.Initial-Delay-Seconds", 0.5, false);
-		long interval = delayMillis("Plugin.Party-Warp.Member-Interval-Seconds", 0.1, true);
+		long initial = TickDuration.toMillis(plugin.getConfigManager().getConfig().getInt("Plugin.Party-Warp.Initial-Delay-Ticks", 10));
+		long interval = TickDuration.toMillis(plugin.getConfigManager().getConfig().getInt("Plugin.Party-Warp.Member-Interval-Ticks", 2));
 		int index = 0;
 		List<UUID> plannedMembers = new ArrayList<>();
 		for (String member : new ArrayList<>(party.getParties())) {
@@ -117,7 +116,7 @@ public class PartyWarpManager {
 	}
 
 	private void connectIfCurrent(UUID leaderId, UUID memberId, String destination, long generation, boolean manual) {
-		if (closed || plugin.getBoolean("Plugin.Disable-Party-Warp")
+		if (closed || !plugin.getBoolean("Plugin.Enable-Party-Warp")
 				|| !Long.valueOf(generation).equals(generations.get(leaderId))
 				|| plugin.isPartyWarpBlocked(destination)) return;
 		ProxiedPlayer leader = plugin.getProxy().getPlayer(leaderId);
@@ -156,13 +155,6 @@ public class PartyWarpManager {
 			if (server != null && gameServers.contains(server.toLowerCase(Locale.ROOT))) result.add(memberId + "@" + server);
 		}
 		return result;
-	}
-
-	private long delayMillis(String key, double fallback, boolean interval) {
-		double seconds;
-		try { seconds = Double.parseDouble(plugin.getString(key)); } catch (Exception e) { seconds = fallback; }
-		if (!Double.isFinite(seconds) || seconds < 0 || seconds > 30) seconds = fallback;
-		return Math.max(interval ? 50L : 0L, Math.round(seconds * 1000));
 	}
 
 	public synchronized void cancelFor(UUID leaderId) {

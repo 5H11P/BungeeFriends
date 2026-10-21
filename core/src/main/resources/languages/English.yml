@@ -12,6 +12,13 @@ DisplayLanguage: YOUR_LANGUAGE
 In-Game-Only: "&cThis command is available only in the game."
 No-Permission: "&cYou do not have access to this command!"
 Hyphen: "&9&m---------------------------------------------"
+Duration-Units:
+  Separator: " "
+  Day: d
+  Hour: h
+  Minute: min
+  Second: s
+  Millisecond: ms
 
 # Exceptions
 Exceptions:
@@ -291,7 +298,7 @@ KickOffline:
   AllOnline: "&cThere are no offline players to remove."
 
 Warp:
-  Confirm: "&e%count% party members are on game servers (%servers%).\n&eType /party warp again within %time% seconds to confirm."
+  Confirm: "&e%count% party members are on game servers (%servers%).\n&eType /party warp again within %duration% to confirm."
   Disabled: "&cParty warp is disabled."
   No-Server: "&cYour current server is unavailable."
   Blocked: "&cParty warp is not available on this server."
@@ -323,11 +330,11 @@ Hijack:
   Other: "%displayName &chas hijacked the party!"
 
 Logout:
-  Leader-Disconnected: "%displayName &ehas logged out the server.\n&eAn online member will become leader after %time% minutes."
-  Disband-When-Empty: "&eIf no members are online, the party will disband after %time% minutes."
+  Leader-Disconnected: "%displayName &ehas logged out the server.\n&eAn online member will become leader after %duration%."
+  Disband-When-Empty: "&eIf no members are online, the party will disband after %duration%."
   Become: "%displayName &ehas become the party leader."
 Party-Connection:
-  Offline: "%displayName &edisconnected and will be removed in %time% minutes unless they return."
+  Offline: "%displayName &edisconnected and will be removed in %duration% unless they return."
   Offline-No-Auto-Kick: "%displayName &edisconnected from the party."
   Rejoin: "%displayName &areconnected to the party."
 

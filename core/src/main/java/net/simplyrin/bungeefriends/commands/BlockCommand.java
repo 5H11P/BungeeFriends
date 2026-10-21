@@ -124,7 +124,7 @@ public class BlockCommand extends Command implements TabExecutor {
 	@Override
 	public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
 		List<String> matches = new ArrayList<>();
-		if (plugin.getBoolean("Plugin.Disable-Tab-Complete") || args == null || args.length == 0) return matches;
+		if (!plugin.getBoolean("Plugin.Enable-Tab-Complete") || args == null || args.length == 0) return matches;
 		String input = args[args.length - 1].toLowerCase(Locale.ROOT);
 		if (args.length == 1) {
 			for (String choice : new String[] {"add", "help", "list", "remove", "removeall"})

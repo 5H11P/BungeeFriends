@@ -170,7 +170,7 @@ public class EventListener implements Listener {
 				&& (!this.plugin.getBoolean("Plugin.Enable-Status") || this.plugin.getStatusManager().getStatus(player.getUniqueId())
 						!= net.simplyrin.bungeefriends.utils.StatusManager.Status.APPEAR_OFFLINE)) {
 			for (String friends : myFriends.getFriends()) {
-				if (!this.plugin.getBoolean("Plugin.Disable-Server-Switch-Notifier")) {
+				if (this.plugin.getBoolean("Plugin.Enable-Server-Switch-Notifier")) {
 					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(friends);
 
 					String message = targetLangUtils.getString("Friends.Server-Move");
