@@ -122,16 +122,6 @@ Lang:
   Usage: "&cInvalid usage! '/friend lang <language>'"
   Available: "&bCurrently available languages:"
   Update: "&aSelected language: &e%lang&a!"
-  Updater:
-    Disabled: "&cOnly the bundled English and Chinese languages are supported."
-    LastUpdate: "&aLast update: %data"
-    Usage: "&cInvalid usage! '/friend lang update <language>'"
-    NeedCheck: "&cYou need check available languages list! (/friend lang update)"
-    Checking: "&7Checking updates..."
-    Failed-Connect: "&cFailed connecting to the server."
-    Unknown: "&cThis language is not found."
-    Available: "&aAvailable files:"
-    Updated: "&a%lang language has been updated! You may need to restart the server."
 
 Ignore:
   Usage:

@@ -228,7 +228,7 @@ public class PartyListener implements Listener {
 				}
 				myParties.disband();
 			}
-		}, disbandMinutes, TimeUnit.MINUTES);
+		}, TickDuration.toMillis(disbandTicks), TimeUnit.MILLISECONDS);
 	}
 
 	private void notifyConnection(UUID playerId, String key, MessageFrame.MessageId messageId) {

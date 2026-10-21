@@ -84,15 +84,6 @@ Lang:
   Usage: "&cFalsche Verwendung! '/friend lang <Sprache>'"
   Available: "&bZurzeit verfügbare Sprachen:"
   Update: "&aAusgewählte Sprache: &e%lang&a!"
-  Updater:
-    LastUpdate: "&aLetztes Update: %data"
-    Usage: "&cFalsche Verwendung! '/friend lang update <Sprache>'"
-    NeedCheck: "&cSie müssen die Liste der verfügbaren Sprachen überprüfen! (/friend lang update)"
-    Checking: "&7Überprüfe nach Updates..."
-    Failed-Connect: "&cVerbinden mit dem Server fehlgeschlagen."
-    Unknown: "&cDiese Sprache wurde nicht gefunden."
-    Available: "&aVerfügbare Dateien:"
-    Updated: "&a%lang Sprache wurde geändert! Eventuell musst du den Server neustarten."
 Ignore:
   Usage:
     Main: "&cFalsche Verwendung! '/friend ignore <add|remove|list>'"

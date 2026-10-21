@@ -1,7 +1,6 @@
 package net.simplyrin.bungeefriends.commands;
 
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -115,71 +114,6 @@ public class FriendConsoleCommand extends Command {
 				File languageFolder = new File(folder, "Language");
 				if (!languageFolder.exists()) {
 					languageFolder.mkdir();
-				}
-
-				if (args.length > 1) {
-					if (args[1].equalsIgnoreCase("update")) {
-						if (args.length > 2) {
-							if (this.plugin.getFriendCommand().getAvailableLanguages().size() == 0) {
-								this.plugin.info(langUtils.getString("Lang.Updater.NeedCheck"));
-								return;
-							}
-
-							String lang = null;
-							for (String available : this.plugin.getFriendCommand().getAvailableLanguages()) {
-								if (args[2].equalsIgnoreCase(available)) {
-									lang = available;
-								}
-							}
-
-							if (lang == null) {
-								this.plugin.info(langUtils.getString("Lang.Updater.Unknown"));
-								return;
-							}
-
-							final String outputLang = lang;
-							ThreadPool.run(() -> {
-								Configuration config;
-								try {
-									config = Config.getConfig(new URL("https://api.simplyrin.net/Bungee-Plugins/BungeeFriends/Languages/Files/" + outputLang + ".yml"));
-								} catch (Exception e) {
-									this.plugin.info(langUtils.getString("Lang.Updater.Failed-Connect"));
-									return;
-								}
-
-								File file = new File(languageFolder, outputLang.toLowerCase() + ".yml");
-								Config.saveConfig(config, file);
-
-								langUtils.reloadLanguage(outputLang.toLowerCase());
-								this.plugin.info(langUtils.getString("Lang.Updater.Updated").replace("%lang", outputLang));
-							});
-							return;
-						}
-
-						ThreadPool.run(() -> {
-							this.plugin.info(langUtils.getString("Lang.Updater.Checking"));
-							Configuration config;
-							try {
-								config = Config.getConfig(new URL("https://api.simplyrin.net/Bungee-Plugins/BungeeFriends/Languages/available.txt"));
-							} catch (Exception e) {
-								e.printStackTrace();
-								this.plugin.info(langUtils.getString("Lang.Updater.Failed-Connect"));
-								return;
-							}
-
-							this.plugin.getFriendCommand().getAvailableLanguages().clear();
-
-							this.plugin.info(langUtils.getString("Lang.Updater.LastUpdate").replace("%data", config.getString("LastUpdate")));
-							this.plugin.info(langUtils.getString("Lang.Updater.Available"));
-							for (String lang : config.getStringList("Langs")) {
-								this.plugin.info("&b- " + lang + " &a(" + config.getString("Percent." + lang) + ")");
-								this.plugin.getFriendCommand().getAvailableLanguages().add(lang);
-							}
-						});
-
-						this.plugin.info(langUtils.getString("Lang.Updater.Usage").replace("/friend", "/friendconsole"));
-						return;
-					}
 				}
 
 				List<String> availableList = new ArrayList<>();

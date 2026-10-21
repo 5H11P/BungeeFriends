@@ -84,15 +84,6 @@ Lang:
   Usage: "&c使用方法: '/friend lang <言語>'"
   Available: "&b現在利用可能な言語:"
   Update: "&a選択した言語: &e%lang&a!"
-  Updater:
-    LastUpdate: "&a最終更新日: %data"
-    Usage: "&c使用方法: '/friend lang update <language>'"
-    NeedCheck: "&cあなたは利用可能な言語リストをチェックする必要があります！(/friend lang update)"
-    Checking: "&7更新を確認しています..."
-    Failed-Connect: "&cサーバーへの接続に失敗しました。"
-    Unknown: "&cこの言語は見つかりませんでした。"
-    Available: "&a利用可能なファイル:"
-    Updated: "&a%lang 言語ファイルを更新しました！サーバーの再起動が必要になる場合があります。"
 Ignore:
   Usage:
     Main: "&c使用方法: /friend ignore <add|remove|list>"

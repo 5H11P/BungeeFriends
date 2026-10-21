@@ -32,12 +32,13 @@ public class LanguageResourcesTest {
 				for (String key : Arrays.asList("Block.Self", "Block.List-Format", "Block.RemoveAll-Done",
 						"Status-Command.Usage", "Status-Command.Disabled", "Status.ChatBar.Busy",
 						"Status.ActionBar.AppearOffline", "Warp.Blocked", "Warp.No-Server",
-						"Warp.Confirm", "Lang.Updater.Disabled",
+						"Warp.Confirm",
 						"Requests.Entry", "Note.Usage", "Party-Setting.Usage", "Party-Private.No-Permission")) {
 					assertFalse(language + ": " + key, config.getString(key).isEmpty());
 				}
 				Set<String> keys = new HashSet<>();
 				collectKeys(config, "", keys);
+				assertFalse(language + " contains removed updater keys", keys.stream().anyMatch(key -> key.startsWith("Lang.Updater")));
 				if (englishKeys == null) englishKeys = keys;
 				else assertEquals("Chinese and English message keys differ", englishKeys, keys);
 			}

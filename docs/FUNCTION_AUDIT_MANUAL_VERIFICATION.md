@@ -22,11 +22,11 @@
 3. 配置 `Disable-PartyCmdSender: true` 并重载，确认队长命令不会转发给队员；设为 false 后分别执行 `/join arena` 和 `/joiner arena`，确认只转发完全匹配的 `/join` 命令。
 4. 从代理控制台输入匹配的队长命令，确认不会触发类型转换异常。
 
-## 忽略列表和语言更新
+## 忽略列表和本地语言
 
 1. 在 YAML 数据模式下添加、移除和清空忽略列表，然后重启代理，确认更改已保存。
 2. 尝试屏蔽自己，确认命令拒绝该操作。
-3. 执行 `/friendconsole lang update` 查询远程语言列表，再更新 English 或 Chinese，确认没有 `UnsupportedOperationException`，新列表和语言文件均正常。
+3. 执行 `/friend lang english`、`/friend lang chinese` 和 `/friendconsole lang <本地语言>`，确认本地切换正常；输入 `lang update` 时只显示本地语言用法，不发起网络请求或生成远程语言文件。
 
 ## 消息入口
 

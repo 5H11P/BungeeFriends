@@ -84,15 +84,6 @@ Lang:
   Usage: "&cNeveljavna uporaba! Uporabi: &8 '/friend lang <language>'"
   Available: "&aJeziki, ki so trenutno na voljo:"
   Update: "&aIzbrani jezik: &6%lang&a!"
-  Updater:
-    LastUpdate: "&aZadnja posodobitev: &8%data"
-    Usage: "&cNeveljavna uporaba! Uporabi: &8 '/friend lang update <language>'"
-    NeedCheck: "&cPreverite seznam razpoložljivih jezikov! &8(/friend lang update)"
-    Checking: "&7Preverjanje posodobitev..."
-    Failed-Connect: "&cPovezava s strežnikom ni uspela."
-    Unknown: "&cTega jezika ni mogoče najti."
-    Available: "&aRazpoložljive datoteke:"
-    Updated: "&a%lang &ajezik je posodobljen! Morda boste morali znova zagnati strežnik."
 Ignore:
   Usage:
     Main: "&cNeveljavna uporaba! Uporabi: &8'/friend ignore <add|remove|list>'"

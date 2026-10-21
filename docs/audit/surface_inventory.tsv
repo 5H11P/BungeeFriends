@@ -40,16 +40,6 @@ permission	friends.prefix.owner	shared	src/main/java/net/simplyrin/bungeefriends
 permission	friends.prefix.vip	shared	src/main/java/net/simplyrin/bungeefriends/utils/PrefixManager.java	src/main/java/net/_5h11p/bungeefriends/utils/PrefixManager.java	P4: preserve	allowed and denied player test
 permission	friends.prefix.vip_plus	shared	src/main/java/net/simplyrin/bungeefriends/utils/PrefixManager.java	src/main/java/net/_5h11p/bungeefriends/utils/PrefixManager.java	P4: preserve	allowed and denied player test
 config-key	BungeeParties.Enable	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
-config-key	Player.64636120-8633-4541-aa5f-412b42ddb04d.Friends	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
-config-key	Player.64636120-8633-4541-aa5f-412b42ddb04d.Language	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
-config-key	Player.64636120-8633-4541-aa5f-412b42ddb04d.Name	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
-config-key	Player.64636120-8633-4541-aa5f-412b42ddb04d.Prefix	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
-config-key	Player.64636120-8633-4541-aa5f-412b42ddb04d.Toggle	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
-config-key	Player.b0bb65a2-832f-4a5d-854e-873b7c4522ed.Friends	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
-config-key	Player.b0bb65a2-832f-4a5d-854e-873b7c4522ed.Language	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
-config-key	Player.b0bb65a2-832f-4a5d-854e-873b7c4522ed.Name	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
-config-key	Player.b0bb65a2-832f-4a5d-854e-873b7c4522ed.Prefix	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
-config-key	Player.b0bb65a2-832f-4a5d-854e-873b7c4522ed.Toggle	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
 config-key	Plugin.AlreadyMigrated	fork-only	src/main/java/net/simplyrin/bungeefriends/utils/MySQLManager.java	-	P4: retain or document retirement	default, reload and YAML/MySQL mode test
 config-key	Plugin.BungeeParties.PartyCmdSender	shared	src/main/java/net/simplyrin/bungeefriends/Main.java	src/main/java/net/_5h11p/bungeefriends/CorePlugin.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
 config-key	Plugin.BungeeParties.PartyCmdSender.1.Leader	shared	src/main/java/net/simplyrin/bungeefriends/utils/ConfigManager.java	src/main/java/net/_5h11p/bungeefriends/utils/ConfigManager.java	P3/P4: map and check default	default, reload and YAML/MySQL mode test
@@ -280,15 +270,6 @@ message-key-english	KickOffline.AllOnline	shared	English.yml:210	English.yml:287
 message-key-english	Lang	shared	English.yml:96	English.yml:130	P4: migrate/check translation	compare locale keys and render message
 message-key-english	Lang.Available	shared	English.yml:98	English.yml:132	P4: migrate/check translation	compare locale keys and render message
 message-key-english	Lang.Update	shared	English.yml:99	English.yml:133	P4: migrate/check translation	compare locale keys and render message
-message-key-english	Lang.Updater	shared	English.yml:100	English.yml:134	P4: migrate/check translation	compare locale keys and render message
-message-key-english	Lang.Updater.Available	shared	English.yml:107	English.yml:141	P4: migrate/check translation	compare locale keys and render message
-message-key-english	Lang.Updater.Checking	shared	English.yml:104	English.yml:138	P4: migrate/check translation	compare locale keys and render message
-message-key-english	Lang.Updater.Failed-Connect	shared	English.yml:105	English.yml:139	P4: migrate/check translation	compare locale keys and render message
-message-key-english	Lang.Updater.LastUpdate	shared	English.yml:101	English.yml:135	P4: migrate/check translation	compare locale keys and render message
-message-key-english	Lang.Updater.NeedCheck	shared	English.yml:103	English.yml:137	P4: migrate/check translation	compare locale keys and render message
-message-key-english	Lang.Updater.Unknown	shared	English.yml:106	English.yml:140	P4: migrate/check translation	compare locale keys and render message
-message-key-english	Lang.Updater.Updated	shared	English.yml:108	English.yml:142	P4: migrate/check translation	compare locale keys and render message
-message-key-english	Lang.Updater.Usage	shared	English.yml:102	English.yml:136	P4: migrate/check translation	compare locale keys and render message
 message-key-english	Lang.Usage	shared	English.yml:97	English.yml:131	P4: migrate/check translation	compare locale keys and render message
 message-key-english	Language	shared	English.yml:5	English.yml:5	P4: migrate/check translation	compare locale keys and render message
 message-key-english	Leave	shared	English.yml:199	English.yml:276	P4: migrate/check translation	compare locale keys and render message
@@ -580,15 +561,6 @@ message-key-chinese	KickOffline.AllOnline	shared	Chinese.yml:184	Chinese.yml:263
 message-key-chinese	Lang	shared	Chinese.yml:83	Chinese.yml:120	P4: migrate/check translation	compare locale keys and render message
 message-key-chinese	Lang.Available	shared	Chinese.yml:85	Chinese.yml:122	P4: migrate/check translation	compare locale keys and render message
 message-key-chinese	Lang.Update	shared	Chinese.yml:86	Chinese.yml:123	P4: migrate/check translation	compare locale keys and render message
-message-key-chinese	Lang.Updater	shared	Chinese.yml:87	Chinese.yml:124	P4: migrate/check translation	compare locale keys and render message
-message-key-chinese	Lang.Updater.Available	shared	Chinese.yml:94	Chinese.yml:131	P4: migrate/check translation	compare locale keys and render message
-message-key-chinese	Lang.Updater.Checking	shared	Chinese.yml:91	Chinese.yml:128	P4: migrate/check translation	compare locale keys and render message
-message-key-chinese	Lang.Updater.Failed-Connect	shared	Chinese.yml:92	Chinese.yml:129	P4: migrate/check translation	compare locale keys and render message
-message-key-chinese	Lang.Updater.LastUpdate	shared	Chinese.yml:88	Chinese.yml:125	P4: migrate/check translation	compare locale keys and render message
-message-key-chinese	Lang.Updater.NeedCheck	shared	Chinese.yml:90	Chinese.yml:127	P4: migrate/check translation	compare locale keys and render message
-message-key-chinese	Lang.Updater.Unknown	shared	Chinese.yml:93	Chinese.yml:130	P4: migrate/check translation	compare locale keys and render message
-message-key-chinese	Lang.Updater.Updated	shared	Chinese.yml:95	Chinese.yml:132	P4: migrate/check translation	compare locale keys and render message
-message-key-chinese	Lang.Updater.Usage	shared	Chinese.yml:89	Chinese.yml:126	P4: migrate/check translation	compare locale keys and render message
 message-key-chinese	Lang.Usage	shared	Chinese.yml:84	Chinese.yml:121	P4: migrate/check translation	compare locale keys and render message
 message-key-chinese	Language	shared	Chinese.yml:4	Chinese.yml:4	P4: migrate/check translation	compare locale keys and render message
 message-key-chinese	Leave	shared	Chinese.yml:175	Chinese.yml:254	P4: migrate/check translation	compare locale keys and render message

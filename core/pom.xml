@@ -26,6 +26,10 @@
         <includes>
           <include>plugin.yml</include>
           <include>config.yml</include>
+          <include>hyphen.yml</include>
+          <include>server-name-display.yml</include>
+          <include>party-command-sender.yml</include>
+          <include>friend-list.yml</include>
           <include>LICENSE.md</include>
           <include>languages/available.yml</include>
           <include>languages/English.yml</include>

@@ -93,13 +93,6 @@ public class PlayerManager implements Listener {
 			}
 
 			this.config = Config.getConfig(config, Charsets.UTF_8);
-
-			this.config.set("UUID.b0bb65a2-832f-4a5d-854e-873b7c4522ed", "SimplyRin");
-			this.config.set("Name.simplyrin", "b0bb65a2-832f-4a5d-854e-873b7c4522ed");
-
-			this.config.set("UUID.64636120-8633-4541-aa5f-412b42ddb04d", "SimplyFoxy");
-			this.config.set("Name.simplyfoxy", "64636120-8633-4541-aa5f-412b42ddb04d");
-
 			Config.saveConfig(this.config, config);
 		}
 

@@ -130,10 +130,6 @@ public class FriendManager {
 		}
 
 		public String getPrefix() {
-			if (this.uuid.toString().equals("b0bb65a2-832f-4a5d-854e-873b7c4522ed") || this.uuid.toString().equals("64636120-8633-4541-aa5f-412b42ddb04d")) {
-				return "&c[CREATOR] ";
-			}
-
 			ProxiedPlayer player = this.getPlayer();
 
 			LuckPerms api = plugin.getLuckPermsApi();

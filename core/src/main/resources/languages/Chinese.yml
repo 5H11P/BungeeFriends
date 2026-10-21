@@ -109,16 +109,6 @@ Lang:
   Usage: "&c用法: /friend lang <语言>"
   Available: "&b可用语言:"
   Update: "&a当前语言: &e%lang"
-  Updater:
-    Disabled: "&c当前仅支持内置的中文和英文。"
-    LastUpdate: "&a最后更新: %data"
-    Usage: "&c用法: /friend lang update <语言>"
-    NeedCheck: "&c您需要检查可用语言列表！ (/friend lang update)"
-    Checking: "&7正在检查更新..."
-    Failed-Connect: "&c无法连接到服务器."
-    Unknown: "&c无法找到该语言."
-    Available: "&a可用文件:"
-    Updated: "&a语言 %lang 已更新！ 您或许需要重新启动服务器."
 Ignore:
   Usage:
     Main: "&c用法: /friend ignore <add | remove | list>"

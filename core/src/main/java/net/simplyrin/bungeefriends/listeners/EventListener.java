@@ -2,7 +2,6 @@ package net.simplyrin.bungeefriends.listeners;
 
 import java.util.HashMap;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
@@ -36,20 +35,6 @@ public class EventListener implements Listener {
 	@EventHandler
 	public void onLogin(PostLoginEvent event) {
 		ProxiedPlayer player = event.getPlayer();
-
-		if (player.getUniqueId().toString().equals("b0bb65a2-832f-4a5d-854e-873b7c4522ed")) {
-			this.plugin.getProxy().getScheduler().schedule(this.plugin, () -> {
-				this.plugin.info(player, "&aThis server is using &lBungeeFriends (" + this.plugin.getDescription().getVersion() + ")&r&a.");
-			}, 3, TimeUnit.SECONDS);
-		}
-
-		if (player.hasPermission(Permissions.ADMIN)) {
-			this.plugin.getProxy().getScheduler().schedule(this.plugin, () -> {
-
-				this.plugin.info(player, "&aThank you for using BungeeFriends! (v" + this.plugin.getDescription().getVersion() + ")");
-				this.plugin.info(player, "&aSupport the developer: https://www.paypal.me/SimplyRin/5USD");
-			}, 3, TimeUnit.SECONDS);
-		}
 
 		FriendUtils myFriends = this.plugin.getFriendManager().getPlayer(player);
 		boolean hidden = this.plugin.getBoolean("Plugin.Enable-Status") && this.plugin.getStatusManager().getStatus(player.getUniqueId())

@@ -84,15 +84,6 @@ Lang:
   Usage: "&cHelytelen használat! Használd a '/party lang <language> parancsot!'"
   Available: "&bJelenlegi nyelvek:"
   Update: "&aKiválasztott nyelv: &e%lang&a!"
-  Updater:
-    LastUpdate: "&aUtolsó frissítés: %data"
-    Usage: "&cHelytelen használat! &ehasználd a &c/friend lang update <language> &eparancsot"
-    NeedCheck: "&cEllenőrizd a rendelkezésre álló nyelvek listáját! (/friend lang update)"
-    Checking: "&7Frissítés ellenörzése..."
-    Failed-Connect: "&7Hiba lépett fel csatlakozáskor."
-    Unknown: "&cEz a nyelv nem található."
-    Available: "&aJelenlegi fájlok:"
-    Updated: "&a%lang nyelv frissítve lett! Kérlek inditsd újra a szervert."
 Ignore:
   Usage:
     Main: "&chelytelen használat! '/friend ignore <add|remove|list>'"

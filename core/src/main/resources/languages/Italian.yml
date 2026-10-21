@@ -84,15 +84,6 @@ Lang:
   Usage: "&cInvalid usage! '/party lang <language>'"
   Available: "&bLingue attualmente disponibili:"
   Update: "&aLingua selezionata: &e%lang&a!"
-  Updater:
-    LastUpdate: "&aUltimo aggiornamento: %data"
-    Usage: "&cUtilizzo non valido! '/Friend lang <lingua>'"
-    NeedCheck: "&cÈ necessario controllare l'elenco delle lingue disponibili (/friend lang update)"
-    Checking: "&7Controllo aggiornamenti..."
-    Failed-Connect: "&cConnessione al server non riuscita."
-    Unknown: "&cQuesta lingua non è stata trovata."
-    Available: "&aFile disponibili:"
-    Updated: "&a%lang la lingua è stata aggiornata! Potrebbe essere necessario riavviare il server."
 Ignore:
   Usage:
     Main: "&cUtilizzo non valido! '/friend ignore <add|remove|list>'"

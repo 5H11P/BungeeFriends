@@ -84,15 +84,6 @@ Lang:
   Usage: "&cНедопустимое использование! Используйте: /party lang <language>"
   Available: "&bДоступные языки:"
   Update: "&aВыбранный язык: &e%lang&a!"
-  Updater:
-    LastUpdate: "&aПоследнее обновление: %data"
-    Usage: "&cInvalid usage! '/friend lang update <language>'"
-    NeedCheck: "&cYou need check available languages list! (/friend lang update)"
-    Checking: "&7Проверка обновлений..."
-    Failed-Connect: "&cНе удалось подключиться к серверу."
-    Unknown: "&cЭтот язык не найден."
-    Available: "&aДоступные файлы:"
-    Updated: "&a%lang language has been updated! You may need to restart the server."
 Ignore:
   Usage:
     Main: "&cНедопустимое использование! Используйте: /friend ignore <add|remove|list>"

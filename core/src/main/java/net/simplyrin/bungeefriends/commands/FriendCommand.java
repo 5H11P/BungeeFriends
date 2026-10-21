@@ -9,11 +9,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -48,8 +46,6 @@ import net.simplyrin.bungeefriends.utils.PaginationMessage;
 public class FriendCommand extends Command implements TabExecutor {
 
 	private Main plugin;
-	@Getter
-	private List<String> availableLanguages = new CopyOnWriteArrayList<>(Arrays.asList("English", "Chinese"));
 
 	public FriendCommand(Main plugin, String command) {
 		super(command, null);
@@ -400,10 +396,6 @@ public class FriendCommand extends Command implements TabExecutor {
 			}
 
 			if (args[0].equalsIgnoreCase("lang") || args[0].equalsIgnoreCase("language")) {
-				if (args.length > 1 && args[1].equalsIgnoreCase("update")) {
-					this.plugin.info(player, langUtils.getString("Lang.Updater.Disabled"));
-					return;
-				}
 				if (args.length > 1 && (args[1].equalsIgnoreCase("english") || args[1].equalsIgnoreCase("chinese"))) {
 					langUtils.setLanguage(args[1].toLowerCase(java.util.Locale.ROOT));
 					this.plugin.info(player, langUtils.getString("Lang.Update").replace("%lang", langUtils.getLanguage()));
