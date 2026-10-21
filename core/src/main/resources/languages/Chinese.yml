@@ -6,8 +6,8 @@ Language: Chinese
 #For example, in the case of Japanese, it is 日本語.
 #in the case of Chinese, it is 中文.
 DisplayLanguage: 简体中文
-Ingame_Only: "&c该指令仅在游戏中可用！"
-No_Permission: "&c你没有权限使用该指令！"
+In-Game-Only: "&c该指令仅在游戏中可用！"
+No-Permission: "&c你没有权限使用该指令！"
 Hyphen: '&9&m----------------------------------------------------'
 #Exceptions
 Exceptions:
@@ -17,8 +17,8 @@ Exceptions:
   AlreadyFriend: "&c你与这位玩家已经成为好友！"
   Ignored: "&c那位玩家已将你置入他们的屏蔽列表中！"
   IsntOnYourFriends: "&c%targetDisplayName &c不在你的好友列表中！"
-  CantAddYourSelf: "&c你不能添加自己为好友！"
-  CantRemoveYourself: "&c你不能移除自己！"
+  Cant-Add-Yourself: "&c你不能添加自己为好友！"
+  Cant-Remove-Yourself: "&c你不能移除自己！"
   NoInvited: "&c那位玩家没有向你发送好友请求！ 请使用 &e/friend add %name &c添加好友！"
   HasntFriend: "&c那位玩家没有向你发送好友请求！ 请使用 &e/friend add %name &c添加好友！"
   SlotLimitReached: "&c好友数量已达上限！ 请先删除一些再继续添加！"
@@ -31,8 +31,8 @@ Exceptions:
     Joined: "&c这个玩家已经加入了其他组队！"
     Invited: "&c你已经邀请了 %targetDisplayName&c！"
   Havent-Received-Invite: "&c你没有被邀请加入该组队, 或者邀请已经过期！"
-  Your-Self-Invite: "&c你不能邀请你自己加入组队！"
-  Cant-Remove-Your-Self: "&c你不能踢出自己！ 请使用 /party disaband 解散组队！"
+  Cant-Invite-Yourself: "&c你不能邀请自己加入组队！"
+  Cant-Kick-Yourself: "&c你不能踢出自己！请使用 /party disband 解散组队！"
   Isnt-In-Your-Party: "%targetDisplayName &c不在你的组队中！ 请先邀请他们！"
 #Commands
 No-Joined-The-Party: "&c你必须在组队中才能使用该指令！"
@@ -43,8 +43,7 @@ Friends:
   Server-Move: "&&7%%displayName%% &e移动到了 &a%%server%%&e."
 Add:
   Usage: "&c用法: /friend add <玩家>"
-  Sent: "&e你向 %targetDisplayName &e发出了好友请求！"
-  5-Minutes: "&e他们有5分钟接受请求！"
+  Sent: "&e你向 %targetDisplayName &e发出了好友请求！\n&e他们有5分钟接受请求！"
   Accept:
     Prefix: "&a&l[接受]&r"
     Message: "&b点击接受好友请求"
@@ -75,9 +74,7 @@ Deny:
   Usage: "&c用法: /friend deny <玩家>"
   Declined: "&e你拒绝了 %targetDisplayName &e的好友请求！"
 List:
-  DontHave:
-    One: "&e你还没有任何好友！"
-    Two: "&e使用 /friends add <player> 来添加一些好友"
+  Empty: "&e你还没有任何好友！\n&e使用 /friend add <玩家> 来添加好友"
   Online: "&e%targetDisplayName &e在 %server 服务器."
   Status:
     Away: "&e%targetDisplayName &e离开 &7- &e%server"
@@ -120,20 +117,19 @@ Ignore:
     Main: "&c用法: /friend ignore <add | remove | list>"
     Add: "&c用法: /friend ignore add <玩家>"
     Remove: "&c用法: /friend ignore add <玩家>"
-  Havent:
-    One: "&e你还没有屏蔽任何玩家！"
-    Two: "&e使用 /ignore add <玩家> 屏蔽玩家"
+  Empty: "&e你还没有屏蔽任何玩家！\n&e使用 /friend ignore add <玩家> 屏蔽玩家"
   Added: "&a已将 %targetDisplayName &a加入到你的屏蔽列表."
   AlreadyAdded: "&c你已经屏蔽那位玩家了！ 使用 &b/ignore remove Player &c取消屏蔽！"
   Removed: "&a已将 %targetDisplayName &a从你的屏蔽列表移除."
   NotAdded: "&c你没有在屏蔽那位玩家！ 使用 &b/ignore add Player &c屏蔽玩家！"
 Block:
   Command: "&a屏蔽命令："
-  add: "&e/block add <玩家> &7- &b屏蔽一名玩家。"
-  help: "&e/block help &7- &b显示帮助消息。"
-  list: "&e/block list [页数] &7- &b列出你屏蔽的玩家。"
-  remove: "&e/block remove <玩家> &7- &b解除屏蔽一名玩家。"
-  removeall: "&e/block removeall &7- &b解除屏蔽所有玩家。"
+  Unknown-Argument: "&c未知参数“%argument%”！"
+  Add: "&e/block add <玩家> &7- &b屏蔽一名玩家。"
+  Help: "&e/block help &7- &b显示帮助消息。"
+  List: "&e/block list [页数] &7- &b列出你屏蔽的玩家。"
+  Remove: "&e/block remove <玩家> &7- &b解除屏蔽一名玩家。"
+  Remove-All: "&e/block removeall &7- &b解除屏蔽所有玩家。"
   List-Page: "%%previousPage%% &6屏蔽列表 (页数 %%currentPage%% / %%maxPage%%) %%nextPage%%"
   List-Format: "&d%index. &e%targetDisplayName"
   RemoveAll-Done: "&a已解除屏蔽所有玩家。"
@@ -165,9 +161,8 @@ Pagination:
 Party-Mute:
   Enabled: "%displayName &e启用了&c全员禁言"
   Disabled: "%displayName &e禁用了&a全员禁言"
-  Muted-1: "&c组队已被禁言！"
   Restricted-Chat-Info: "&e现在只有组队管理员和队长可以在聊天中发言。"
-  Send-Denied: "&c你无法在组队聊天中发送消息。"
+  Send-Denied: "&c组队已被禁言！你无法在组队聊天中发送消息。"
 Party-AllInvite:
   Enabled: "%displayName &e启用了&aAll Invite"
   Disabled: "%displayName &e禁用了&cAll Invite"
@@ -246,9 +241,8 @@ Invite:
   Usage: "&c无效指令！ 用法: '/party invite <玩家>'"
   All-Left: "&e该组队被解散, 因为所有邀请已到期, 所有成员已离开."
   Request:
-    Sent:
-      Invited: "%displayName &e邀请了 %targetDisplayName &e加入组队！"
-      60-Seconds: "&e他们有60秒同意该邀请！"
+    Sent: "%displayName &e邀请了 %targetDisplayName &e加入组队！\n&e他们有60秒同意该邀请！"
+    Party-Notice: "%displayName &e邀请了 %targetDisplayName &e加入组队！"
     Click-here:
       Here: "&6点击此处 "
       Accept: "&e加入，你有60秒时间接受."
@@ -268,8 +262,7 @@ Remove-Party:  #and Kick
 KickOffline:
   AllOnline: "&cThere are no offline players to remove."
 Warp:
-  Confirm: "&e队伍中一些队员仍在游戏中，再次发送命令来确认召集所有队员！" #在游戏中玩家的数量%count%和所在的服务器%servers%
-  Confirm-Usage: "&e请在 &c%time%s &e内再次输入 &b/p warp&e来确认传送！" #设定时间%time%秒内再次输入命令来确认传送。
+  Confirm: "&e队伍中有 %count% 名队员仍在游戏服务器（%servers%）。\n&e请在 &c%time% 秒内再次输入 &b/p warp&e 来确认传送！"
   Disabled: "&c组队传送已关闭。"
   No-Server: "&c当前服务器不可用。"
   Blocked: "&c此服务器不允许组队传送。"
@@ -295,8 +288,7 @@ Hijack:
   You: "&c你劫持了这个队伍."
   Other: "%displayName &c劫持了你的队伍！"
 Logout:
-  One: "%displayName &e离开了服务器."
-  Two: "&e%time%分钟后，随机一名队伍成员将成为队长."
+  Leader-Disconnected: "%displayName &e离开了服务器。\n&e%time%分钟后，随机一名队伍成员将成为队长。"
   Disband-When-Empty: "&e如果没有其他成员，队伍将在%time%分钟后解散."
   Become: "%displayName &e成为了队长."
 Party-Connection:

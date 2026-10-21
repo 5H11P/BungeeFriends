@@ -11,7 +11,7 @@ public class Messages {
 
 	public static final String INGAME_ONLY = "&cThis command is available only in the game.";
 	public static final String CONSOLE_ONLY = "&cThis command is only available from the console.";
-	public static final String NO_PERMISSION = "No_Permission";
+	public static final String NO_PERMISSION = "No-Permission";
 
 	public static final String HYPHEN = "Hyphen";
 	public static final String CONSOLE_HYPHEN = "&9&m---------------------------------------------";

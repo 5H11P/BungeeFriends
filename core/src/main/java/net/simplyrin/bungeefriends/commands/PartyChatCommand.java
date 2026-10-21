@@ -5,6 +5,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.simplyrin.bungeefriends.Main;
 import net.simplyrin.bungeefriends.exceptions.parties.NotJoinedException;
+import net.simplyrin.bungeefriends.messages.MessageFrame;
 import net.simplyrin.bungeefriends.messages.Messages;
 import net.simplyrin.bungeefriends.tools.ThreadPool;
 import net.simplyrin.bungeefriends.utils.LanguageManager.LanguageUtils;
@@ -42,9 +43,7 @@ public class PartyChatCommand extends Command {
 		LanguageUtils langUtils = this.plugin.getLanguageManager().getPlayer(player);
 
 		if (!myParties.isJoinedParty()) {
-			this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-			this.plugin.info(player, langUtils.getString("No-Joined-The-Party"));
-			this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+			this.plugin.infoFramed(player, langUtils.getString("No-Joined-The-Party"), MessageFrame.MessageId.NO_JOINED_PARTY);
 			return;
 		}
 
@@ -65,16 +64,12 @@ public class PartyChatCommand extends Command {
 			try {
 				partyLeader.partyChat(player, message);
 			} catch (NotJoinedException e) {
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-				this.plugin.info(player, langUtils.getString("Chat.NeedInAParty"));
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				this.plugin.infoFramed(player, langUtils.getString("Chat.NeedInAParty"), MessageFrame.MessageId.CHAT_NEED_PARTY);
 			}
 			return;
 		}
 
-		this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-		this.plugin.info(player, langUtils.getString("Chat.ChatUsage"));
-		this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+		this.plugin.infoFramed(player, langUtils.getString("Chat.ChatUsage"), MessageFrame.MessageId.PARTY_CHAT_USAGE);
 		return;
 	}
 

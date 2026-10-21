@@ -14,6 +14,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.config.Configuration;
 import net.simplyrin.bungeefriends.Main;
+import net.simplyrin.bungeefriends.messages.MessageFrame;
 import net.simplyrin.bungeefriends.messages.Messages;
 import net.simplyrin.bungeefriends.tools.Config;
 import net.simplyrin.bungeefriends.tools.ThreadPool;
@@ -54,9 +55,7 @@ public class FriendConsoleCommand extends Command {
 				if (args.length > 1) {
 					UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[1]);
 					if (target == null) {
-						this.plugin.info(langUtils.getString(Messages.HYPHEN));
-						this.plugin.info(langUtils.getString("Cant-Find").replace("%name", args[1]));
-						this.plugin.info(langUtils.getString(Messages.HYPHEN));
+						this.plugin.infoFramedConsole(langUtils.getString("Cant-Find").replace("%name", args[1]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
 						return;
 					}
 					if (args.length > 2) {
@@ -77,9 +76,7 @@ public class FriendConsoleCommand extends Command {
 						return;
 					}
 				}
-				this.plugin.info(langUtils.getString(Messages.HYPHEN));
-				this.plugin.info(langUtils.getString("Prefix.Usage").replace("/friend", "/friendconsole"));
-				this.plugin.info(langUtils.getString(Messages.HYPHEN));
+				this.plugin.infoFramedConsole(langUtils.getString("Prefix.Usage").replace("/friend", "/friendconsole"), MessageFrame.MessageId.CONSOLE_PREFIX);
 				return;
 			}
 
@@ -199,26 +196,25 @@ public class FriendConsoleCommand extends Command {
 				if (args.length > 1) {
 					if (availableList.contains(args[1].toLowerCase())) {
 						langUtils.setLanguage(args[1].toLowerCase());
-						this.plugin.info(langUtils.getString(Messages.HYPHEN));
-						this.plugin.info(langUtils.getString("Lang.Update").replace("%lang", langUtils.getLanguage().replace("/friend", "/friendconsole")));
-						this.plugin.info(langUtils.getString(Messages.HYPHEN));
+						this.plugin.infoFramedConsole(langUtils.getString("Lang.Update").replace("%lang", langUtils.getLanguage().replace("/friend", "/friendconsole")),
+								MessageFrame.MessageId.CONSOLE_LANGUAGE);
 						return;
 					}
 				}
 
-				this.plugin.info(langUtils.getString(Messages.HYPHEN));
+				this.plugin.infoFrameConsole(MessageFrame.MessageId.CONSOLE_LANGUAGE);
 				this.plugin.info(langUtils.getString("Lang.Usage").replace("/friend", "/friendconsole"));
 				this.plugin.info(langUtils.getString("Lang.Available").replace("/friend", "/friendconsole") + " <" + available.substring(0, available.length() - 1) + ">");
-				this.plugin.info(langUtils.getString(Messages.HYPHEN));
+				this.plugin.infoFrameConsole(MessageFrame.MessageId.CONSOLE_LANGUAGE);
 				return;
 			}
 		}
 
-		this.plugin.info(langUtils.getString(Messages.HYPHEN));
+		this.plugin.infoFrameConsole(MessageFrame.MessageId.CONSOLE_HELP);
 		this.plugin.info(langUtils.getString("Help.Lang").replace("/friend", "/friendconsole"));
 		this.plugin.info(langUtils.getString("Help.Prefix").replace("/friend", "/friendconsole"));
 		this.plugin.info(langUtils.getString("Help.Reload").replace("/friend", "/friendconsole"));
-		this.plugin.info(langUtils.getString(Messages.HYPHEN));
+		this.plugin.infoFrameConsole(MessageFrame.MessageId.CONSOLE_HELP);
 		return;
 	}
 

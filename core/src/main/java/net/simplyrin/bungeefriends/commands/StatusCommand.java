@@ -15,6 +15,7 @@ import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.simplyrin.bungeefriends.Main;
+import net.simplyrin.bungeefriends.messages.MessageFrame;
 import net.simplyrin.bungeefriends.messages.Messages;
 import net.simplyrin.bungeefriends.tools.ThreadPool;
 import net.simplyrin.bungeefriends.utils.LanguageManager.LanguageUtils;
@@ -43,12 +44,12 @@ public class StatusCommand extends Command implements TabExecutor {
 		if (plugin.getProxy().getPlayer(player.getUniqueId()) == null) return;
 		LanguageUtils language = plugin.getLanguageManager().getPlayer(player);
 		if (!plugin.getBoolean("Plugin.Enable-Status")) {
-			plugin.info(player, language.getString("Status-Command.Disabled"));
+			plugin.infoFramed(player, language.getString("Status-Command.Disabled"), MessageFrame.MessageId.STATUS_DISABLED);
 			return;
 		}
 		Status status = Status.fromArgs(args);
 		if (status == null) {
-			plugin.info(player, language.getString("Status-Command.Usage"));
+			plugin.infoFramed(player, language.getString("Status-Command.Usage"), MessageFrame.MessageId.STATUS_USAGE);
 			return;
 		}
 		plugin.getStatusManager().setStatus(player.getUniqueId(), status);
@@ -91,7 +92,7 @@ public class StatusCommand extends Command implements TabExecutor {
 	@Override
 	public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
 		List<String> matches = new ArrayList<>();
-		if (plugin.getBoolean("Plugin.Disable-TabComplete")) return matches;
+		if (plugin.getBoolean("Plugin.Disable-Tab-Complete")) return matches;
 		String[] choices = args.length == 1 ? new String[] {"online", "away", "busy", "offline", "appear", "appear-offline", "appearoffline"}
 				: args.length == 2 && "appear".equalsIgnoreCase(args[0]) ? new String[] {"offline"} : new String[0];
 		String input = args.length == 0 ? "" : args[args.length - 1].toLowerCase(java.util.Locale.ROOT);

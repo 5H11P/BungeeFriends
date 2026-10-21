@@ -17,59 +17,70 @@ Plugin:
     /pl: false
     /w: false
     /whisper: false
-  Disable-ServerSwitchNotifer: false
-  Disable-PartyWarp: false
+  Disable-Server-Switch-Notifier: false
+  Disable-Party-Warp: false
   Disable-LuckPerms-API: false
   Disable-Hyphen: false
-  Disable-TabComplete: false
-  Disable-PartyCmdSender: false
-  Enable-BungeeParties: false
+  Hyphen:
+    Categories:
+      Command-Results: true
+      Lists: true
+      Party-Notifications: true
+      Warp-Notifications: true
+    # Message-specific values override the category setting. Valid IDs are declared by the plugin.
+    # Example: PARTY_MUTE_DENIED: false
+    Messages: {}
+  Disable-Tab-Complete: false
+  Disable-Party-Command-Sender: false
+  Enable-Bungee-Parties: false
   Enable-Status: true
-  Enable-NoPartyWarp-Servers: true
-  NoPartyWarp-Servers: []
-  Enable-Deprecated-PrefixYml: false
-  FriendList-NoPrefix: false
-  Bypass-Lobby-Name-Contains: lobby
-  Party-Max-Size: '10'
-  Party-Disband-Delay-Minutes: 5
-  Party-Offline-Member-Kick-Delay-Minutes: 5
+  Enable-Deprecated-Prefix-YML: false
+  Friend-List:
+    No-Prefix: false
+    Time-Format: yyyy-MM-dd HH:mm:ss
+    Sort:
+      1:
+        No-Color-Prefix: '[ADMIN]'
+        Priority: 1
+      2:
+        No-Color-Prefix: '[MOD]'
+        Priority: 2
+  Party:
+    Max-Size: 10
+    Disband-Delay-Minutes: 5
+    Offline-Member-Kick-Delay-Minutes: 5
   Notify-Removed-Friend: true
-  FriendList-Time:
-    Format: yyyy-MM-dd HH:mm:ss
   LuckPerms:
-    OfflinePrefixCacheMinutes: 30
-    OfflinePrefixLoadTimeoutSeconds: 2
-  PartyWarp:
+    Offline-Prefix-Cache-Minutes: 30
+    Offline-Prefix-Load-Timeout-Seconds: 2
+  Party-Warp:
     Enable-Confirmation: false
-    Confirm-Timeout: 10
+    Confirm-Timeout-Seconds: 10
     Game-Servers: []
-    Initial-Delay: '0.5'
-    Member-Interval: '0.1'
-  ServerName:
+    Initial-Delay-Seconds: '0.5'
+    Member-Interval-Seconds: '0.1'
+    Lobby-Server-Name-Contains: lobby
+    Server-Blocklist:
+      Enabled: true
+      Servers: []
+  Server-Name:
     1:
       Type: startsWith
-      ServerName: lobby-
-      ReplaceName: Lobby
+      Server-Name: lobby-
+      Replace-Name: Lobby
     2:
       Type: contains
-      ServerName: game
-      ReplaceName: Game
+      Server-Name: game
+      Replace-Name: Game
     3:
       Type: equalsIgnoreCase
-      ServerName: sw-1
-      ReplaceName: SkyWars
-  BungeeParties:
-    PartyCmdSender:
+      Server-Name: sw-1
+      Replace-Name: SkyWars
+  Bungee-Parties:
+    Party-Command-Sender:
       1:
         Leader: /join
         Member: '/join $args'
       2:
         Leader: /sw join
         Member: '/sw join $args'
-  FriendList-Sort:
-    1:
-      NoColorPrefix: '[ADMIN]'
-      Priority: 1
-    2:
-      NoColorPrefix: '[MOD]'
-      Priority: 2

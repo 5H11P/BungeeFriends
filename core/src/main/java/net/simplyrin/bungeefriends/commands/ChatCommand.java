@@ -10,6 +10,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.simplyrin.bungeefriends.Main;
+import net.simplyrin.bungeefriends.messages.MessageFrame;
 import net.simplyrin.bungeefriends.messages.Messages;
 import net.simplyrin.bungeefriends.messages.Permissions;
 import net.simplyrin.bungeefriends.utils.LanguageManager.LanguageUtils;
@@ -69,48 +70,49 @@ public class ChatCommand extends Command {
 		if (args.length > 0) {
 			if (args[0].equalsIgnoreCase("all") || args[0].equalsIgnoreCase("a") || args[0].equalsIgnoreCase("default")) {
 				this.channels.remove(player.getUniqueId());
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				this.plugin.infoFrame(player, MessageFrame.MessageId.CHAT_COMMAND_MESSAGES);
 				this.plugin.info(player, langUtils.getString("Chat.Update").replace("%CHANNEL%", langUtils.getString("Chat.Channels.All")));
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				this.plugin.infoFrame(player, MessageFrame.MessageId.CHAT_COMMAND_MESSAGES);
 				return;
 			}
 			if (args[0].equalsIgnoreCase("party") || args[0].equalsIgnoreCase("p")) {
 				if (this.plugin.getPartyManager() == null
 						|| !this.plugin.getPartyManager().getPlayer(player).isJoinedParty()) {
-					this.plugin.info(player, langUtils.getString("Chat.NeedInAParty"));
+					this.plugin.infoFramed(player, langUtils.getString("Chat.NeedInAParty"), MessageFrame.MessageId.CHAT_NEED_PARTY);
 					return;
 				}
 				this.channels.put(player.getUniqueId(), Channel.PARTY);
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				this.plugin.infoFrame(player, MessageFrame.MessageId.CHAT_COMMAND_MESSAGES);
 				this.plugin.info(player, langUtils.getString("Chat.Update").replace("%CHANNEL%", langUtils.getString("Chat.Channels.Party")));
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				this.plugin.infoFrame(player, MessageFrame.MessageId.CHAT_COMMAND_MESSAGES);
 				return;
 			}
 			if (args[0].equalsIgnoreCase("staff") || args[0].equalsIgnoreCase("s")) {
 				if (!player.hasPermission(Permissions.STAFF_CHAT) && !player.hasPermission(Permissions.ADMIN)) {
-					this.plugin.info(player, langUtils.getString("Chat.No-Permission"));
+					this.plugin.infoFramed(player, langUtils.getString("Chat.No-Permission"), MessageFrame.MessageId.CHAT_NO_PERMISSION);
 					return;
 				}
 				this.channels.put(player.getUniqueId(), Channel.STAFF);
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				this.plugin.infoFrame(player, MessageFrame.MessageId.CHAT_COMMAND_MESSAGES);
 				this.plugin.info(player, langUtils.getString("Chat.Update").replace("%CHANNEL%", langUtils.getString("Chat.Channels.Staff")));
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				this.plugin.infoFrame(player, MessageFrame.MessageId.CHAT_COMMAND_MESSAGES);
 				return;
 			}
 			if (args[0].equalsIgnoreCase("admin")) {
 				if (!player.hasPermission(Permissions.ADMIN)) {
-					this.plugin.info(player, langUtils.getString("Chat.No-Permission"));
+					this.plugin.infoFramed(player, langUtils.getString("Chat.No-Permission"), MessageFrame.MessageId.CHAT_NO_PERMISSION);
 					return;
 				}
 				this.channels.put(player.getUniqueId(), Channel.ADMIN);
-				this.plugin.info(player, langUtils.getString("Chat.Update").replace("%CHANNEL%", langUtils.getString("Chat.Channels.Admin")));
+				this.plugin.infoFramed(player, langUtils.getString("Chat.Update").replace("%CHANNEL%", langUtils.getString("Chat.Channels.Admin")),
+						MessageFrame.MessageId.CHAT_UPDATED);
 				return;
 			}
 		}
 
-		this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+		this.plugin.infoFrame(player, MessageFrame.MessageId.CHAT_COMMAND_MESSAGES);
 		this.plugin.info(player, langUtils.getString("Chat.Usage"));
-		this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+		this.plugin.infoFrame(player, MessageFrame.MessageId.CHAT_COMMAND_MESSAGES);
 	}
 
 }

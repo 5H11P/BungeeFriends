@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.simplyrin.bungeefriends.Main;
 import net.simplyrin.bungeefriends.api.event.PartyWarpEvent;
+import net.simplyrin.bungeefriends.messages.MessageFrame;
 import net.simplyrin.bungeefriends.tools.ThreadPool;
 import net.simplyrin.bungeefriends.utils.LanguageManager.LanguageUtils;
 import net.simplyrin.bungeefriends.utils.PartyManager.PartyUtils;
@@ -29,7 +30,7 @@ public class PartyWarpManager {
 
 	public synchronized boolean confirmOrPrompt(ProxiedPlayer leader, PartyUtils party, LanguageUtils language) {
 		UUID leaderId = leader.getUniqueId();
-		if (!plugin.getBoolean("Plugin.PartyWarp.Enable-Confirmation")) {
+		if (!plugin.getBoolean("Plugin.Party-Warp.Enable-Confirmation")) {
 			confirmations.remove(leaderId);
 			return true;
 		}
@@ -44,16 +45,16 @@ public class PartyWarpManager {
 				&& current.destination.equalsIgnoreCase(destination) && current.gameMembers.equals(gameMembers)
 				&& confirmations.remove(leaderId, current)) return true;
 
-		long seconds = plugin.getConfigManager().getConfig().getInt("Plugin.PartyWarp.Confirm-Timeout", 10);
+		long seconds = plugin.getConfigManager().getConfig().getInt("Plugin.Party-Warp.Confirm-Timeout-Seconds", 10);
 		if (seconds <= 0 || seconds > 300) seconds = 10;
 		confirmations.put(leaderId, new Confirmation(destination, gameMembers,
 				System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(seconds)));
 		Set<String> servers = new HashSet<>();
 		for (String entry : gameMembers) servers.add(plugin.getServerName(entry.substring(entry.indexOf('@') + 1)));
-		plugin.info(leader, language.getString("Warp.Confirm")
+		plugin.infoFramed(leader, language.getString("Warp.Confirm")
 				.replace("%count%", String.valueOf(gameMembers.size()))
-				.replace("%servers%", String.join(", ", servers)));
-		plugin.info(leader, language.getString("Warp.Confirm-Usage").replace("%time%", String.valueOf(seconds)));
+				.replace("%servers%", String.join(", ", servers))
+				.replace("%time%", String.valueOf(seconds)), MessageFrame.MessageId.WARP_CONFIRM);
 		return false;
 	}
 
@@ -67,8 +68,8 @@ public class PartyWarpManager {
 		generations.put(leaderId, generation);
 		Set<String> scheduled = ConcurrentHashMap.newKeySet();
 		tasks.put(leaderId, scheduled);
-		long initial = delayMillis("Plugin.PartyWarp.Initial-Delay", 0.5, false);
-		long interval = delayMillis("Plugin.PartyWarp.Member-Interval", 0.1, true);
+		long initial = delayMillis("Plugin.Party-Warp.Initial-Delay-Seconds", 0.5, false);
+		long interval = delayMillis("Plugin.Party-Warp.Member-Interval-Seconds", 0.1, true);
 		int index = 0;
 		List<UUID> plannedMembers = new ArrayList<>();
 		for (String member : new ArrayList<>(party.getParties())) {
@@ -116,7 +117,7 @@ public class PartyWarpManager {
 	}
 
 	private void connectIfCurrent(UUID leaderId, UUID memberId, String destination, long generation, boolean manual) {
-		if (closed || plugin.getBoolean("Plugin.Disable-PartyWarp")
+		if (closed || plugin.getBoolean("Plugin.Disable-Party-Warp")
 				|| !Long.valueOf(generation).equals(generations.get(leaderId))
 				|| plugin.isPartyWarpBlocked(destination)) return;
 		ProxiedPlayer leader = plugin.getProxy().getPlayer(leaderId);
@@ -130,10 +131,11 @@ public class PartyWarpManager {
 				|| !plugin.getStringList("Parties." + leaderId + ".Party-List").contains(memberId.toString())) return;
 		LanguageUtils language = plugin.getLanguageManager().getPlayer(member);
 		if (manual) {
-			plugin.info(member, language.getString("Warp.Summon")
-					.replace("%displayName", plugin.getFriendManager().getPlayer(leader).getDisplayName()));
+			plugin.infoFramed(member, language.getString("Warp.Summon")
+					.replace("%displayName", plugin.getFriendManager().getPlayer(leader).getDisplayName()), MessageFrame.MessageId.WARP_SUMMON);
 		} else {
-			plugin.info(member, language.getString("Warp.Sending").replace("%server%", plugin.getServerName(destination)));
+			plugin.infoFramed(member, language.getString("Warp.Sending").replace("%server%", plugin.getServerName(destination)),
+					MessageFrame.MessageId.WARP_SENDING);
 		}
 		member.connect(leader.getServer().getInfo());
 	}
@@ -141,7 +143,7 @@ public class PartyWarpManager {
 	private Set<String> gameMembers(UUID leaderId, List<String> members) {
 		Set<String> result = new HashSet<>();
 		Set<String> gameServers = new HashSet<>();
-		for (String server : plugin.getStringList("Plugin.PartyWarp.Game-Servers"))
+		for (String server : plugin.getStringList("Plugin.Party-Warp.Game-Servers"))
 			gameServers.add(server.trim().toLowerCase(Locale.ROOT));
 		for (String member : members) {
 			UUID memberId;

@@ -47,9 +47,9 @@ public class Priority {
 
 		Configuration config = this.instance.getConfigManager().getConfig();
 
-		String base = "Plugin.FriendList-Sort";
+		String base = "Plugin.Friend-List.Sort";
 		for (String key : config.getSection(base).getKeys()) {
-			String noColorPrefix = config.getString(base + "." + key + ".NoColorPrefix");
+			String noColorPrefix = config.getString(base + "." + key + ".No-Color-Prefix");
 			int priority = config.getInt(base + "." + key + ".Priority", -1);
 
 			if (!noColorPrefix.equals("") && priority != -1) {

@@ -155,7 +155,7 @@ public class EventListener implements Listener {
 
 		String server = player.getServer().getInfo().getName();
 		if (this.plugin.getBoolean("Plugin.Enable-Status")
-				&& this.plugin.getStringList("Plugin.PartyWarp.Game-Servers").stream().anyMatch(server::equalsIgnoreCase)
+				&& this.plugin.getStringList("Plugin.Party-Warp.Game-Servers").stream().anyMatch(server::equalsIgnoreCase)
 				&& this.plugin.getStatusManager().getStatus(player.getUniqueId()) != net.simplyrin.bungeefriends.utils.StatusManager.Status.ONLINE) {
 			this.plugin.getStatusManager().setStatus(player.getUniqueId(), net.simplyrin.bungeefriends.utils.StatusManager.Status.ONLINE);
 		}
@@ -170,7 +170,7 @@ public class EventListener implements Listener {
 				&& (!this.plugin.getBoolean("Plugin.Enable-Status") || this.plugin.getStatusManager().getStatus(player.getUniqueId())
 						!= net.simplyrin.bungeefriends.utils.StatusManager.Status.APPEAR_OFFLINE)) {
 			for (String friends : myFriends.getFriends()) {
-				if (!this.plugin.getBoolean("Plugin.Disable-ServerSwitchNotifer")) {
+				if (!this.plugin.getBoolean("Plugin.Disable-Server-Switch-Notifier")) {
 					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(friends);
 
 					String message = targetLangUtils.getString("Friends.Server-Move");

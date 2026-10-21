@@ -6,6 +6,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.simplyrin.bungeefriends.Main;
+import net.simplyrin.bungeefriends.messages.MessageFrame;
 import net.simplyrin.bungeefriends.messages.Messages;
 import net.simplyrin.bungeefriends.tools.ThreadPool;
 import net.simplyrin.bungeefriends.utils.FriendManager.FriendUtils;
@@ -45,9 +46,8 @@ public class ReplyCommand extends Command {
 
 		UUID targetUniqueId = this.plugin.getReplyTargetMap().get(myFriends.getUniqueId());
 		if (targetUniqueId == null) {
-			this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-			this.plugin.info(player, langUtils.getString("Reply-Command.Target").replace("%targetDisplayName", "&cNone!"));
-			this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+			this.plugin.infoFramed(player, langUtils.getString("Reply-Command.Target").replace("%targetDisplayName", "&cNone!"),
+					MessageFrame.MessageId.REPLY_TARGET_NONE);
 			return;
 		}
 
@@ -62,9 +62,8 @@ public class ReplyCommand extends Command {
 
 			if (targetFriends.getPlayer() == null || (this.plugin.getBoolean("Plugin.Enable-Status")
 					&& this.plugin.getStatusManager().getStatus(targetUniqueId) == net.simplyrin.bungeefriends.utils.StatusManager.Status.APPEAR_OFFLINE)) {
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-				this.plugin.info(player, langUtils.getString("Tell-Command.Offline").replace("%targetDisplayName", targetFriends.getDisplayName()));
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				this.plugin.infoFramed(player, langUtils.getString("Tell-Command.Offline").replace("%targetDisplayName", targetFriends.getDisplayName()),
+						MessageFrame.MessageId.TELL_OFFLINE);
 				return;
 			}
 

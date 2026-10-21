@@ -146,8 +146,8 @@ public class FriendManager {
 					else {
 						prefix = plugin.getString("Player." + this.uuid + ".Prefix");
 						final UUID targetId = this.uuid;
-						final int cacheMinutes = plugin.getConfigManager().getConfig().getInt("Plugin.LuckPerms.OfflinePrefixCacheMinutes", 30);
-						final int timeoutSeconds = plugin.getConfigManager().getConfig().getInt("Plugin.LuckPerms.OfflinePrefixLoadTimeoutSeconds", 2);
+						final int cacheMinutes = plugin.getConfigManager().getConfig().getInt("Plugin.LuckPerms.Offline-Prefix-Cache-Minutes", 30);
+						final int timeoutSeconds = plugin.getConfigManager().getConfig().getInt("Plugin.LuckPerms.Offline-Prefix-Load-Timeout-Seconds", 2);
 						if (offlinePrefixRefresh.putIfAbsent(targetId, Boolean.TRUE) == null) {
 							try {
 								ThreadPool.run(() -> {

@@ -12,6 +12,7 @@ import com.google.common.base.Charsets;
 import lombok.Getter;
 import net.md_5.bungee.config.Configuration;
 import net.simplyrin.bungeefriends.Main;
+import net.simplyrin.bungeefriends.messages.MessageFrame;
 import net.simplyrin.bungeefriends.tools.Config;
 
 /**
@@ -45,7 +46,6 @@ public class ConfigManager {
 		if (this.plugin.getPartyWarpManager() != null) this.plugin.getPartyWarpManager().cancelAll();
 		File config = new File(this.plugin.getDataFolder(), "config.yml");
 		this.config = Config.getConfig(config, Charsets.UTF_8);
-		migrateBungeeParties(this.config);
 		this.ensureP4Defaults();
 		this.ensureFeatureDefaults();
 		this.save();
@@ -58,7 +58,6 @@ public class ConfigManager {
 	public void createConfig() {
 		File config = new File(this.plugin.getDataFolder(), "config.yml");
 		this.config = loadOrCreateConfig(config);
-		migrateBungeeParties(this.config);
 
 		this.config.set("Plugin.Disable-Alias", null);
 
@@ -78,48 +77,44 @@ public class ConfigManager {
 		this.resetValue("Plugin.Disable-Aliases./w");
 		this.resetValue("Plugin.Disable-Aliases./whisper");
 		this.resetValue("Plugin.Disable-Lang-Command");
-		this.resetValue("Plugin.Disable-ServerSwitchNotifer");
-		this.resetValue("Plugin.Disable-PartyWarp");
+		this.resetValue("Plugin.Disable-Server-Switch-Notifier");
+		this.resetValue("Plugin.Disable-Party-Warp");
 		this.resetValue("Plugin.Disable-LuckPerms-API");
 		this.resetValue("Plugin.Disable-Hyphen");
-		this.resetValue("Plugin.Disable-TabComplete");
-		this.resetValue("Plugin.Disable-PartyCmdSender");
-		this.resetValue("Plugin.Enable-BungeeParties");
+		this.resetValue("Plugin.Disable-Tab-Complete");
+		this.resetValue("Plugin.Disable-Party-Command-Sender");
+		this.resetValue("Plugin.Enable-Bungee-Parties");
 		this.ensureP4Defaults();
 		this.ensureFeatureDefaults();
-		this.resetValue("Plugin.Enable-Deprecated-PrefixYml");
-		this.resetValue("Plugin.FriendList-NoPrefix");
+		this.resetValue("Plugin.Enable-Deprecated-Prefix-YML");
+		this.resetValue("Plugin.Friend-List.No-Prefix");
 
 		this.resetStringValue("Plugin.Default-Language", "english");
-		this.resetStringValue("Plugin.Bypass-Lobby-Name-Contains", "lobby");
+		this.resetStringValue("Plugin.Party-Warp.Lobby-Server-Name-Contains", "lobby");
 
-		this.resetStringValue("Plugin.ServerName.1.Type", "startsWith");
-		this.resetStringValue("Plugin.ServerName.1.ServerName", "lobby-");
-		this.resetStringValue("Plugin.ServerName.1.ReplaceName", "Lobby");
+		this.resetStringValue("Plugin.Server-Name.1.Type", "startsWith");
+		this.resetStringValue("Plugin.Server-Name.1.Server-Name", "lobby-");
+		this.resetStringValue("Plugin.Server-Name.1.Replace-Name", "Lobby");
 
-		this.resetStringValue("Plugin.ServerName.2.Type", "contains");
-		this.resetStringValue("Plugin.ServerName.2.ServerName", "game");
-		this.resetStringValue("Plugin.ServerName.2.ReplaceName", "Game");
+		this.resetStringValue("Plugin.Server-Name.2.Type", "contains");
+		this.resetStringValue("Plugin.Server-Name.2.Server-Name", "game");
+		this.resetStringValue("Plugin.Server-Name.2.Replace-Name", "Game");
 
-		this.resetStringValue("Plugin.ServerName.3.Type", "equalsIgnoreCase");
-		this.resetStringValue("Plugin.ServerName.3.ServerName", "sw-1");
-		this.resetStringValue("Plugin.ServerName.3.ReplaceName", "SkyWars");
+		this.resetStringValue("Plugin.Server-Name.3.Type", "equalsIgnoreCase");
+		this.resetStringValue("Plugin.Server-Name.3.Server-Name", "sw-1");
+		this.resetStringValue("Plugin.Server-Name.3.Replace-Name", "SkyWars");
 
-		this.resetStringValue("Plugin.BungeeParties.PartyCmdSender.1.Leader", "/join");
-		this.resetStringValue("Plugin.BungeeParties.PartyCmdSender.1.Member", "/join $args");
+		this.resetStringValue("Plugin.Bungee-Parties.Party-Command-Sender.1.Leader", "/join");
+		this.resetStringValue("Plugin.Bungee-Parties.Party-Command-Sender.1.Member", "/join $args");
 
-		this.resetStringValue("Plugin.BungeeParties.PartyCmdSender.2.Leader", "/sw join");
-		this.resetStringValue("Plugin.BungeeParties.PartyCmdSender.2.Member", "/sw join $args");
+		this.resetStringValue("Plugin.Bungee-Parties.Party-Command-Sender.2.Leader", "/sw join");
+		this.resetStringValue("Plugin.Bungee-Parties.Party-Command-Sender.2.Member", "/sw join $args");
 
-		this.resetStringValue("Plugin.FriendList-Sort.1.NoColorPrefix", "[ADMIN]");
-		this.resetStringValue("Plugin.FriendList-Sort.1.Priority", 1);
+		this.resetStringValue("Plugin.Friend-List.Sort.1.No-Color-Prefix", "[ADMIN]");
+		this.resetStringValue("Plugin.Friend-List.Sort.1.Priority", 1);
 
-		this.resetStringValue("Plugin.FriendList-Sort.2.NoColorPrefix", "[MOD]");
-		this.resetStringValue("Plugin.FriendList-Sort.2.Priority", 2);
-
-		this.config.set("Plugin.Disable-Party-ServerSwitchNotifer", null);
-		this.config.set("Plugin.Disable-Lang-Command", null);
-		this.config.set("Plugin.Use-LuckPerms-API", null);
+		this.resetStringValue("Plugin.Friend-List.Sort.2.No-Color-Prefix", "[MOD]");
+		this.resetStringValue("Plugin.Friend-List.Sort.2.Priority", 2);
 
 		this.save();
 	}
@@ -139,29 +134,23 @@ public class ConfigManager {
 		return Config.getConfig(file, Charsets.UTF_8);
 	}
 
-	static void migrateBungeeParties(Configuration config) {
-		if (config.contains("BungeeParties.Enable") && !config.contains("Plugin.Enable-BungeeParties")) {
-			config.set("Plugin.Enable-BungeeParties", config.getBoolean("BungeeParties.Enable"));
-		}
-		config.set("BungeeParties.Enable", null);
-	}
-
 	public void resetStringValue(String key, String value) {
-		if (this.config.getString(key).equals("")) {
+		String current = this.config.getString(key);
+		if (current == null || current.isEmpty()) {
 			this.config.set(key, value);
 		}
 	}
 
 	private void ensureP4Defaults() {
-		this.resetStringValue("Plugin.Party-Max-Size", "10");
+		defaultValue(this.config, "Plugin.Party.Max-Size", 10);
 		if (!this.config.contains("Plugin.Enable-Status")) this.config.set("Plugin.Enable-Status", true);
-		if (!this.config.contains("Plugin.Enable-NoPartyWarp-Servers")) this.config.set("Plugin.Enable-NoPartyWarp-Servers", true);
-		if (!this.config.contains("Plugin.NoPartyWarp-Servers")) this.config.set("Plugin.NoPartyWarp-Servers", new java.util.ArrayList<String>());
-		if (!this.config.contains("Plugin.PartyWarp.Enable-Confirmation")) this.config.set("Plugin.PartyWarp.Enable-Confirmation", false);
-		if (!this.config.contains("Plugin.PartyWarp.Confirm-Timeout")) this.config.set("Plugin.PartyWarp.Confirm-Timeout", 10);
-		if (!this.config.contains("Plugin.PartyWarp.Game-Servers")) this.config.set("Plugin.PartyWarp.Game-Servers", new java.util.ArrayList<String>());
-		this.resetStringValue("Plugin.PartyWarp.Initial-Delay", "0.5");
-		this.resetStringValue("Plugin.PartyWarp.Member-Interval", "0.1");
+		if (!this.config.contains("Plugin.Party-Warp.Server-Blocklist.Enabled")) this.config.set("Plugin.Party-Warp.Server-Blocklist.Enabled", true);
+		if (!this.config.contains("Plugin.Party-Warp.Server-Blocklist.Servers")) this.config.set("Plugin.Party-Warp.Server-Blocklist.Servers", new java.util.ArrayList<String>());
+		if (!this.config.contains("Plugin.Party-Warp.Enable-Confirmation")) this.config.set("Plugin.Party-Warp.Enable-Confirmation", false);
+		if (!this.config.contains("Plugin.Party-Warp.Confirm-Timeout-Seconds")) this.config.set("Plugin.Party-Warp.Confirm-Timeout-Seconds", 10);
+		if (!this.config.contains("Plugin.Party-Warp.Game-Servers")) this.config.set("Plugin.Party-Warp.Game-Servers", new java.util.ArrayList<String>());
+		this.resetStringValue("Plugin.Party-Warp.Initial-Delay-Seconds", "0.5");
+		this.resetStringValue("Plugin.Party-Warp.Member-Interval-Seconds", "0.1");
 	}
 
 	private void ensureFeatureDefaults() {
@@ -170,26 +159,34 @@ public class ConfigManager {
 	}
 
 	static List<String> applyFeatureDefaults(Configuration config) {
-		migrateKey(config, "Plugin.Party-Disband-Time", "Plugin.Party-Disband-Delay-Minutes");
-		migrateKey(config, "Plugin.Party-Kick-Offline-Time", "Plugin.Party-Offline-Member-Kick-Delay-Minutes");
-		migrateKey(config, "Plugin.Send-Remove-Target-Message", "Plugin.Notify-Removed-Friend");
-		defaultValue(config, "Plugin.Party-Disband-Delay-Minutes", 5);
-		defaultValue(config, "Plugin.Party-Offline-Member-Kick-Delay-Minutes", 5);
+		defaultValue(config, "Plugin.Hyphen.Categories.Command-Results", true);
+		defaultValue(config, "Plugin.Hyphen.Categories.Lists", true);
+		defaultValue(config, "Plugin.Hyphen.Categories.Party-Notifications", true);
+		defaultValue(config, "Plugin.Hyphen.Categories.Warp-Notifications", true);
+		defaultValue(config, "Plugin.Party.Max-Size", 10);
+		defaultValue(config, "Plugin.Party.Disband-Delay-Minutes", 5);
+		defaultValue(config, "Plugin.Party.Offline-Member-Kick-Delay-Minutes", 5);
 		defaultValue(config, "Plugin.Notify-Removed-Friend", true);
-		defaultValue(config, "Plugin.FriendList-Time.Format", "yyyy-MM-dd HH:mm:ss");
-		defaultValue(config, "Plugin.LuckPerms.OfflinePrefixCacheMinutes", 30);
-		defaultValue(config, "Plugin.LuckPerms.OfflinePrefixLoadTimeoutSeconds", 2);
+		defaultValue(config, "Plugin.Friend-List.Time-Format", "yyyy-MM-dd HH:mm:ss");
+		defaultValue(config, "Plugin.LuckPerms.Offline-Prefix-Cache-Minutes", 30);
+		defaultValue(config, "Plugin.LuckPerms.Offline-Prefix-Load-Timeout-Seconds", 2);
 		List<String> invalid = new ArrayList<>();
-		validInt(config, "Plugin.Party-Disband-Delay-Minutes", 5, 0, invalid);
-		validInt(config, "Plugin.Party-Offline-Member-Kick-Delay-Minutes", 5, 0, invalid);
-		validInt(config, "Plugin.LuckPerms.OfflinePrefixCacheMinutes", 30, 0, invalid);
-		validInt(config, "Plugin.LuckPerms.OfflinePrefixLoadTimeoutSeconds", 2, 1, invalid);
+		Configuration messageOverrides = config.getSection("Plugin.Hyphen.Messages");
+		if (messageOverrides != null) {
+			for (String messageId : messageOverrides.getKeys()) {
+				try {
+					MessageFrame.MessageId.valueOf(messageId);
+				} catch (IllegalArgumentException e) {
+					invalid.add("Plugin.Hyphen.Messages." + messageId + " (unknown message id)");
+				}
+			}
+		}
+		validInt(config, "Plugin.Party.Disband-Delay-Minutes", 5, 0, invalid);
+		validInt(config, "Plugin.Party.Offline-Member-Kick-Delay-Minutes", 5, 0, invalid);
+		validInt(config, "Plugin.Party.Max-Size", 10, 2, invalid);
+		validInt(config, "Plugin.LuckPerms.Offline-Prefix-Cache-Minutes", 30, 0, invalid);
+		validInt(config, "Plugin.LuckPerms.Offline-Prefix-Load-Timeout-Seconds", 2, 1, invalid);
 		return invalid;
-	}
-
-	private static void migrateKey(Configuration config, String oldKey, String newKey) {
-		if (!config.contains(newKey) && config.contains(oldKey)) config.set(newKey, config.get(oldKey));
-		config.set(oldKey, null);
 	}
 
 	private static void defaultValue(Configuration config, String key, Object value) {

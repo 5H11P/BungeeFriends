@@ -3,6 +3,7 @@ package net.simplyrin.bungeefriends.utils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -31,7 +32,7 @@ public class LanguageResourcesTest {
 				for (String key : Arrays.asList("Block.Self", "Block.List-Format", "Block.RemoveAll-Done",
 						"Status-Command.Usage", "Status-Command.Disabled", "Status.ChatBar.Busy",
 						"Status.ActionBar.AppearOffline", "Warp.Blocked", "Warp.No-Server",
-						"Warp.Confirm", "Warp.Confirm-Usage", "Lang.Updater.Disabled",
+						"Warp.Confirm", "Lang.Updater.Disabled",
 						"Requests.Entry", "Note.Usage", "Party-Setting.Usage", "Party-Private.No-Permission")) {
 					assertFalse(language + ": " + key, config.getString(key).isEmpty());
 				}
@@ -67,7 +68,9 @@ public class LanguageResourcesTest {
 				"Pagination.Previous", "Pagination.Next", "Party-Mute.Restricted-Chat-Info",
 				"Party-Mute.Send-Denied", "Chat.No-Permission", "Chat.Channels.Admin",
 				"Party-Connection.Offline", "Party-Connection.Offline-No-Auto-Kick",
-				"Logout.Disband-When-Empty", "Help-Party-Setting.Command")) {
+				"Logout.Leader-Disconnected", "Logout.Disband-When-Empty", "Help-Party-Setting.Command",
+				"In-Game-Only", "No-Permission", "List.Empty", "Ignore.Empty", "Add.Sent",
+				"Invite.Request.Sent", "Invite.Request.Party-Notice", "Warp.Confirm")) {
 			assertFalse("English: " + key, english.getString(key).isEmpty());
 			assertFalse("Chinese: " + key, chinese.getString(key).isEmpty());
 			assertEquals("Placeholders differ for " + key, placeholders(english.getString(key)), placeholders(chinese.getString(key)));
@@ -75,24 +78,36 @@ public class LanguageResourcesTest {
 	}
 
 	@Test
-	public void legacyCustomMessagesTakePrecedenceOverBundledDefaults() {
+	public void oldLanguageKeysDoNotOverrideCanonicalMessages() {
 		Configuration custom = new Configuration();
 		Configuration bundled = new Configuration();
 		bundled.set("Party-Mute.Send-Denied", "bundled");
 		custom.set("Party-Mute.Muted-2", "custom old");
-		assertEquals("custom old", LanguageManager.resolveMessage(custom, bundled, bundled, "Party-Mute.Send-Denied"));
+		assertEquals("bundled", LanguageManager.resolveMessage(custom, bundled, bundled, "Party-Mute.Send-Denied"));
 		custom.set("Party-Mute.Send-Denied", "custom new");
 		assertEquals("custom new", LanguageManager.resolveMessage(custom, bundled, bundled, "Party-Mute.Send-Denied"));
 		custom.set("Party-Mute.Send-Denied", null);
 		assertEquals("bundled", LanguageManager.resolveMessage(new Configuration(), bundled, bundled, "Party-Mute.Send-Denied"));
-		for (String[] keys : new String[][] {
-				{"Logout.Disband-When-Empty", "Logout.Three"},
-				{"Party-Mute.Restricted-Chat-Info", "Party-Mute.Info-Enabled"},
-				{"Chat.No-Permission", "Chat.Chat-NoPermission"}}) {
-			Configuration oldFile = new Configuration();
-			oldFile.set(keys[1], "older translation");
-			assertEquals(keys[0], "older translation", LanguageManager.resolveMessage(oldFile, bundled, bundled, keys[0]));
-		}
+		Configuration oldFile = new Configuration();
+		oldFile.set("Chat.Chat-NoPermission", "older translation");
+		bundled.set("Chat.No-Permission", "bundled chat permission");
+		assertEquals("bundled chat permission", LanguageManager.resolveMessage(oldFile, bundled, bundled, "Chat.No-Permission"));
+	}
+
+	@Test
+	public void mergedMessagesKeepNewlinesAndCanonicalKeysOnly() {
+		Configuration english = Config.getConfig(getClass().getResourceAsStream("/languages/English.yml"));
+		Set<String> keys = new HashSet<>();
+		collectKeys(english, "", keys);
+		assertFalse(keys.contains("Ingame_Only"));
+		assertFalse(keys.contains("No_Permission"));
+		assertFalse(keys.contains("Logout.One"));
+		assertFalse(keys.contains("Logout.Two"));
+		assertFalse(keys.contains("Add.5-Minutes"));
+		assertFalse(keys.contains("Invite.Request.Sent.Invited"));
+		assertTrue(english.getString("Add.Sent").contains("\n"));
+		assertTrue(english.getString("Logout.Leader-Disconnected").contains("\n"));
+		assertTrue(english.getString("Invite.Request.Sent").contains("\n"));
 	}
 
 	private Set<String> placeholders(String message) {

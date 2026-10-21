@@ -9,8 +9,8 @@ Language: English
 # in the case of Chinese, it is 中文.
 DisplayLanguage: YOUR_LANGUAGE
 
-Ingame_Only: "&cThis command is available only in the game."
-No_Permission: "&cYou do not have access to this command!"
+In-Game-Only: "&cThis command is available only in the game."
+No-Permission: "&cYou do not have access to this command!"
 Hyphen: "&9&m---------------------------------------------"
 
 # Exceptions
@@ -21,8 +21,8 @@ Exceptions:
   AlreadyFriend: "&cYou're already friends with this person!"
   Ignored: "&cThat player has added you to their ignored players list!"
   IsntOnYourFriends: "&c%targetDisplayName &cisn't on your friends list!"
-  CantAddYourSelf: "&cYou can't add yourself as a friend!"
-  CantRemoveYourself: "&cYou can not remove yourself!"
+  Cant-Add-Yourself: "&cYou can't add yourself as a friend!"
+  Cant-Remove-Yourself: "&cYou can not remove yourself!"
   NoInvited: "&cThat person hasn't invited you to be friends! Try &e/friend add %name"
   HasntFriend: "&cThat person hasn't invited you to be friends! Try &e/friend add %name"
   SlotLimitReached: "&cYou have reached the maximum of friends! To add more friends please remove some!"
@@ -35,8 +35,8 @@ Exceptions:
     Joined: "&cThis player is already joined the party!"
     Invited: "&cYou have already invited %targetDisplayName&c!"
   Havent-Received-Invite: "&cYou haven't been invited to a party, or the invitation has expired!"
-  Your-Self-Invite: "&cYou can't add yourself to a party!"
-  Cant-Remove-Your-Self: "&cYou can't remove yourself! Use /party disaband instead!"
+  Cant-Invite-Yourself: "&cYou can't invite yourself to a party!"
+  Cant-Kick-Yourself: "&cYou can't remove yourself! Use /party disband instead!"
   Isnt-In-Your-Party: "%targetDisplayName &cisn't in your party! Invite them first!"
 
 # Commands
@@ -50,8 +50,7 @@ Friends:
 
 Add:
   Usage: "&cUsage: /friend add <player>"
-  Sent: "&eYou sent a friend request to %targetDisplayName&e!"
-  5-Minutes: "&eThey have 5 minutes to accept it!"
+  Sent: "&eYou sent a friend request to %targetDisplayName&e!\n&eThey have 5 minutes to accept it!"
   Accept:
     Prefix: "&a&l[ACCEPT]&r"
     Message: "&bClick to accept the friend request"
@@ -87,9 +86,7 @@ Deny:
   Declined: "&eDeclined %targetDisplayName&e's friend request!"
 
 List:
-  DontHave:
-    One: "&eYou don't have any friends yet!"
-    Two: "&eAdd some with /friend add <player>"
+  Empty: "&eYou don't have any friends yet!\n&eAdd some with /friend add <player>"
   Online: "&e%targetDisplayName &eis in a %server Server."
   Status:
     Away: "&e%targetDisplayName &eis away &7- &e%server"
@@ -134,9 +131,7 @@ Ignore:
     Main: "&cInvalid usage! '/friend ignore <add|remove|list>'"
     Add: "&cInvalid usage! '/friend ignore add <player>'"
     Remove: "&cInvalid usage! '/friend ignore add <player>'"
-  Havent:
-    One: "&eYou don't have any ignores yet!"
-    Two: "&eAdd some with /friend ignore add <player>"
+  Empty: "&eYou don't have any ignores yet!\n&eAdd some with /friend ignore add <player>"
   Added: "&aAdded %targetDisplayName &ato your ignore list."
   AlreadyAdded: "&cYou've already ignored that player! &b/ignore remove Player &cto unignore them!"
   Removed: "&aRemoved %targetDisplayName &afrom your ignore list."
@@ -144,11 +139,12 @@ Ignore:
 
 Block:
   Command: "&aBlock commands:"
-  add: "&e/block add <player> &7- &bBlock a player"
-  help: "&e/block help &7- &bShow commands"
-  list: "&e/block list [page] &7- &bList blocked players"
-  remove: "&e/block remove <player> &7- &bUnblock a player"
-  removeall: "&e/block removeall &7- &bUnblock everyone"
+  Unknown-Argument: "&cUnknown argument \"%argument%\"!"
+  Add: "&e/block add <player> &7- &bBlock a player"
+  Help: "&e/block help &7- &bShow commands"
+  List: "&e/block list [page] &7- &bList blocked players"
+  Remove: "&e/block remove <player> &7- &bUnblock a player"
+  Remove-All: "&e/block removeall &7- &bUnblock everyone"
   List-Page: "&6Blocked players (page %%currentPage%% of %%maxPage%%)"
   List-Format: "&d%index. &e%targetDisplayName"
   RemoveAll-Done: "&aAll players have been unblocked."
@@ -182,9 +178,8 @@ Pagination:
 Party-Mute:
   Enabled: "&e%displayName enabled party chat mute."
   Disabled: "&e%displayName disabled party chat mute."
-  Muted-1: "&cParty chat is muted."
   Restricted-Chat-Info: "&eOnly the party leader can send party messages while muted."
-  Send-Denied: "&cYou cannot send party messages right now."
+  Send-Denied: "&cParty chat is muted. You cannot send party messages right now."
 Party-AllInvite:
   Enabled: "&e%displayName enabled invitations for all members."
   Disabled: "&e%displayName restricted invitations to the leader."
@@ -271,9 +266,8 @@ Invite:
   Usage: "&cInvalid usage! '/party invite <player>'"
   All-Left: "&eThe party was disbanded because all invites have expired and all members have left."
   Request:
-    Sent: 
-      Invited: "%displayName &einvited %targetDisplayName &eto the party!"
-      60-Seconds: "&eThey have 60 seconds to accept it!"
+    Sent: "%displayName &einvited %targetDisplayName &eto the party!\n&eThey have 60 seconds to accept it!"
+    Party-Notice: "%displayName &einvited %targetDisplayName &eto the party!"
     Click-here:
       Here: "&6Click here "
       Accept: "&eto join! You have 60 seconds to accept."
@@ -297,8 +291,7 @@ KickOffline:
   AllOnline: "&cThere are no offline players to remove."
 
 Warp:
-  Confirm: "&e%count% party members are on game servers (%servers%)."
-  Confirm-Usage: "&eType /party warp again within %time% seconds to confirm."
+  Confirm: "&e%count% party members are on game servers (%servers%).\n&eType /party warp again within %time% seconds to confirm."
   Disabled: "&cParty warp is disabled."
   No-Server: "&cYour current server is unavailable."
   Blocked: "&cParty warp is not available on this server."
@@ -330,8 +323,7 @@ Hijack:
   Other: "%displayName &chas hijacked the party!"
 
 Logout:
-  One: "%displayName &ehas logged out the server."
-  Two: "&eAn online member will become leader after %time% minutes."
+  Leader-Disconnected: "%displayName &ehas logged out the server.\n&eAn online member will become leader after %time% minutes."
   Disband-When-Empty: "&eIf no members are online, the party will disband after %time% minutes."
   Become: "%displayName &ehas become the party leader."
 Party-Connection:

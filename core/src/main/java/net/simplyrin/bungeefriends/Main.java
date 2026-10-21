@@ -1,5 +1,7 @@
 package net.simplyrin.bungeefriends;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +33,8 @@ import net.simplyrin.bungeefriends.commands.TellCommand;
 import net.simplyrin.bungeefriends.commands.alias.FLCommand;
 import net.simplyrin.bungeefriends.listeners.EventListener;
 import net.simplyrin.bungeefriends.listeners.parties.PartyListener;
+import net.simplyrin.bungeefriends.messages.MessageFrame;
+import net.simplyrin.bungeefriends.messages.Messages;
 import net.simplyrin.bungeefriends.tools.Priority;
 import net.simplyrin.bungeefriends.tools.ThreadPool;
 import net.simplyrin.bungeefriends.utils.ConfigManager;
@@ -120,6 +124,11 @@ public class Main extends Plugin {
 		this.priority.update();
 
 		this.reloadLanguageManager();
+		try {
+			MessageFrame.writeDocumentation(new File(this.getDataFolder(), "Hyphen-Guide.md"));
+		} catch (IOException e) {
+			this.getLogger().warning("Could not generate Hyphen-Guide.md: " + e.getMessage());
+		}
 		this.reloadPartyCmdSender();
 
 		this.friendCommand = new FriendCommand(this, "friend");
@@ -216,7 +225,7 @@ public class Main extends Plugin {
 		this.partyChatCommand = null;
 		this.partyPChatCommand = null;
 		this.partyChatAliasCommand = null;
-		if (this.configManager.getConfig().getBoolean("Plugin.Enable-BungeeParties")) {
+		if (this.configManager.getConfig().getBoolean("Plugin.Enable-Bungee-Parties")) {
 			this.partyPChatCommand = new PartyChatCommand(this, "pchat");
 			this.partyChatAliasCommand = new PartyChatCommand(this, "partychat");
 			this.getProxy().getPluginManager().registerCommand(this, this.partyPChatCommand);
@@ -309,7 +318,7 @@ public class Main extends Plugin {
 			this.getProxy().getPluginManager().unregisterCommand(this.flCommand);
 		}
 
-		if (this.configManager.getConfig().getBoolean("Plugin.Enable-BungeeParties")) {
+		if (this.configManager.getConfig().getBoolean("Plugin.Enable-Bungee-Parties")) {
 			if (!this.configManager.getConfig().getBoolean("Plugin.Disable-Aliases./pc")) {
 				this.partyChatCommand = new PartyChatCommand(this, "pc");
 				this.getProxy().getPluginManager().registerCommand(this, this.partyChatCommand);
@@ -324,7 +333,7 @@ public class Main extends Plugin {
 	}
 
 	public void reloadPartyFeatures() {
-		if (!this.configManager.getConfig().getBoolean("Plugin.Enable-BungeeParties")) {
+		if (!this.configManager.getConfig().getBoolean("Plugin.Enable-Bungee-Parties")) {
 			if (this.partyCommand != null) this.getProxy().getPluginManager().unregisterCommand(this.partyCommand);
 			if (this.chatCommand != null) this.getProxy().getPluginManager().unregisterCommand(this.chatCommand);
 			if (this.partyListener != null) this.getProxy().getPluginManager().unregisterListener(this.partyListener);
@@ -356,8 +365,8 @@ public class Main extends Plugin {
 	public void reloadPartyCmdSender() {
 		Map<String, String> mappings = new ConcurrentHashMap<>();
 
-		String base = "Plugin.BungeeParties.PartyCmdSender";
-		for (String key : this.getConfigManager().getConfig().getSection("Plugin.BungeeParties.PartyCmdSender").getKeys()) {
+		String base = "Plugin.Bungee-Parties.Party-Command-Sender";
+		for (String key : this.getConfigManager().getConfig().getSection("Plugin.Bungee-Parties.Party-Command-Sender").getKeys()) {
 			String leader = this.getString(base + "." + key + ".Leader");
 			String member = this.getString(base + "." + key + ".Member");
 
@@ -369,10 +378,10 @@ public class Main extends Plugin {
 	}
 
 	public String getServerName(String serverName) {
-		for (String key : this.getConfigManager().getConfig().getSection("Plugin.ServerName").getKeys()) {
-			String type = this.getString("Plugin.ServerName." + key + ".Type");
-			String name = this.getString("Plugin.ServerName." + key + ".ServerName");
-			String replaceName = this.getString("Plugin.ServerName." + key + ".ReplaceName");
+		for (String key : this.getConfigManager().getConfig().getSection("Plugin.Server-Name").getKeys()) {
+			String type = this.getString("Plugin.Server-Name." + key + ".Type");
+			String name = this.getString("Plugin.Server-Name." + key + ".Server-Name");
+			String replaceName = this.getString("Plugin.Server-Name." + key + ".Replace-Name");
 
 			if (!type.equals("") && !name.equals("") && !replaceName.equals("")) {
 				if (type.equals("startsWith") && serverName.startsWith(name)) {
@@ -388,8 +397,8 @@ public class Main extends Plugin {
 	}
 
 	public boolean isPartyWarpBlocked(String serverName) {
-		if (serverName == null || !this.getBoolean("Plugin.Enable-NoPartyWarp-Servers")) return false;
-		for (String blocked : this.getStringList("Plugin.NoPartyWarp-Servers")) {
+		if (serverName == null || !this.getBoolean("Plugin.Party-Warp.Server-Blocklist.Enabled")) return false;
+		for (String blocked : this.getStringList("Plugin.Party-Warp.Server-Blocklist.Servers")) {
 			if (serverName.equalsIgnoreCase(blocked.trim())) return true;
 		}
 		return false;
@@ -641,6 +650,62 @@ public class Main extends Plugin {
 		if (player != null) {
 			player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getPrefix() + args));
 		}
+	}
+
+	public void infoFramed(ProxiedPlayer player, String message, MessageFrame.MessageId messageId) {
+		if (player == null || message == null || message.isEmpty() || messageId == null) return;
+		this.infoFrame(player, messageId);
+		for (String line : message.split("\\n", -1)) this.info(player, line);
+		this.infoFrame(player, messageId);
+	}
+
+	public void infoFrame(ProxiedPlayer player, MessageFrame.MessageId messageId) {
+		if (!this.shouldFrame(player, messageId)) return;
+		this.info(player, this.getLanguageManager().getPlayer(player).getString(Messages.HYPHEN));
+	}
+
+	public void infoFrame(UUID uuid, MessageFrame.MessageId messageId) {
+		if (uuid == null) return;
+		this.infoFrame(this.getProxy().getPlayer(uuid), messageId);
+	}
+
+	public void infoFrameConsole(MessageFrame.MessageId messageId) {
+		if (!this.shouldFrame(messageId)) return;
+		LanguageManager.LanguageUtils language = this.getLanguageManager().getPlayer(this.getConsoleUniqueId());
+		this.info(language.getString(Messages.HYPHEN));
+	}
+
+	public void infoFramedConsole(String message, MessageFrame.MessageId messageId) {
+		if (message == null || message.isEmpty()) return;
+		this.infoFrameConsole(messageId);
+		for (String line : message.split("\\n", -1)) this.info(line);
+		this.infoFrameConsole(messageId);
+	}
+
+	private boolean shouldFrame(ProxiedPlayer player, MessageFrame.MessageId messageId) {
+		return player != null && this.shouldFrame(messageId);
+	}
+
+	private boolean shouldFrame(MessageFrame.MessageId messageId) {
+		if (messageId == null || this.getBoolean("Plugin.Disable-Hyphen")) return false;
+		String categoryPath = "Plugin.Hyphen.Categories." + messageId.getCategory().configKey();
+		boolean categoryEnabled = this.getConfigManager().getConfig().getBoolean(categoryPath, true);
+		String overridePath = "Plugin.Hyphen.Messages." + messageId.name();
+		Boolean override = this.getConfigManager().getConfig().contains(overridePath)
+				? Boolean.valueOf(this.getBoolean(overridePath)) : null;
+		return MessageFrame.shouldFrame(false, categoryEnabled, override);
+ 	}
+
+	public void infoFramed(UUID uuid, String message, MessageFrame.MessageId messageId) {
+		if (uuid == null) return;
+		this.infoFramed(this.getProxy().getPlayer(uuid), message, messageId);
+	}
+
+	public void infoFramed(ProxiedPlayer player, TextComponent message, MessageFrame.MessageId messageId) {
+		if (player == null || message == null || message.getText().isEmpty() || messageId == null) return;
+		this.infoFrame(player, messageId);
+		this.info(player, message);
+		this.infoFrame(player, messageId);
 	}
 
 	public void info(ProxiedPlayer player, TextComponent args) {

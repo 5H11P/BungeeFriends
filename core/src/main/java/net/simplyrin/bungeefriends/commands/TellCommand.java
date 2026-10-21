@@ -9,6 +9,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.simplyrin.bungeefriends.Main;
+import net.simplyrin.bungeefriends.messages.MessageFrame;
 import net.simplyrin.bungeefriends.messages.Messages;
 import net.simplyrin.bungeefriends.messages.Permissions;
 import net.simplyrin.bungeefriends.tools.ThreadPool;
@@ -35,7 +36,7 @@ public class TellCommand extends Command implements TabExecutor {
 	@Override
 	public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
 		List<String> list = new ArrayList<>();
-		if (plugin.getBoolean("Plugin.Disable-TabComplete") || !(sender instanceof ProxiedPlayer) || args == null || args.length != 1
+		if (plugin.getBoolean("Plugin.Disable-Tab-Complete") || !(sender instanceof ProxiedPlayer) || args == null || args.length != 1
 				|| args[0].isEmpty() || ((ProxiedPlayer) sender).getServer() == null) return list;
 		String server = ((ProxiedPlayer) sender).getServer().getInfo().getName();
 		if (args.length == 1) {
@@ -72,15 +73,11 @@ public class TellCommand extends Command implements TabExecutor {
 			}
 			UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[0]);
 			if (target == null) {
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-				this.plugin.info(player, langUtils.getString("Cant-Find").replace("%name", args[0]));
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				this.plugin.infoFramed(player, langUtils.getString("Cant-Find").replace("%name", args[0]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
 				return;
 			}
 			if (player.getUniqueId().equals(target)) {
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-				this.plugin.info(player, langUtils.getString("Tell-Command.CantSend"));
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				this.plugin.infoFramed(player, langUtils.getString("Tell-Command.CantSend"), MessageFrame.MessageId.TELL_CANT_SEND_SELF);
 				return;
 			}
 			FriendUtils targetFriends = this.plugin.getFriendManager().getPlayer(target);
@@ -88,17 +85,15 @@ public class TellCommand extends Command implements TabExecutor {
 
 			if (!(myFriends.isFriend(targetFriends.getUniqueId()) || player.hasPermission(Permissions.ADMIN)
 					|| player.hasPermission(Permissions.TELL_BYPASS))) {
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-				this.plugin.info(player, langUtils.getString("Tell-Command.MustBeFriends").replace("%targetDisplayName", targetFriends.getDisplayName()));
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				this.plugin.infoFramed(player, langUtils.getString("Tell-Command.MustBeFriends").replace("%targetDisplayName", targetFriends.getDisplayName()),
+						MessageFrame.MessageId.TELL_MUST_BE_FRIENDS);
 				return;
 			}
 
 			if (targetFriends.getPlayer() == null || (this.plugin.getBoolean("Plugin.Enable-Status")
 					&& this.plugin.getStatusManager().getStatus(target) == net.simplyrin.bungeefriends.utils.StatusManager.Status.APPEAR_OFFLINE)) {
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-				this.plugin.info(player, langUtils.getString("Tell-Command.Offline").replace("%targetDisplayName", targetFriends.getDisplayName()));
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				this.plugin.infoFramed(player, langUtils.getString("Tell-Command.Offline").replace("%targetDisplayName", targetFriends.getDisplayName()),
+						MessageFrame.MessageId.TELL_OFFLINE);
 				return;
 			}
 

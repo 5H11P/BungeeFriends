@@ -16,6 +16,7 @@ import net.md_5.bungee.event.EventHandler;
 import net.simplyrin.bungeefriends.Main;
 import net.simplyrin.bungeefriends.commands.ChatCommand.Channel;
 import net.simplyrin.bungeefriends.exceptions.parties.NotJoinedException;
+import net.simplyrin.bungeefriends.messages.MessageFrame;
 import net.simplyrin.bungeefriends.messages.Messages;
 import net.simplyrin.bungeefriends.tools.ThreadPool;
 import net.simplyrin.bungeefriends.utils.LanguageManager.LanguageUtils;
@@ -50,7 +51,7 @@ public class PartyListener implements Listener {
 		this.plugin.set("Name." + player.getName().toLowerCase(), player.getUniqueId().toString());
 		this.plugin.set("UUID." + player.getUniqueId().toString(), player.getName().toLowerCase());
 		if (!this.plugin.isEnabledMySQL()) this.plugin.getPlayerManager().save();
-		this.notifyConnection(player.getUniqueId(), "Party-Connection.Rejoin");
+		this.notifyConnection(player.getUniqueId(), "Party-Connection.Rejoin", MessageFrame.MessageId.PARTY_CONNECTION_REJOIN);
 	}
 
 	@EventHandler
@@ -76,7 +77,8 @@ public class PartyListener implements Listener {
 			if (!myParties.isJoinedParty()) {
 				event.setCancelled(true);
 				this.plugin.getChatCommand().getChannels().remove(player.getUniqueId());
-				this.plugin.info(player, this.plugin.getLanguageManager().getPlayer(player).getString("Chat.NeedInAParty"));
+				this.plugin.infoFramed(player, this.plugin.getLanguageManager().getPlayer(player).getString("Chat.NeedInAParty"),
+						MessageFrame.MessageId.CHAT_NEED_PARTY);
 				return;
 			}
 
@@ -99,12 +101,12 @@ public class PartyListener implements Listener {
 
 	@EventHandler
 	public void partyCmdSender(ChatEvent event) {
-		if (!event.isCommand() || this.plugin.getBoolean("Plugin.Disable-PartyCmdSender")
+		if (!event.isCommand() || this.plugin.getBoolean("Plugin.Disable-Party-Command-Sender")
 				|| !(event.getSender() instanceof ProxiedPlayer)) {
 			return;
 		}
 
-		// Plugin.BungeeParties.PartyCmdSender
+		// Plugin.Bungee-Parties.Party-Command-Sender
 
 		String cmd = event.getMessage();
 
@@ -154,8 +156,9 @@ public class PartyListener implements Listener {
 
 		try {
 			if (!myParties.isPartyOwner()) {
-				int minutes = this.plugin.getConfigManager().getConfig().getInt("Plugin.Party-Offline-Member-Kick-Delay-Minutes", 5);
-				this.notifyConnection(player.getUniqueId(), minutes == 0 ? "Party-Connection.Offline-No-Auto-Kick" : "Party-Connection.Offline");
+				int minutes = this.plugin.getConfigManager().getConfig().getInt("Plugin.Party.Offline-Member-Kick-Delay-Minutes", 5);
+				this.notifyConnection(player.getUniqueId(), minutes == 0 ? "Party-Connection.Offline-No-Auto-Kick" : "Party-Connection.Offline",
+						minutes == 0 ? MessageFrame.MessageId.PARTY_CONNECTION_OFFLINE_NO_KICK : MessageFrame.MessageId.PARTY_CONNECTION_OFFLINE);
 				this.scheduleOfflineMemberKick(player.getUniqueId(), myParties);
 				return;
 			}
@@ -163,7 +166,7 @@ public class PartyListener implements Listener {
 			return;
 		}
 		if (myParties.getParties().isEmpty()) return;
-		final int disbandMinutes = this.plugin.getConfigManager().getConfig().getInt("Plugin.Party-Disband-Delay-Minutes", 5);
+		final int disbandMinutes = this.plugin.getConfigManager().getConfig().getInt("Plugin.Party.Disband-Delay-Minutes", 5);
 
 		ThreadPool.run(() -> {
 			for (String partyPlayerUniqueId : myParties.getParties()) {
@@ -171,13 +174,13 @@ public class PartyListener implements Listener {
 				LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(partyPlayerUniqueId);
 
 				if (targetPlayer.getPlayer() == null) continue;
-				this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString(Messages.HYPHEN));
-
-				this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString("Logout.One").replace("%displayName", myParties.getDisplayName()));
-				this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString("Logout.Two").replace("%time%", String.valueOf(disbandMinutes)).replace("%time", String.valueOf(disbandMinutes)));
+				String message = targetLangUtils.getString("Logout.Leader-Disconnected")
+						.replace("%displayName", myParties.getDisplayName())
+						.replace("%time%", String.valueOf(disbandMinutes));
 				if (myParties.getOnlinePlayers() <= 1)
-					this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString("Logout.Disband-When-Empty").replace("%time%", String.valueOf(disbandMinutes)).replace("%time", String.valueOf(disbandMinutes)));
-				this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString(Messages.HYPHEN));
+					message += "\n" + targetLangUtils.getString("Logout.Disband-When-Empty")
+							.replace("%time%", String.valueOf(disbandMinutes));
+				this.plugin.infoFramed(targetPlayer.getPlayer(), message, MessageFrame.MessageId.PARTY_LOGOUT_LEADER_DISCONNECTED);
 			}
 
 		});
@@ -204,15 +207,13 @@ public class PartyListener implements Listener {
 						PartyUtils targetPlayer = this.plugin.getPartyManager().getPlayer(partyPlayerUniqueId);
 						LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(partyPlayerUniqueId);
 
-						this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString(Messages.HYPHEN));
-						this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString("Logout.Become").replace("%displayName", newParties.getDisplayName()));
-						this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString(Messages.HYPHEN));
+						this.plugin.infoFramed(targetPlayer.getPlayer(), targetLangUtils.getString("Logout.Become").replace("%displayName", newParties.getDisplayName()),
+								MessageFrame.MessageId.PARTY_LEADER_CHANGED);
 					}
 
 					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(uniqueId);
-					this.plugin.info(newParties.getPlayer(), targetLangUtils.getString(Messages.HYPHEN));
-					this.plugin.info(newParties.getPlayer(), targetLangUtils.getString("Logout.Become").replace("%displayName", newParties.getDisplayName()));
-					this.plugin.info(newParties.getPlayer(), targetLangUtils.getString(Messages.HYPHEN));
+					this.plugin.infoFramed(newParties.getPlayer(), targetLangUtils.getString("Logout.Become").replace("%displayName", newParties.getDisplayName()),
+							MessageFrame.MessageId.PARTY_LEADER_CHANGED);
 				} catch (NotJoinedException e) {
 				}
 			} else {
@@ -220,9 +221,8 @@ public class PartyListener implements Listener {
 					PartyUtils targetPlayer = this.plugin.getPartyManager().getPlayer(partyPlayerUniqueId);
 					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(partyPlayerUniqueId);
 
-					this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString(Messages.HYPHEN));
-					this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString("Disband.Disbanded").replace("%displayName", myParties.getDisplayName()));
-					this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString(Messages.HYPHEN));
+					this.plugin.infoFramed(targetPlayer.getPlayer(), targetLangUtils.getString("Disband.Disbanded").replace("%displayName", myParties.getDisplayName()),
+							MessageFrame.MessageId.PARTY_DISBANDED);
 
 				}
 				myParties.disband();
@@ -230,7 +230,7 @@ public class PartyListener implements Listener {
 		}, disbandMinutes, TimeUnit.MINUTES);
 	}
 
-	private void notifyConnection(UUID playerId, String key) {
+	private void notifyConnection(UUID playerId, String key, MessageFrame.MessageId messageId) {
 		PartyUtils member = this.plugin.getPartyManager().getPlayer(playerId);
 		if (!member.isJoinedParty()) return;
 		PartyUtils leader;
@@ -242,14 +242,14 @@ public class PartyListener implements Listener {
 			UUID recipientId = UUID.fromString(recipient);
 			if (recipientId.equals(playerId) || this.plugin.getProxy().getPlayer(recipientId) == null) continue;
 			LanguageUtils language = this.plugin.getLanguageManager().getPlayer(recipientId);
-			this.plugin.info(recipientId, language.getString(key)
+			this.plugin.infoFramed(recipientId, language.getString(key)
 					.replace("%displayName", this.plugin.getFriendManager().getPlayer(playerId).getDisplayNameFor(recipientId))
-					.replace("%time%", String.valueOf(this.plugin.getConfigManager().getConfig().getInt("Plugin.Party-Offline-Member-Kick-Delay-Minutes", 5))));
+					.replace("%time%", String.valueOf(this.plugin.getConfigManager().getConfig().getInt("Plugin.Party.Offline-Member-Kick-Delay-Minutes", 5))), messageId);
 		}
 	}
 
 	private void scheduleOfflineMemberKick(UUID playerId, PartyUtils member) {
-		int minutes = this.plugin.getConfigManager().getConfig().getInt("Plugin.Party-Offline-Member-Kick-Delay-Minutes", 5);
+		int minutes = this.plugin.getConfigManager().getConfig().getInt("Plugin.Party.Offline-Member-Kick-Delay-Minutes", 5);
 		if (minutes == 0) return;
 		PartyUtils leader;
 		try { leader = member.getPartyLeader(); } catch (NotJoinedException e) { return; }
@@ -268,8 +268,9 @@ public class PartyListener implements Listener {
 					UUID recipientId = UUID.fromString(recipient);
 					if (this.plugin.getProxy().getPlayer(recipientId) != null) {
 						LanguageUtils language = this.plugin.getLanguageManager().getPlayer(recipientId);
-						this.plugin.info(recipientId, language.getString("Remove-Party.Member-Removed")
-								.replace("%targetDisplayName", this.plugin.getFriendManager().getPlayer(playerId).getDisplayNameFor(recipientId)));
+						this.plugin.infoFramed(recipientId, language.getString("Remove-Party.Member-Removed")
+								.replace("%targetDisplayName", this.plugin.getFriendManager().getPlayer(playerId).getDisplayNameFor(recipientId)),
+								MessageFrame.MessageId.PARTY_MEMBER_REMOVED);
 					}
 				}
 			} catch (NotJoinedException ignored) { }
@@ -294,14 +295,14 @@ public class PartyListener implements Listener {
 		if (serverName == null || serverName.isEmpty()) {
 			return;
 		}
-		String lobbyFilter = this.plugin.getString("Plugin.Bypass-Lobby-Name-Contains");
+		String lobbyFilter = this.plugin.getString("Plugin.Party-Warp.Lobby-Server-Name-Contains");
 		if (lobbyFilter != null && !lobbyFilter.isEmpty()
 				&& serverName.toLowerCase(java.util.Locale.ROOT).contains(lobbyFilter.toLowerCase(java.util.Locale.ROOT))) {
 			return;
 		}
 		if (this.plugin.isPartyWarpBlocked(serverName)) return;
 
-		if (this.plugin.getBoolean("Plugin.Disable-PartyWarp")) {
+		if (this.plugin.getBoolean("Plugin.Disable-Party-Warp")) {
 			return;
 		}
 

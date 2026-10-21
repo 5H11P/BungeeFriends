@@ -12,6 +12,7 @@ import net.simplyrin.bungeefriends.exceptions.parties.FailedAddingException;
 import net.simplyrin.bungeefriends.exceptions.parties.FailedInvitingException;
 import net.simplyrin.bungeefriends.exceptions.parties.NotInvitedException;
 import net.simplyrin.bungeefriends.exceptions.parties.NotJoinedException;
+import net.simplyrin.bungeefriends.messages.MessageFrame;
 import net.simplyrin.bungeefriends.utils.FriendManager.FriendUtils;
 import net.simplyrin.bungeefriends.utils.LanguageManager.LanguageUtils;
 
@@ -70,7 +71,7 @@ public class PartyManager {
 
 	private int maxSize() {
 		try {
-			return Math.max(2, Integer.parseInt(this.plugin.getString("Plugin.Party-Max-Size")));
+			return Math.max(2, Integer.parseInt(this.plugin.getString("Plugin.Party.Max-Size")));
 		} catch (NumberFormatException e) {
 			return 10;
 		}
@@ -112,9 +113,9 @@ public class PartyManager {
 
 		public void broadcast(String text) {
 			for (String player : this.getParties()) {
-				plugin.info(player, text);
+				plugin.infoFramed(UUID.fromString(player), text, MessageFrame.MessageId.PARTY_BROADCAST);
 			}
-			plugin.info(uuid, text);
+			plugin.infoFramed(uuid, text, MessageFrame.MessageId.PARTY_BROADCAST);
 		}
 
 		public void partyChat(ProxiedPlayer player, String text) throws NotJoinedException {
@@ -122,8 +123,8 @@ public class PartyManager {
 			PartyUtils myParties = this.getPartyLeader();
 			if (plugin.getBoolean("Parties." + myParties.uuid + ".Mute")
 					&& !player.getUniqueId().equals(myParties.uuid)) {
-				plugin.info(player, plugin.getLanguageManager().getPlayer(player).getString("Party-Mute.Muted-1"));
-				plugin.info(player, plugin.getLanguageManager().getPlayer(player).getString("Party-Mute.Send-Denied"));
+				plugin.infoFramed(player, plugin.getLanguageManager().getPlayer(player).getString("Party-Mute.Send-Denied"),
+						MessageFrame.MessageId.PARTY_MUTE_DENIED);
 				return;
 			}
 
@@ -437,7 +438,7 @@ public class PartyManager {
 					&& !"NONE".equalsIgnoreCase(this.getCurrentlyJoinedParty()))
 				throw new FailedAddingException("Exceptions.Not-Joined");
 			if (this.uuid.toString().equals(uuid.toString())) {
-				throw new FailedAddingException("Exceptions.Your-Self-Invite"); // "You can't add yourself to a party!"
+				throw new FailedAddingException("Exceptions.Cant-Invite-Yourself");
 			}
 
 			List<String> list = this.getParties();
@@ -468,7 +469,7 @@ public class PartyManager {
 			if (!this.uuid.toString().equals(this.getCurrentlyJoinedParty()))
 				throw new NotJoinedException("Disband.Must-Leader");
 			if (this.uuid.toString().equals(uuid.toString())) {
-				throw new NotJoinedException("Exceptions.Cant-Remove-Your-Self"); // "&cYou can't remove yourself! Use /party disaband instead!"
+				throw new NotJoinedException("Exceptions.Cant-Kick-Yourself");
 			}
 
 			List<String> list = this.getParties();

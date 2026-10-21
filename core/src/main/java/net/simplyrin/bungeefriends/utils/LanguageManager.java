@@ -21,14 +21,6 @@ import net.simplyrin.bungeefriends.tools.Config;
  */
 public class LanguageManager {
 	private static final String BUNDLED_LANGUAGE_PATH = "/languages/";
-	private static final Map<String, String> LEGACY_KEYS = new HashMap<>();
-	static {
-		LEGACY_KEYS.put("Logout.Disband-When-Empty", "Logout.Three");
-		LEGACY_KEYS.put("Party-Mute.Restricted-Chat-Info", "Party-Mute.Info-Enabled");
-		LEGACY_KEYS.put("Party-Mute.Send-Denied", "Party-Mute.Muted-2");
-		LEGACY_KEYS.put("Chat.No-Permission", "Chat.Chat-NoPermission");
-	}
-
 	private Main plugin;
 
 	private HashMap<String, Configuration> configMap;
@@ -41,11 +33,6 @@ public class LanguageManager {
 	static String resolveMessage(Configuration selected, Configuration bundled, Configuration english, String key) {
 		String result = selected.getString(key);
 		if (result != null && !result.isEmpty()) return result;
-		String legacyKey = LEGACY_KEYS.get(key);
-		if (legacyKey != null) {
-			String legacy = selected.getString(legacyKey);
-			if (legacy != null && !legacy.isEmpty()) return legacy;
-		}
 		result = bundled.getString(key);
 		return result == null || result.isEmpty() ? english.getString(key) : result;
 	}
