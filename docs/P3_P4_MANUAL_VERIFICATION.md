@@ -52,14 +52,14 @@ P3-05 是现场并发观察，不能单独证明所有竞态均不存在；P3-07
 | P4-05 | A 邀请 B/C，测试 `/party accept A`、`/party list`、`/pl`、`/party leave`、`/party promote B`、`/party kickoffline`；邀请超过 1 分钟后再接受。 | 过期邀请被拒绝；列表、队长和成员一致；普通成员不能踢人或改队长；离线成员可由队长移除。 | 待测 |
 | P4-06 | 将 `Plugin.Party-Max-Size` 临时设为 2，测试第三人入队；队长切换 `/party setting allinvite`、`mute`、`private`，普通成员也尝试切换。 | 超员被拒绝；只有有权玩家可改设置；静音时普通成员不能发组队消息，私有模式校验 `friends.party.private`。 | 待测 |
 | P4-07 | A/B/C 测试 `/chat party`、`/party chat`、`/ac`、`/achat 文本`；B 退队后再聊天。分别以有/无 `friends.chat.staff` 的账号测试 `/chat staff`。 | 消息仅到达对应频道且不重复；退队后不能向旧队伍发言；无权限者不能发送或接收 Staff 消息。 | 待测 |
-| P4-08 | 在 `config.yml` 中分别打开 `Plugin.Disable-Aliases./ac`、`/achat`、`/pl`、`/block`，执行 `/friend reload config` 或重启后测试，再恢复。 | 被禁用的别名不能执行；其他入口和原 `/friend`、`/party` 命令仍可用。记录实际配置刷新方式。 | 待测 |
+| P4-08 | 在 `config.yml` 中分别关闭 `Plugin.Enable-Aliases./ac`、`/achat`、`/pl`、`/block`，执行 `/friend reload config` 或重启后测试，再恢复。 | 被禁用的别名不能执行；其他入口和原 `/friend`、`/party` 命令仍可用。记录实际配置刷新方式。 | 待测 |
 | P4-09 | A 在服务器一担任队长，B/C 分别在服务器一、二；执行 `/party warp`，随后让 A 切服；在 `Plugin.NoPartyWarp-Servers` 加入目标服后重复。 | 符合条件的成员最多连接一次；已在目标服的成员不重复连接；被过滤的服务器不触发传送。 | 待测 |
 | P4-10 | 开启 `Plugin.PartyWarp.Enable-Confirmation`，把成员所在服加入 `Plugin.PartyWarp.Game-Servers`；执行一次 `/party warp`，在超时内再执行；超时后单独执行一次。 | 首次只提示确认；第二次仅对相同目标和成员快照执行；超时后的单次命令再次要求确认。 | 待测 |
 | P4-11 | 排定传送后，依次测试成员退队、成员掉线、队长掉线、队长再切服、配置重载及插件停机；连续触发两次传送。 | 任务执行前重新核验；失效成员不被传送，旧任务被取消；重载/停机后没有迟到传送或重复事件。 | 待测 |
 | P4-12 | 用无权限账号尝试 `/friend force-add B`、`/party hijack B` 和 `/party setting private`；再用分别授权的账号重试。 | 无权限操作被拒绝且数据未改变；授权操作仅在满足队伍/好友条件时生效。 | 待测 |
 | P4-13 | A/B/C 用 `/friend lang chinese` 和 `/friend lang english` 切换语言，执行好友、组队、状态和传送命令，观察聊天、动作栏及控制台。 | 关键消息可读、占位符已替换，不显示缺失键或异常；两种语言行为一致。 | 待测 |
 | P4-14 | 备份配置后，在旧配置中仅写 `Plugin.Party-Disband-Time`、`Plugin.Party-Kick-Offline-Time`、`Plugin.Send-Remove-Target-Message`；启动并检查新键，再同时设置新旧键为不同值并 `/friend reload config`；另试非法整数。 | 旧值迁入语义化新键，新键已有值优先，旧键移除；非法值回退默认值并告警；重载与启动结果一致。 | 待测 |
-| P4-15 | 准备超过 7 位好友和超过 8 位屏蔽玩家；中英文分别查看 `/friend list`、`/block list`，悬浮在线/离线好友，点击首、中、末页按钮；修改 `Plugin.FriendList-Time.Format` 后重载。 | 点击仅跳到有效页；悬浮显示状态、服务器、好友建立时间、最后在线及相对时间，不泄露隐身玩家的在线状态；时间格式按配置变化。 | 待测 |
+| P4-15 | 准备超过 7 位好友和超过 8 位屏蔽玩家；中英文分别查看 `/friend list`、`/block list`，悬浮在线/离线好友，点击首、中、末页按钮；修改 `friend-list.yml` 的 `Time-Format` 后重载。 | 点击仅跳到有效页；悬浮显示状态、服务器、好友建立时间、最后在线及相对时间，不泄露隐身玩家的在线状态；时间格式按配置变化。 | 待测 |
 | P4-16 | 三人队伍中让成员离线并重连，分别设置自动踢出时长为 1 分钟和 0；让队长离线并按配置等待晋升/解散；检查队长、成员收到的通知。 | 重连取消踢出，过期仅移除仍离线且仍在原队伍的成员，并通知包括队长在内的在线玩家；0 禁用自动踢出且提示不承诺踢出；队长延迟和 `%time%` 正确。 | 待测 |
 | P4-17 | 分别用普通玩家、Staff 和管理员切换 `/chat staff`、`/chat admin` 后发言，再撤销权限并发言；隐身玩家尝试 `/tell`、`/reply`，其他玩家尝试私聊隐身目标。 | 无权者被拒绝，撤权后频道自动退出；Staff 消息仅授权者可见，Admin 消息仅管理员可见；隐身私聊按离线规则拒绝。 | 待测 |
 | P4-18 | 保留一份只含旧消息键的自定义 `Language/english.yml` 或 `chinese.yml`，包含 `Logout.Three`、`Party-Mute.Info-Enabled`、`Party-Mute.Muted-2`、`Chat.Chat-NoPermission`；重载语言并触发对应操作。 | 旧自定义译文先于内置新译文生效；已有新键时新键优先；旧中文 `%time` 和新 `%time%` 均正确替换。 | 待测 |

@@ -35,7 +35,14 @@ public class ConfigManagerFeatureTest {
 			assertEquals(6000, generated.getInt("Plugin.Party.Disband-Delay-Ticks"));
 			assertEquals(36000, generated.getInt("Plugin.LuckPerms.Offline-Prefix-Cache-Ticks"));
 			assertEquals(40, generated.getInt("Plugin.LuckPerms.Offline-Prefix-Load-Timeout-Ticks"));
-			assertEquals("/join $args", generated.getString("Plugin.Bungee-Parties.Party-Command-Sender.1.Member"));
+			Configuration hyphen = ConfigManager.loadOrCreateConfig(folder.resolve("hyphen.yml").toFile(), "hyphen.yml");
+			Configuration sender = ConfigManager.loadOrCreateConfig(folder.resolve("party-command-sender.yml").toFile(), "party-command-sender.yml");
+			Configuration servers = ConfigManager.loadOrCreateConfig(folder.resolve("server-name-display.yml").toFile(), "server-name-display.yml");
+			Configuration friendList = ConfigManager.loadOrCreateConfig(folder.resolve("friend-list.yml").toFile(), "friend-list.yml");
+			assertTrue(hyphen.getBoolean("Enable"));
+			assertEquals("/join $args", ((java.util.Map<?, ?>) sender.getList("Mappings").get(0)).get("Member-Command"));
+			assertEquals(3, servers.getList("Rules").size());
+			assertEquals("yyyy-MM-dd HH:mm:ss", friendList.getString("Time-Format"));
 			generated.set("Plugin.Prefix", "custom");
 			generated.set("Name.alice", "id-1");
 			generated.set("UUID.id-1", "Alice");
@@ -48,6 +55,10 @@ public class ConfigManagerFeatureTest {
 			assertTrue(java.util.Arrays.equals(before, Files.readAllBytes(path)));
 		} finally {
 			Files.deleteIfExists(path);
+			Files.deleteIfExists(folder.resolve("hyphen.yml"));
+			Files.deleteIfExists(folder.resolve("server-name-display.yml"));
+			Files.deleteIfExists(folder.resolve("party-command-sender.yml"));
+			Files.deleteIfExists(folder.resolve("friend-list.yml"));
 			Files.deleteIfExists(folder);
 		}
 	}
@@ -64,38 +75,42 @@ public class ConfigManagerFeatureTest {
 		assertEquals(9000, config.getInt("Plugin.Party.Disband-Delay-Ticks"));
 		assertEquals(6000, config.getInt("Plugin.Party.Offline-Member-Kick-Delay-Ticks"));
 		assertTrue(config.getBoolean("Plugin.Enable-Friend-Removal-Notifications"));
-		assertEquals("yyyy-MM-dd HH:mm:ss", config.getString("Plugin.Friend-List.Time-Format"));
+		Configuration friendList = new Configuration();
+		ConfigManager.applyFriendListDefaults(friendList);
+		assertEquals("yyyy-MM-dd HH:mm:ss", friendList.getString("Time-Format"));
 		assertEquals(36000, config.getInt("Plugin.LuckPerms.Offline-Prefix-Cache-Ticks"));
 		assertEquals(40, config.getInt("Plugin.LuckPerms.Offline-Prefix-Load-Timeout-Ticks"));
-		assertTrue(config.getBoolean("Plugin.Hyphen.Categories.Enable-Command-Results"));
-		assertTrue(config.getBoolean("Plugin.Hyphen.Categories.Enable-Lists"));
-		assertTrue(config.getBoolean("Plugin.Hyphen.Categories.Enable-Party-Notifications"));
-		assertTrue(config.getBoolean("Plugin.Hyphen.Categories.Enable-Warp-Notifications"));
+		Configuration hyphen = new Configuration();
+		ConfigManager.applyHyphenDefaults(hyphen);
+		assertTrue(hyphen.getBoolean("Categories.Enable-Command-Results"));
+		assertTrue(hyphen.getBoolean("Categories.Enable-Lists"));
+		assertTrue(hyphen.getBoolean("Categories.Enable-Party-Notifications"));
+		assertTrue(hyphen.getBoolean("Categories.Enable-Warp-Notifications"));
 		assertTrue(config.contains("Plugin.Party-Disband-Time"));
 	}
 
 	@Test
 	public void hyphenCategoryOverridesSurviveDefaulting() {
 		Configuration config = new Configuration();
-		config.set("Plugin.Hyphen.Categories.Enable-Lists", false);
-		config.set("Plugin.Hyphen.Messages.PARTY_MUTE_DENIED", false);
+		config.set("Categories.Enable-Lists", false);
+		config.set("Messages.PARTY_MUTE_DENIED", false);
 
-		ConfigManager.applyFeatureDefaults(config);
+		ConfigManager.applyHyphenDefaults(config);
 
-		assertFalse(config.getBoolean("Plugin.Hyphen.Categories.Enable-Lists"));
-		assertFalse(config.getBoolean("Plugin.Hyphen.Messages.PARTY_MUTE_DENIED"));
-		assertTrue(config.getBoolean("Plugin.Hyphen.Categories.Enable-Command-Results"));
+		assertFalse(config.getBoolean("Categories.Enable-Lists"));
+		assertFalse(config.getBoolean("Messages.PARTY_MUTE_DENIED"));
+		assertTrue(config.getBoolean("Categories.Enable-Command-Results"));
 	}
 
 	@Test
 	public void unknownHyphenMessageOverridesAreReported() {
 		Configuration config = new Configuration();
-		config.set("Plugin.Hyphen.Messages.NOT_A_MESSAGE", false);
+		config.set("Messages.NOT_A_MESSAGE", false);
 
-		List<String> invalid = ConfigManager.applyFeatureDefaults(config);
+		List<String> invalid = ConfigManager.applyHyphenDefaults(config);
 
-		assertTrue(invalid.contains("Plugin.Hyphen.Messages.NOT_A_MESSAGE (unknown message id)"));
-		assertFalse(config.getBoolean("Plugin.Hyphen.Messages.NOT_A_MESSAGE"));
+		assertTrue(invalid.contains("Messages.NOT_A_MESSAGE (unknown message id)"));
+		assertFalse(config.getBoolean("Messages.NOT_A_MESSAGE"));
 	}
 
 	@Test
@@ -135,15 +150,15 @@ public class ConfigManagerFeatureTest {
 
 	@Test
 	public void serverNameRulesLoadAsMappingsAndInvalidRulesAreReported() throws Exception {
-		Configuration bundled = Config.getConfig(getClass().getResourceAsStream("/config.yml"));
-		List<?> rules = bundled.getList("Plugin.Server-Name-Display.Rules");
+		Configuration bundled = Config.getConfig(getClass().getResourceAsStream("/server-name-display.yml"));
+		List<?> rules = bundled.getList("Rules");
 		assertEquals(3, rules.size());
 		assertTrue(rules.get(0) instanceof java.util.Map);
-		assertTrue(ConfigManager.applyFeatureDefaults(bundled).isEmpty());
+		assertTrue(ConfigManager.applyServerNameDisplayDefaults(bundled).isEmpty());
 
 		Configuration config = new Configuration();
-		config.set("Plugin.Server-Name-Display.Rules", java.util.Collections.singletonList("invalid"));
-		assertTrue(ConfigManager.applyFeatureDefaults(config).contains(
-				"Plugin.Server-Name-Display.Rules[0] (expected a rule mapping)"));
+		config.set("Rules", java.util.Collections.singletonList("invalid"));
+		assertTrue(ConfigManager.applyServerNameDisplayDefaults(config).contains(
+				"Rules[0] (expected a rule mapping)"));
 	}
 }

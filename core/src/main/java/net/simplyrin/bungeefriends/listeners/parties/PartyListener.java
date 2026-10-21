@@ -102,12 +102,12 @@ public class PartyListener implements Listener {
 
 	@EventHandler
 	public void partyCmdSender(ChatEvent event) {
-		if (!event.isCommand() || !this.plugin.getBoolean("Plugin.Enable-Party-Command-Sender")
+		if (!event.isCommand() || !this.plugin.getConfigManager().getPartyCommandSenderConfig().getBoolean("Enable", true)
 				|| !(event.getSender() instanceof ProxiedPlayer)) {
 			return;
 		}
 
-		// Plugin.Bungee-Parties.Party-Command-Sender
+		// party-command-sender.yml -> Mappings
 
 		String cmd = event.getMessage();
 

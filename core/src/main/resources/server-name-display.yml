@@ -1,0 +1,15 @@
+# Rules are checked in order; the first matching rule supplies the display name.
+# PREFIX, CONTAINS, and EXACT are case-sensitive. EXACT_IGNORE_CASE ignores letter case.
+Rules:
+  - Match:
+      Mode: PREFIX
+      Value: lobby-
+    Display-Name: Lobby
+  - Match:
+      Mode: CONTAINS
+      Value: game
+    Display-Name: Game
+  - Match:
+      Mode: EXACT_IGNORE_CASE
+      Value: sw-1
+    Display-Name: SkyWars

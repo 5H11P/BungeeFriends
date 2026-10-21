@@ -321,7 +321,7 @@ public class FriendCommand extends Command implements TabExecutor {
 				List<TextComponent> online = new ArrayList<>();
 				List<TextComponent> offline = new ArrayList<>();
 
-				boolean colorOnly = this.plugin.getBoolean("Plugin.Friend-List.Enable-Color-Only-Prefix");
+				boolean colorOnly = this.plugin.getConfigManager().getFriendListConfig().getBoolean("Display-Only-Prefix-Color", false);
 
 				Priority priority = this.plugin.getPriority();
 				List<Priority.Item> items = priority.getPriorities();
@@ -675,7 +675,7 @@ public class FriendCommand extends Command implements TabExecutor {
 		try {
 			long timestamp = Long.parseLong(raw);
 			if (timestamp <= 0) return lang.getString("List.Unknown");
-			String pattern = this.plugin.getConfigManager().getConfig().getString("Plugin.Friend-List.Time-Format");
+			String pattern = this.plugin.getConfigManager().getFriendListConfig().getString("Time-Format");
 			if (pattern == null || pattern.isEmpty()) pattern = "yyyy-MM-dd HH:mm:ss";
 			try { return new SimpleDateFormat(pattern, Locale.ROOT).format(new Date(timestamp)); }
 			catch (IllegalArgumentException invalid) { return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).format(new Date(timestamp)); }

@@ -45,16 +45,19 @@ public class Priority {
 	public void update() {
 		this.map.clear();
 
-		Configuration config = this.instance.getConfigManager().getConfig();
+		Configuration config = this.instance.getConfigManager().getFriendListConfig();
 
-		String base = "Plugin.Friend-List.Sort";
-		for (String key : config.getSection(base).getKeys()) {
-			String noColorPrefix = config.getString(base + "." + key + ".No-Color-Prefix");
-			int priority = config.getInt(base + "." + key + ".Priority", -1);
-
-			if (!noColorPrefix.equals("") && priority != -1) {
-				this.addPriority(noColorPrefix, priority);
-			}
+		for (Object value : config.getList("Sort")) {
+			if (!(value instanceof Map)) continue;
+			Map<?, ?> item = (Map<?, ?>) value;
+			Object rawPrefix = item.get("Prefix");
+			Object rawPriority = item.get("Priority");
+			if (rawPrefix == null || rawPriority == null) continue;
+			try {
+				String prefix = String.valueOf(rawPrefix);
+				int priority = Integer.parseInt(String.valueOf(rawPriority));
+				if (!prefix.trim().isEmpty() && priority >= 0) this.addPriority(prefix, priority);
+			} catch (NumberFormatException ignored) { }
 		}
 	}
 

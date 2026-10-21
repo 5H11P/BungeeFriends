@@ -17,6 +17,7 @@ import net.luckperms.api.LuckPermsProvider;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.simplyrin.bungeefriends.commands.ChatCommand;
@@ -365,10 +366,15 @@ public class Main extends Plugin {
 	public void reloadPartyCmdSender() {
 		Map<String, String> mappings = new ConcurrentHashMap<>();
 
-		String base = "Plugin.Bungee-Parties.Party-Command-Sender";
-		for (String key : this.getConfigManager().getConfig().getSection("Plugin.Bungee-Parties.Party-Command-Sender").getKeys()) {
-			String leader = this.getString(base + "." + key + ".Leader");
-			String member = this.getString(base + "." + key + ".Member");
+		Configuration senderConfig = this.getConfigManager().getPartyCommandSenderConfig();
+		for (Object value : senderConfig.getList("Mappings")) {
+			if (!(value instanceof Map)) continue;
+			Map<?, ?> mapping = (Map<?, ?>) value;
+			Object rawLeader = mapping.get("Leader-Command");
+			Object rawMember = mapping.get("Member-Command");
+			if (rawLeader == null || rawMember == null) continue;
+			String leader = String.valueOf(rawLeader);
+			String member = String.valueOf(rawMember);
 
 			if (!leader.equals("") && !member.equals("")) {
 				mappings.put(leader, member);
@@ -379,14 +385,17 @@ public class Main extends Plugin {
 
 	public String getServerName(String serverName) {
 		if (serverName == null) return null;
-		List<?> rules = this.getConfigManager().getConfig().getList("Plugin.Server-Name-Display.Rules");
+		List<?> rules = this.getConfigManager().getServerNameDisplayConfig().getList("Rules");
 		for (Object value : rules) {
 			if (!(value instanceof Map)) continue;
 			Map<?, ?> rule = (Map<?, ?>) value;
-			Object rawMode = rule.get("Match-Mode");
-			Object rawPattern = rule.get("Pattern");
+			Object rawMatch = rule.get("Match");
 			Object rawDisplayName = rule.get("Display-Name");
-			if (rawMode == null || rawPattern == null || rawDisplayName == null) continue;
+			if (!(rawMatch instanceof Map) || rawDisplayName == null) continue;
+			Map<?, ?> match = (Map<?, ?>) rawMatch;
+			Object rawMode = match.get("Mode");
+			Object rawPattern = match.get("Value");
+			if (rawMode == null || rawPattern == null) continue;
 			String mode = String.valueOf(rawMode);
 			String pattern = String.valueOf(rawPattern);
 			String displayName = String.valueOf(rawDisplayName);
@@ -697,12 +706,12 @@ public class Main extends Plugin {
 	}
 
 	private boolean shouldFrame(MessageFrame.MessageId messageId) {
-		if (messageId == null || !this.getBoolean("Plugin.Enable-Hyphen")) return false;
-		String categoryPath = "Plugin.Hyphen.Categories.Enable-" + messageId.getCategory().configKey();
-		boolean categoryEnabled = this.getConfigManager().getConfig().getBoolean(categoryPath, true);
-		String overridePath = "Plugin.Hyphen.Messages." + messageId.name();
-		Boolean override = this.getConfigManager().getConfig().contains(overridePath)
-				? Boolean.valueOf(this.getBoolean(overridePath)) : null;
+		Configuration hyphen = this.getConfigManager().getHyphenConfig();
+		if (messageId == null || !hyphen.getBoolean("Enable", true)) return false;
+		String categoryPath = "Categories.Enable-" + messageId.getCategory().configKey();
+		boolean categoryEnabled = hyphen.getBoolean(categoryPath, true);
+		String overridePath = "Messages." + messageId.name();
+		Boolean override = hyphen.contains(overridePath) ? Boolean.valueOf(hyphen.getBoolean(overridePath)) : null;
 		return MessageFrame.shouldFrame(false, categoryEnabled, override);
  	}
 

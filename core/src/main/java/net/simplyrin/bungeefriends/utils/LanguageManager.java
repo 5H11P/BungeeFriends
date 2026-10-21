@@ -140,7 +140,7 @@ public class LanguageManager {
 		}
 
 		public String getString(String configKey) {
-			if (configKey.equals("Hyphen") && !plugin.getBoolean("Plugin.Enable-Hyphen")) {
+			if (configKey.equals("Hyphen") && !plugin.getConfigManager().getHyphenConfig().getBoolean("Enable", true)) {
 				return "";
 			}
 

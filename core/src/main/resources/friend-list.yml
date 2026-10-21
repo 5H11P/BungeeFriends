@@ -1,0 +1,13 @@
+# Friend list display and sorting settings.
+Display-Only-Prefix-Color: false
+
+# Java SimpleDateFormat pattern used for friend timestamps in hover text.
+Time-Format: 'yyyy-MM-dd HH:mm:ss'
+
+# Prefix groups are processed by Priority in ascending order.
+# Prefix matching ignores color codes.
+Sort:
+  - Prefix: '[ADMIN]'
+    Priority: 1
+  - Prefix: '[MOD]'
+    Priority: 2

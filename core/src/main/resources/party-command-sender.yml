@@ -1,0 +1,7 @@
+# Party leader command mappings. $args is replaced with the matched command arguments.
+Enable: true
+Mappings:
+  - Leader-Command: /join
+    Member-Command: '/join $args'
+  - Leader-Command: /sw join
+    Member-Command: '/sw join $args'

@@ -20,31 +20,10 @@ Plugin:
   Enable-Server-Switch-Notifier: true
   Enable-Party-Warp: true
   Enable-LuckPerms-API: true
-  Enable-Hyphen: true
-  Hyphen:
-    Categories:
-      Enable-Command-Results: true
-      Enable-Lists: true
-      Enable-Party-Notifications: true
-      Enable-Warp-Notifications: true
-    # Message-specific values override the category setting. Valid IDs are declared by the plugin.
-    # Example: PARTY_MUTE_DENIED: false
-    Messages: {}
   Enable-Tab-Complete: true
-  Enable-Party-Command-Sender: true
   Enable-Bungee-Parties: false
   Enable-Status: true
   Enable-Legacy-Prefix-YML: false
-  Friend-List:
-    Enable-Color-Only-Prefix: false
-    Time-Format: yyyy-MM-dd HH:mm:ss
-    Sort:
-      1:
-        No-Color-Prefix: '[ADMIN]'
-        Priority: 1
-      2:
-        No-Color-Prefix: '[MOD]'
-        Priority: 2
   # All duration and interval values use ticks (1 tick = 50 ms).
   Party:
     Max-Size: 10
@@ -63,24 +42,4 @@ Plugin:
     Lobby-Server-Name-Contains: lobby
     Enable-Server-Blocklist: true
     Server-Blocklist: []
-  # Rules are checked in order; the first matching rule supplies the display name.
-  # PREFIX, CONTAINS, and EXACT are case-sensitive. EXACT_IGNORE_CASE ignores letter case.
-  Server-Name-Display:
-    Rules:
-      - Match-Mode: PREFIX
-        Pattern: lobby-
-        Display-Name: Lobby
-      - Match-Mode: CONTAINS
-        Pattern: game
-        Display-Name: Game
-      - Match-Mode: EXACT_IGNORE_CASE
-        Pattern: sw-1
-        Display-Name: SkyWars
-  Bungee-Parties:
-    Party-Command-Sender:
-      1:
-        Leader: /join
-        Member: '/join $args'
-      2:
-        Leader: /sw join
-        Member: '/sw join $args'
+  Bungee-Parties: {}

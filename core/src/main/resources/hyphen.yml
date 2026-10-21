@@ -1,0 +1,23 @@
+# Message frame settings. Changes are loaded on plugin reload.
+Enable: true
+Categories:
+  Enable-Command-Results: true
+  Enable-Lists: true
+  Enable-Party-Notifications: true
+  Enable-Warp-Notifications: true
+# Message-specific values override the category setting.
+Messages:
+  BLOCK_HELP: false
+  BLOCK_EMPTY: false
+  BLOCK_REMOVE_ALL_DONE: false
+  BLOCK_COMMAND: false
+  BLOCK_ADD: false
+  BLOCK_REMOVE: false
+  BLOCK_SELF: false
+  BLOCK_LIST_PAGE: false
+  IGNORE_ADDED: false
+  IGNORE_ALREADY_ADDED: false
+  IGNORE_NOT_ADDED: false
+  IGNORE_LIST_EMPTY: false
+  IGNORE_REMOVE_USAGE: false
+  IGNORE_LIST: false
