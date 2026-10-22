@@ -24,6 +24,7 @@ Exceptions:
   AlreadyFriend: "&c你与这位玩家已经成为好友！"
   Ignored: "&c那位玩家已将你置入他们的屏蔽列表中！"
   IsntOnYourFriends: "&c%targetDisplayName% &c不在你的好友列表中！"
+  Isnt-Moderator: "&c%targetDisplayName% &c不是队伍管理员。"
   Cant-Add-Yourself: "&c你不能添加自己为好友！"
   Cant-Remove-Yourself: "&c你不能移除自己！"
   NoInvited: "&c那位玩家没有向你发送好友请求！ 请使用 &e/friend add %name% &c添加好友！"
@@ -106,6 +107,7 @@ List:
   Party-List: "&a组队成员 (%size%):"
   Party-Header: "&6队伍成员 (%size%)"
   Party-Leader: "&e队长: %leader%"
+  Party-Moderators: "&e队伍管理员: %moderators%"
   Party-Members: "&e队员: %members%"
 Lang:
   Usage: "&c用法: /friend lang <语言>"
@@ -306,7 +308,13 @@ Disband:
   Disbanded: "%displayName% &e解散了组队！"
 Promote:
   Usage: "&c无效指令！ '/party promote <player>'"
-  Promoted: "%displayName% &e将 %targetDisplayName% &e提升为队长！"
+  Promoted: "%displayName% &e将 %targetDisplayName% &e提升为队伍管理员！"
+Demote:
+  Usage: "&c用法: /party demote <玩家>"
+  Demoted: "%displayName% &e取消了 %targetDisplayName% &e的管理员身份。"
+Transfer:
+  Usage: "&c用法: /party transfer <玩家>"
+  Transferred: "%displayName% &e将队长转移给了 %targetDisplayName%！"
 Hijack:
   Failed: "&c无法接管该队伍。请先退出当前队伍。"
   Usage: "&c无效指令！ /party hijack <player>"
@@ -335,7 +343,9 @@ Help-Party:
   Accept: "&e/party accept <玩家> &7- &b同意一个来自玩家的组队邀请"
   Toggle: "&e/party toggle &7- &b更改接收组队邀请状态"
   Disband: "&e/party disband &7- &b解散组队"
-  Promote: "&e/party promote &7- &b提权为队长"
+  Promote: "&e/party promote <玩家> &7- &b提权为队伍管理员"
+  Demote: "&e/party demote <玩家> &7- &b取消管理员身份"
+  Transfer: "&e/party transfer <玩家> &7- &b转移队长"
   KickOffline: "&e/party kickoffline &7- &b移除所有掉线玩家."
   Hijack: "&e/party hijack &7- &b劫持队伍"
 Help-Party-Setting:

@@ -28,6 +28,7 @@ Exceptions:
   AlreadyFriend: "&cYou're already friends with this person!"
   Ignored: "&cThat player has added you to their ignored players list!"
   IsntOnYourFriends: "&c%targetDisplayName% &cisn't on your friends list!"
+  Isnt-Moderator: "&c%targetDisplayName% &cis not a party moderator."
   Cant-Add-Yourself: "&cYou can't add yourself as a friend!"
   Cant-Remove-Yourself: "&cYou can not remove yourself!"
   NoInvited: "&cThat person hasn't invited you to be friends! Try &e/friend add %name%"
@@ -116,9 +117,10 @@ List:
     Years: "%time% years ago"
   Page: "%previousPage% &6Friends (Page %currentPage% of %maxPage%) %nextPage%"
   Party-List: "&aParty members (%size%):"
-  Party-Header: "&6Party members (%size%)"
-  Party-Leader: "&eLeader: %leader%"
-  Party-Members: "&eMembers: %members%"
+  Party-Header: "&6Party Members (%size%)"
+  Party-Leader: "&eParty Leader: %leader%"
+  Party-Moderators: "&eParty Moderators: %moderators%"
+  Party-Members: "&eParty Members: %members%"
 
 Lang:
   Usage: "&cInvalid usage! '/friend lang <language>'"
@@ -339,7 +341,13 @@ Disband:
 
 Promote:
   Usage: "&cInvalid usage! '/party promote <player>'"
-  Promoted: "%displayName% &ehas promoted %targetDisplayName% &eto party leader!"
+  Promoted: "%displayName% &ehas promoted %targetDisplayName% &eto party moderator!"
+Demote:
+  Usage: "&cInvalid usage! '/party demote <player>'"
+  Demoted: "%displayName% &ehas removed %targetDisplayName%&e's moderator role."
+Transfer:
+  Usage: "&cInvalid usage! '/party transfer <player>'"
+  Transferred: "%displayName% &ehas transferred party leadership to %targetDisplayName%!"
 
 Hijack:
   Failed: "&cCould not take over this party. Leave your current party first."
@@ -371,7 +379,9 @@ Help-Party:
   Accept: "&e/party accept &7- &bAccept a party invite from the player"
   Toggle: "&e/party toggle &7- &bToggle acceptance of invitation."
   Disband: "&e/party disband &7- &bDisbands the party"
-  Promote: "&e/party promote &7- &bPromote party leader"
+  Promote: "&e/party promote <player> &7- &bPromote a moderator"
+  Demote: "&e/party demote <player> &7- &bRemove a moderator"
+  Transfer: "&e/party transfer <player> &7- &bTransfer party leadership"
   KickOffline: "&e/party kickoffline &7- &bKick offline player(s)."
   Hijack: "&e/party hijack &7- &bHijack the party"
 Help-Party-Setting:

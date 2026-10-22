@@ -38,6 +38,7 @@ public class MySQLTest {
 			editor.set("Player." + A + ".Friends", Arrays.asList(B, C, B));
 			editor.set("Player." + A + ".Requests", Collections.singletonList(C));
 			editor.set("Parties." + A + ".Party-List", Collections.singletonList(B));
+			editor.set("Parties." + A + ".Moderators", Collections.singletonList(B));
 			editor.set("Parties." + A + ".Currently-Joined-Party", A);
 			assertEquals(A, editor.get("Name.o'reilly"));
 			assertEquals("true", editor.get("Player." + A + ".Toggle"));
@@ -50,6 +51,7 @@ public class MySQLTest {
 			assertEquals(Arrays.asList(B, C), editor.getList("Player." + A + ".Friends"));
 			assertEquals(Collections.singletonList(C), editor.getList("Player." + A + ".Requests"));
 			assertEquals(Collections.singletonList(B), editor.getList("Parties." + A + ".Party-List"));
+			assertEquals(Collections.singletonList(B), editor.getList("Parties." + A + ".Moderators"));
 			assertEquals(A, editor.get("Parties." + A + ".Currently-Joined-Party"));
 		}
 	}

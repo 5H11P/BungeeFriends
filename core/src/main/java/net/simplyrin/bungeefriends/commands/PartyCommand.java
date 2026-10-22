@@ -44,7 +44,7 @@ public class PartyCommand extends Command implements TabExecutor {
 		if (!plugin.getBoolean("Plugin.Enable-Tab-Complete") || args == null || args.length == 0) return matches;
 		String input = args[args.length - 1] == null ? "" : args[args.length - 1].toLowerCase(java.util.Locale.ROOT);
 		if (args.length == 1) {
-			for (String command : new String[] {"invite", "leave", "list", "remove", "kick", "promote", "disband", "accept", "hijack", "setting", "warp", "toggle", "chat", "kickoffline", "help"})
+			for (String command : new String[] {"invite", "leave", "list", "remove", "kick", "promote", "demote", "transfer", "disband", "accept", "hijack", "setting", "warp", "toggle", "chat", "kickoffline", "help"})
 				if (command.startsWith(input) && (!command.equals("hijack") || sender.hasPermission(Permissions.ADMIN) || sender.hasPermission(Permissions.PARTY_HIJACK))) matches.add(command);
 			if (!matches.isEmpty() || input.isEmpty()) return matches;
 			return playerMatches(sender, input);
@@ -54,7 +54,7 @@ public class PartyCommand extends Command implements TabExecutor {
 			for (String option : new String[] {"allinvite", "mute", "private", "help"})
 				if (option.startsWith(input) && (!option.equals("private") || sender.hasPermission(Permissions.ADMIN) || sender.hasPermission(Permissions.PARTY_PRIVATE))) matches.add(option);
 		} else if (args.length == 2 && (command.equals("invite") || command.equals("remove") || command.equals("kick")
-				|| command.equals("promote") || command.equals("accept") || command.equals("hijack"))) {
+				|| command.equals("promote") || command.equals("demote") || command.equals("transfer") || command.equals("accept") || command.equals("hijack"))) {
 			if (command.equals("hijack") && !sender.hasPermission(Permissions.ADMIN) && !sender.hasPermission(Permissions.PARTY_HIJACK)) return matches;
 			return playerMatches(sender, input);
 		}
@@ -144,17 +144,23 @@ public class PartyCommand extends Command implements TabExecutor {
 
 				List<String> parties = partyLeader.getParties();
 
+				List<String> moderators = partyLeader.getModerators();
+				StringBuilder moderatorText = new StringBuilder();
 				StringBuilder members = new StringBuilder();
 				for (String partyPlayerUniqueId : parties) {
 					PartyUtils member = this.plugin.getPartyManager().getPlayer(partyPlayerUniqueId);
-					if (members.length() > 0) members.append("&7, ");
-					members.append(member.getDisplayName()).append(member.getPlayer() != null ? " &a●" : " &c●");
+					StringBuilder target = moderators.contains(partyPlayerUniqueId) ? moderatorText : members;
+					if (target.length() > 0) target.append("&7, ");
+					target.append(member.getDisplayName()).append(member.getPlayer() != null ? " &a●" : " &c●");
 				}
 
 				this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_LIST);
 				this.plugin.info(player, langUtils.format("List.Party-Header", "size", String.valueOf(parties.size() + 1)));
 				this.plugin.info(player, langUtils.format("List.Party-Leader", "leader", partyLeader.getDisplayName() + (partyLeader.getPlayer() != null ? " &a●" : " &c●")));
-				this.plugin.info(player, langUtils.format("List.Party-Members", "members", members.length() == 0 ? langUtils.getString("List.None") : members.toString()));
+				if (moderatorText.length() > 0)
+					this.plugin.info(player, langUtils.format("List.Party-Moderators", "moderators", moderatorText.toString()));
+				if (members.length() > 0)
+					this.plugin.info(player, langUtils.format("List.Party-Members", "members", members.toString()));
 				this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_LIST);
 				return;
 			}
@@ -256,28 +262,54 @@ public class PartyCommand extends Command implements TabExecutor {
 						return;
 					}
 
-					String displayName = myParties.getDisplayName();
-					myParties = this.plugin.getPartyManager().getPlayer(target);
-
 					for (String partyPlayerUniqueId : myParties.getParties()) {
 						PartyUtils targetPlayer = this.plugin.getPartyManager().getPlayer(partyPlayerUniqueId);
 						LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(partyPlayerUniqueId);
 
 						this.plugin.infoFrame(targetPlayer.getPlayer(), MessageFrame.MessageId.PARTY_BROADCAST);
-						this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.format("Promote.Promoted", "displayName", displayName, "targetDisplayName", newPartyLeader.getDisplayName()));
+						this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.format("Promote.Promoted", "displayName", myParties.getDisplayName(), "targetDisplayName", newPartyLeader.getDisplayName()));
 						this.plugin.infoFrame(targetPlayer.getPlayer(), MessageFrame.MessageId.PARTY_BROADCAST);
 					}
+					this.plugin.info(player, langUtils.format("Promote.Promoted", "displayName", myParties.getDisplayName(), "targetDisplayName", newPartyLeader.getDisplayName()));
 
-					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(newPartyLeader.getUniqueId());
-					this.plugin.infoFrame(myParties.getPlayer(), MessageFrame.MessageId.PARTY_BROADCAST);
-					this.plugin.info(myParties.getPlayer(), targetLangUtils.format("Promote.Promoted", "displayName", displayName, "targetDisplayName", newPartyLeader.getDisplayName()));
-					this.plugin.infoFrame(myParties.getPlayer(), MessageFrame.MessageId.PARTY_BROADCAST);
 					return;
 				}
 
 				this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
 				this.plugin.info(player, langUtils.getString("Promote.Usage"));
 				this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
+				return;
+			}
+
+			if (args[0].equalsIgnoreCase("demote") || args[0].equalsIgnoreCase("transfer")) {
+				boolean transfer = args[0].equalsIgnoreCase("transfer");
+				if (args.length <= 1) {
+					this.plugin.info(player, langUtils.getString(transfer ? "Transfer.Usage" : "Demote.Usage"));
+					return;
+				}
+				try {
+					if (!myParties.isPartyOwner()) { this.plugin.info(player, langUtils.getString("Disband.Must-Leader")); return; }
+				} catch (NotJoinedException e) { this.plugin.info(player, langUtils.formatException(e, "Exceptions.Not-Joined")); return; }
+				UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[1]);
+				if (target == null) { this.plugin.info(player, langUtils.format("Cant-Find", "name", args[1])); return; }
+				PartyUtils targetParty = this.plugin.getPartyManager().getPlayer(target);
+				try {
+					if (transfer) myParties.transferLeadership(target);
+					else myParties.demote(target);
+				} catch (NotJoinedException e) {
+					this.plugin.info(player, langUtils.formatException(e, "Exceptions.Isnt-In-Your-Party", "targetDisplayName", targetParty.getDisplayName()));
+					return;
+				}
+				String messageKey = transfer ? "Transfer.Transferred" : "Demote.Demoted";
+				for (String id : myParties.getParties()) {
+					LanguageUtils targetLanguage = this.plugin.getLanguageManager().getPlayer(id);
+					this.plugin.info(UUID.fromString(id), targetLanguage.format(messageKey, "displayName", myParties.getDisplayName(), "targetDisplayName", targetParty.getDisplayName()));
+				}
+				if (transfer) {
+					this.plugin.info(target, this.plugin.getLanguageManager().getPlayer(target).format(messageKey,
+							"displayName", myParties.getDisplayName(), "targetDisplayName", targetParty.getDisplayName()));
+				}
+				this.plugin.info(player, langUtils.format(messageKey, "displayName", myParties.getDisplayName(), "targetDisplayName", targetParty.getDisplayName()));
 				return;
 			}
 
@@ -436,8 +468,15 @@ public class PartyCommand extends Command implements TabExecutor {
 					this.plugin.info(player, langUtils.getString("Party-Setting.Usage"));
 					return;
 				}
+				boolean moderatorMute = args[1].equalsIgnoreCase("mute") && myParties.isJoinedParty();
+				PartyUtils settingsParty;
 				try {
-					if (!myParties.isPartyOwner()) {
+					settingsParty = myParties.isPartyOwner() ? myParties : myParties.getPartyLeader();
+					if (!myParties.isPartyOwner() && !moderatorMute) {
+						this.plugin.info(player, langUtils.getString("Disband.Must-Leader"));
+						return;
+					}
+					if (moderatorMute && !settingsParty.isPartyModerator(player.getUniqueId())) {
 						this.plugin.info(player, langUtils.getString("Disband.Must-Leader"));
 						return;
 					}
@@ -452,14 +491,14 @@ public class PartyCommand extends Command implements TabExecutor {
 				}
 				String field = args[1].equalsIgnoreCase("allinvite") ? "AllInvite"
 						: args[1].equalsIgnoreCase("mute") ? "Mute" : "Private";
-				String key = "Parties." + myParties.getUniqueId() + "." + field;
+				String key = "Parties." + settingsParty.getUniqueId() + "." + field;
 				boolean enabled = !this.plugin.getBoolean(key);
 				this.plugin.set(key, enabled);
 				if (!this.plugin.isEnabledMySQL()) this.plugin.getDataManager().save();
-				myParties.broadcast(langUtils.format("Party-" + field + "." + (enabled ? "Enabled" : "Disabled"),
-					"displayName", myParties.getDisplayName()));
+				settingsParty.broadcast(langUtils.format("Party-" + field + "." + (enabled ? "Enabled" : "Disabled"),
+					"displayName", settingsParty.getDisplayName()));
 				if (field.equals("Mute") && enabled)
-					myParties.broadcast(langUtils.getString("Party-Mute.Restricted-Chat-Info"));
+					settingsParty.broadcast(langUtils.getString("Party-Mute.Restricted-Chat-Info"));
 				return;
 			}
 
@@ -632,6 +671,8 @@ public class PartyCommand extends Command implements TabExecutor {
 		this.plugin.info(player, langUtils.getString("Help-Party.Toggle"));
 		this.plugin.info(player, langUtils.getString("Help-Party.Disband"));
 		this.plugin.info(player, langUtils.getString("Help-Party.Promote"));
+		this.plugin.info(player, langUtils.getString("Help-Party.Demote"));
+		this.plugin.info(player, langUtils.getString("Help-Party.Transfer"));
 		this.plugin.info(player, langUtils.getString("Help-Party.KickOffline"));
 		this.plugin.info(player, langUtils.getString("Help-Party.Setting"));
 		if (player.hasPermission(Permissions.ADMIN) || player.hasPermission(Permissions.PARTY_HIJACK)) {
@@ -647,6 +688,7 @@ public class PartyCommand extends Command implements TabExecutor {
 			try { leader = myParties.getPartyLeader(); } catch (NotJoinedException ignored) { }
 		}
 		if (!leader.getUniqueId().equals(player.getUniqueId())
+				&& !leader.isPartyModerator(player.getUniqueId())
 				&& !this.plugin.getBoolean("Parties." + leader.getUniqueId() + ".AllInvite")) {
 			this.plugin.info(player, langUtils.getString("Party-AllInvite.No-Invite-Permission"));
 			return;

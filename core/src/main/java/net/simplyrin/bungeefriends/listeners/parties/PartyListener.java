@@ -201,7 +201,7 @@ public class PartyListener implements Listener {
 			if (uniqueId != null) {
 
 				try {
-					myParties.promote(UUID.fromString(uniqueId));
+					myParties.transferLeadership(UUID.fromString(uniqueId));
 					PartyUtils newParties = this.plugin.getPartyManager().getPlayer(uniqueId);
 
 					for (String partyPlayerUniqueId : newParties.getParties()) {

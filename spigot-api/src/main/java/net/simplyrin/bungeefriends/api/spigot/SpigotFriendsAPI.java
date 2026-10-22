@@ -117,6 +117,9 @@ public final class SpigotFriendsAPI implements FriendQueryApi, PartyQueryApi, Pl
 	public CompletableFuture<Boolean> isPartyLeader(Player player) {
 		return map(query(player, "isPartyLeader"), SpigotFriendsAPI::booleanValue);
 	}
+	public CompletableFuture<Boolean> isPartyModerator(Player player) {
+		return map(query(player, "isPartyModerator"), SpigotFriendsAPI::booleanValue);
+	}
 	public CompletableFuture<Boolean> isPartyPrivate(Player player) {
 		return map(query(player, "isPartyPrivate"), SpigotFriendsAPI::booleanValue);
 	}
@@ -147,8 +150,11 @@ public final class SpigotFriendsAPI implements FriendQueryApi, PartyQueryApi, Pl
 	public CompletableFuture<Void> leaveParty(Player actor) { return action(actor, "leaveParty"); }
 	public CompletableFuture<Void> kickFromParty(Player actor, UUID target) { return action(actor, "kickPartyMember", id(target)); }
 	public CompletableFuture<Void> transferPartyLeadership(Player actor, UUID target) { return action(actor, "transferPartyLeadership", id(target)); }
+	public CompletableFuture<Void> promotePartyModerator(Player actor, UUID target) { return action(actor, "promotePartyModerator", id(target)); }
+	public CompletableFuture<Void> demotePartyModerator(Player actor, UUID target) { return action(actor, "demotePartyModerator", id(target)); }
 	public CompletableFuture<Void> disbandParty(Player actor) { return action(actor, "disbandParty"); }
 	public CompletableFuture<Void> setPartyPrivate(Player actor, boolean isPrivate) { return action(actor, "setPartyPrivate", Boolean.toString(isPrivate)); }
+	public CompletableFuture<Void> setPartyMute(Player actor, boolean muted) { return action(actor, "setPartyMute", Boolean.toString(muted)); }
 	public CompletableFuture<Void> sendPartyChat(Player actor, String message) { return action(actor, "partyChat", message); }
 	/** Completes when the proxy accepts command delivery, not when the target command finishes. */
 	public CompletableFuture<Boolean> executePartyCommand(Player leader, UUID target, String commandWithoutSlash) {
@@ -195,6 +201,9 @@ public final class SpigotFriendsAPI implements FriendQueryApi, PartyQueryApi, Pl
 	@Override public CompletableFuture<Boolean> isLeader(UUID actor) {
 		return map(query(actor, "isPartyLeader"), SpigotFriendsAPI::booleanValue);
 	}
+	@Override public CompletableFuture<Boolean> isModerator(UUID actor) {
+		return map(query(actor, "isPartyModerator"), SpigotFriendsAPI::booleanValue);
+	}
 	@Override public CompletableFuture<Boolean> isPrivate(UUID actor) {
 		return map(query(actor, "isPartyPrivate"), SpigotFriendsAPI::booleanValue);
 	}
@@ -221,8 +230,11 @@ public final class SpigotFriendsAPI implements FriendQueryApi, PartyQueryApi, Pl
 	@Override public CompletableFuture<Void> leave(UUID actor) { return action(actor, "leaveParty"); }
 	@Override public CompletableFuture<Void> kick(UUID actor, UUID target) { return action(actor, "kickPartyMember", id(target)); }
 	@Override public CompletableFuture<Void> transferLeadership(UUID actor, UUID target) { return action(actor, "transferPartyLeadership", id(target)); }
+	@Override public CompletableFuture<Void> promoteModerator(UUID actor, UUID target) { return action(actor, "promotePartyModerator", id(target)); }
+	@Override public CompletableFuture<Void> demoteModerator(UUID actor, UUID target) { return action(actor, "demotePartyModerator", id(target)); }
 	@Override public CompletableFuture<Void> disband(UUID actor) { return action(actor, "disbandParty"); }
 	@Override public CompletableFuture<Void> setPrivate(UUID actor, boolean value) { return action(actor, "setPartyPrivate", Boolean.toString(value)); }
+	@Override public CompletableFuture<Void> setMute(UUID actor, boolean value) { return action(actor, "setPartyMute", Boolean.toString(value)); }
 	@Override public CompletableFuture<Void> chat(UUID actor, String message) { return action(actor, "partyChat", message); }
 	private CompletableFuture<Void> action(UUID actor, String operation, String... args) {
 		return map(query(actor, operation, args), message -> {
@@ -241,11 +253,20 @@ public final class SpigotFriendsAPI implements FriendQueryApi, PartyQueryApi, Pl
 	}
 	static Page<PartyMember> partyPage(Message message) {
 		List<String> values = message.values;
-		PageHeader header = header(values, 5);
+		int tupleSize = isPartyTuple(values, 6) ? 6 : 5;
+		PageHeader header = header(values, tupleSize);
 		List<PartyMember> items = new ArrayList<>();
-		for (int i = 3; i < values.size(); i += 5)
-			items.add(new PartyMember(UUID.fromString(values.get(i)), values.get(i + 1), values.get(i + 2), parseBoolean(values.get(i + 3)), parseBoolean(values.get(i + 4))));
+		for (int i = 3; i < values.size(); i += tupleSize)
+			items.add(new PartyMember(UUID.fromString(values.get(i)), values.get(i + 1), values.get(i + 2), parseBoolean(values.get(i + 3)), parseBoolean(values.get(i + 4)), tupleSize == 6 && parseBoolean(values.get(i + 5))));
 		return new Page<>(items, header.offset, header.limit, header.total);
+	}
+	private static boolean isPartyTuple(List<String> values, int tupleSize) {
+		if (values.size() < 3 || (values.size() - 3) % tupleSize != 0) return false;
+		for (int i = 3; i < values.size(); i += tupleSize) {
+			for (int j = 3; j < tupleSize; j++)
+				if (!"true".equals(values.get(i + j)) && !"false".equals(values.get(i + j))) return false;
+		}
+		return true;
 	}
 	private static Page<UUID> uuidPage(Message message) {
 		List<String> values = message.values;

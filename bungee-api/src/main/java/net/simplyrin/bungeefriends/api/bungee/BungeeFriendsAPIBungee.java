@@ -176,10 +176,11 @@ public final class BungeeFriendsAPIBungee extends Plugin implements Listener {
 			}
 			case "partyMembers": {
 				PageSpec page = page(request, 1);
-				return success(request, boundedPage(request, partyPage(api.partyMembers(actor, page.offset, page.limit)), 5));
+				return success(request, boundedPage(request, partyPage(api.partyMembers(actor, page.offset, page.limit)), 6));
 			}
 			case "isPartyMember": requireArgs(request, 0); return success(request, Boolean.toString(api.inParty(actor)));
 			case "isPartyLeader": requireArgs(request, 0); return success(request, Boolean.toString(api.leader(actor)));
+			case "isPartyModerator": requireArgs(request, 0); return success(request, Boolean.toString(api.moderator(actor)));
 			case "isPartyPrivate": requireArgs(request, 0); return success(request, Boolean.toString(api.isPrivate(actor)));
 			case "partyOwner": { requireArgs(request, 0); UUID owner = api.owner(actor); return success(request, owner == null ? "" : owner.toString()); }
 			case "requestFriend": requireArgs(request, 1); api.requestFriend(actor, UUID.fromString(request.values.get(0))); return successEmpty(request);
@@ -206,8 +207,11 @@ public final class BungeeFriendsAPIBungee extends Plugin implements Listener {
 			case "leaveParty": requireArgs(request, 0); api.leave(actor); return successEmpty(request);
 			case "kickPartyMember": requireArgs(request, 1); api.kick(actor, UUID.fromString(request.values.get(0))); return successEmpty(request);
 			case "transferPartyLeadership": requireArgs(request, 1); api.transfer(actor, UUID.fromString(request.values.get(0))); return successEmpty(request);
+			case "promotePartyModerator": requireArgs(request, 1); api.promote(actor, UUID.fromString(request.values.get(0))); return successEmpty(request);
+			case "demotePartyModerator": requireArgs(request, 1); api.demote(actor, UUID.fromString(request.values.get(0))); return successEmpty(request);
 			case "disbandParty": requireArgs(request, 0); api.disband(actor); return successEmpty(request);
 			case "setPartyPrivate": requireArgs(request, 1); api.setPrivate(actor, parseBoolean(request.values.get(0))); return successEmpty(request);
+			case "setPartyMute": requireArgs(request, 1); api.setMute(actor, parseBoolean(request.values.get(0))); return successEmpty(request);
 			case "partyChat": {
 				requireArgs(request, 1);
 				api.chat(actor, request.values.get(0));
@@ -289,7 +293,7 @@ public final class BungeeFriendsAPIBungee extends Plugin implements Listener {
 		List<String> values = new ArrayList<>();
 		Collections.addAll(values, Integer.toString(page.getOffset()), Integer.toString(page.getLimit()), Integer.toString(page.getTotal()));
 		for (PartyMember item : page.getItems()) Collections.addAll(values, item.getUniqueId().toString(), item.getName(),
-				item.getDisplayName(), Boolean.toString(item.isOnline()), Boolean.toString(item.isLeader()));
+				item.getDisplayName(), Boolean.toString(item.isOnline()), Boolean.toString(item.isLeader()), Boolean.toString(item.isModerator()));
 		return values;
 	}
 

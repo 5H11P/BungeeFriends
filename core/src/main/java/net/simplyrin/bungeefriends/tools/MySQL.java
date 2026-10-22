@@ -83,6 +83,7 @@ public class MySQL {
 			createRelation(st, "bungeefriends_ignore", "ignored_uuid");
 			createRelation(st, "bungeefriends_friend_requests", "target_uuid");
 			createRelation(st, "bungeefriends_party_members", "member_uuid");
+			createRelation(st, "bungeefriends_party_moderators", "moderator_uuid");
 			createRelation(st, "bungeefriends_party_requests", "invited_uuid");
 			createRelation(st, "bungeefriends_best", "best_uuid");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS bungeefriends_friend_prefix (viewer_uuid varchar(36) NOT NULL, "
@@ -108,6 +109,7 @@ public class MySQL {
 	private static final String[][] RELATIONS = {
 		{"bungeefriends_friends", "friend_uuid"}, {"bungeefriends_ignore", "ignored_uuid"},
 		{"bungeefriends_friend_requests", "target_uuid"}, {"bungeefriends_party_members", "member_uuid"},
+		{"bungeefriends_party_moderators", "moderator_uuid"},
 		{"bungeefriends_party_requests", "invited_uuid"}, {"bungeefriends_best", "best_uuid"}
 	};
 
@@ -635,6 +637,7 @@ public class MySQL {
 				party ? "invited_uuid" : "target_uuid");
 		case "BestFriends": if (!party) return relation(owner, "bungeefriends_best", "best_uuid"); break;
 		case "Party-List": if (party) return relation(owner, "bungeefriends_party_members", "member_uuid"); break;
+		case "Moderators": if (party) return relation(owner, "bungeefriends_party_moderators", "moderator_uuid"); break;
 		case "Name": return field(owner, party ? "party_name" : "name", false);
 		case "Language": if (!party) return field(owner, "language", false); break;
 		case "Prefix": if (!party) return field(owner, "prefix", false); break;

@@ -94,6 +94,7 @@ public class PartyManager {
 				plugin.set("Parties." + this.uuid.toString() + ".Name", player.getName());
 				plugin.set("Parties." + this.uuid.toString() + ".Currently-Joined-Party", "NONE");
 				plugin.set("Parties." + this.uuid.toString() + ".Party-List", new ArrayList<>());
+				plugin.set("Parties." + this.uuid.toString() + ".Moderators", new ArrayList<>());
 				plugin.set("Parties." + this.uuid.toString() + ".Requests", new ArrayList<>());
 				plugin.set("Parties." + this.uuid.toString() + ".Toggle", true);
 				plugin.set("Parties." + this.uuid.toString() + ".AllInvite", false);
@@ -122,7 +123,8 @@ public class PartyManager {
 			FriendUtils myFriends = plugin.getFriendManager().getPlayer(player);
 			PartyUtils myParties = this.getPartyLeader();
 			if (plugin.getBoolean("Parties." + myParties.uuid + ".Mute")
-					&& !player.getUniqueId().equals(myParties.uuid)) {
+					&& !player.getUniqueId().equals(myParties.uuid)
+					&& !myParties.isPartyModerator(player.getUniqueId())) {
 				plugin.infoFramed(player, plugin.getLanguageManager().getPlayer(player).getString("Party-Mute.Send-Denied"),
 						MessageFrame.MessageId.PARTY_MUTE_DENIED);
 				return;
@@ -160,6 +162,7 @@ public class PartyManager {
 			for (String member : this.getParties()) detached.add(UUID.fromString(member));
 			updateMembers(this.uuid, Collections.emptyList(), detached);
 			clearRequests();
+			plugin.set("Parties." + this.uuid + ".Moderators", new ArrayList<>());
 			plugin.set("Parties." + this.uuid + ".AllInvite", false);
 			plugin.set("Parties." + this.uuid + ".Mute", false);
 			plugin.set("Parties." + this.uuid + ".Private", false);
@@ -309,18 +312,75 @@ public class PartyManager {
 			synchronized (PartyManager.this) {
 			if (!this.uuid.toString().equals(this.getCurrentlyJoinedParty()))
 				throw new NotJoinedException("Disband.Must-Leader");
-			List<String> previous = this.getParties();
-			if (!previous.contains(uniqueId.toString())) {
+			if (!this.getParties().contains(uniqueId.toString())) {
 				throw new NotJoinedException("Exceptions.Isnt-In-Your-Party");
 			}
+			List<String> moderators = this.getModerators();
+			if (!moderators.contains(uniqueId.toString())) moderators.add(uniqueId.toString());
+			setModerators(moderators);
+			}
+		}
+
+		public void demote(ProxiedPlayer player) throws NotJoinedException {
+			this.demote(player.getUniqueId());
+		}
+
+		public void demote(UUID uniqueId) throws NotJoinedException {
+			synchronized (PartyManager.this) {
+			if (!this.uuid.toString().equals(this.getCurrentlyJoinedParty()))
+				throw new NotJoinedException("Disband.Must-Leader");
+			if (!this.getParties().contains(uniqueId.toString()))
+				throw new NotJoinedException("Exceptions.Isnt-In-Your-Party");
+			List<String> moderators = this.getModerators();
+			if (!moderators.remove(uniqueId.toString()))
+				throw new NotJoinedException("Exceptions.Isnt-Moderator");
+			setModerators(moderators);
+			}
+		}
+
+		public List<String> getModerators() {
+			return new ArrayList<>(plugin.getStringList("Parties." + this.uuid + ".Moderators"));
+		}
+
+		public boolean isPartyModerator(UUID player) {
+			return this.getModerators().contains(player.toString()) && this.getParties().contains(player.toString());
+		}
+
+		private void setModerators(List<String> moderators) {
+			List<String> valid = new ArrayList<>();
+			for (String moderator : moderators) {
+				if (!moderator.equals(this.uuid.toString()) && this.getParties().contains(moderator) && !valid.contains(moderator)) valid.add(moderator);
+			}
+			plugin.set("Parties." + this.uuid + ".Moderators", valid);
+			if (!plugin.isEnabledMySQL()) plugin.getDataManager().save();
+		}
+
+		public void transferLeadership(UUID uniqueId) throws NotJoinedException {
+			transferLeadership(uniqueId, true);
+		}
+
+		public void transferLeadership(ProxiedPlayer player) throws NotJoinedException {
+			this.transferLeadership(player.getUniqueId());
+		}
+
+		private void transferLeadership(UUID uniqueId, boolean promotePreviousLeader) throws NotJoinedException {
+			synchronized (PartyManager.this) {
+			if (!this.uuid.toString().equals(this.getCurrentlyJoinedParty())) throw new NotJoinedException("Disband.Must-Leader");
+			List<String> previous = this.getParties();
+			if (!previous.contains(uniqueId.toString())) throw new NotJoinedException("Exceptions.Isnt-In-Your-Party");
 			List<UUID> participants = new ArrayList<>();
 			participants.add(uniqueId);
 			participants.add(this.uuid);
-			for (String player : previous) if (!player.equals(uniqueId.toString())) participants.add(UUID.fromString(player));
+			for (String member : previous) if (!member.equals(uniqueId.toString())) participants.add(UUID.fromString(member));
+			List<String> moderators = this.getModerators();
+			moderators.remove(uniqueId.toString());
+			if (promotePreviousLeader) moderators.add(this.uuid.toString());
 			boolean allInvite = plugin.getBoolean("Parties." + this.uuid + ".AllInvite");
 			boolean mute = plugin.getBoolean("Parties." + this.uuid + ".Mute");
 			boolean privateParty = plugin.getBoolean("Parties." + this.uuid + ".Private");
 			updateMembers(uniqueId, participants, Collections.emptyList());
+			plugin.set("Parties." + uniqueId + ".Moderators", moderators);
+			plugin.set("Parties." + this.uuid + ".Moderators", new ArrayList<>());
 			plugin.set("Parties." + uniqueId + ".AllInvite", allInvite);
 			plugin.set("Parties." + uniqueId + ".Mute", mute);
 			plugin.set("Parties." + uniqueId + ".Private", privateParty);
@@ -346,7 +406,7 @@ public class PartyManager {
 			}
 
 			try {
-				this.promote(uniqueId);
+				this.transferLeadership(uniqueId, false);
 			} catch (NotJoinedException e) {
 				throw new IllegalStateException("Cannot promote the hijacking player", e);
 			}
@@ -482,7 +542,12 @@ public class PartyManager {
 			participants.add(this.uuid);
 			for (String member : list) participants.add(UUID.fromString(member));
 			if (list.isEmpty()) this.disband();
-			else updateMembers(this.uuid, participants, Collections.singletonList(uuid));
+			else {
+				List<String> moderators = this.getModerators();
+				moderators.remove(uuid.toString());
+				updateMembers(this.uuid, participants, Collections.singletonList(uuid));
+				setModerators(moderators);
+			}
 			return this;
 			}
 		}

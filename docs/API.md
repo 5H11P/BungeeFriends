@@ -128,6 +128,7 @@ CompletableFuture<Page<UUID>> ignoredPlayers(UUID playerId, int offset, int limi
 CompletableFuture<Page<PartyMember>> members(UUID playerId, int offset, int limit);
 CompletableFuture<Boolean> isMember(UUID playerId);
 CompletableFuture<Boolean> isLeader(UUID playerId);
+CompletableFuture<Boolean> isModerator(UUID playerId);
 CompletableFuture<Boolean> isPrivate(UUID playerId);
 CompletableFuture<UUID> owner(UUID playerId);
 ```
@@ -172,8 +173,11 @@ CompletableFuture<Void> revokeInvite(UUID actor, UUID target);
 CompletableFuture<Void> leave(UUID actor);
 CompletableFuture<Void> kick(UUID actor, UUID target);
 CompletableFuture<Void> transferLeadership(UUID actor, UUID target);
+CompletableFuture<Void> promoteModerator(UUID actor, UUID target);
+CompletableFuture<Void> demoteModerator(UUID actor, UUID target);
 CompletableFuture<Void> disband(UUID actor);
 CompletableFuture<Void> setPrivate(UUID actor, boolean isPrivate);
+CompletableFuture<Void> setMute(UUID actor, boolean muted);
 CompletableFuture<Void> chat(UUID actor, String message);
 ```
 
@@ -207,9 +211,9 @@ CompletableFuture<Void> setPartyInviteEnabled(UUID actor, boolean enabled);
 | Status | `status(Player)` / `setStatus(Player, PlayerStatus)` |
 | Ignored IDs | `ignoredPlayers(Player, offset, limit)` |
 | Party members | `partyMembers(Player, offset, limit)` |
-| Party checks | `isPartyMember(Player)`, `isPartyLeader(Player)`, `isPartyPrivate(Player)`, `partyOwner(Player)` |
+| Party checks | `isPartyMember(Player)`, `isPartyLeader(Player)`, `isPartyModerator(Player)`, `isPartyPrivate(Player)`, `partyOwner(Player)` |
 | Friend actions | `requestFriend`, `acceptFriend`, `removeFriend`, `ignore`, `unignore` |
-| Party actions | `inviteToParty`, `acceptPartyInvite`, `revokePartyInvite`, `leaveParty`, `kickFromParty`, `transferPartyLeadership`, `disbandParty`, `setPartyPrivate`, `sendPartyChat` |
+| Party actions | `inviteToParty`, `acceptPartyInvite`, `revokePartyInvite`, `leaveParty`, `kickFromParty`, `transferPartyLeadership`, `promotePartyModerator`, `demotePartyModerator`, `disbandParty`, `setPartyPrivate`, `setPartyMute`, `sendPartyChat` |
 
 All rows return the same `CompletableFuture` result types as the shared
 interfaces. The UUID-based names (`members`, `isMember`, `owner`, `invite`,
@@ -241,7 +245,7 @@ player's private nickname and a trailing `*` when one is configured; the
 original `getName()` remains unchanged.
 
 `PartyMember` contains `getUniqueId()`, `getName()`, `getDisplayName()`,
-`isOnline()`, and `isLeader()`.
+`isOnline()`, `isLeader()`, and `isModerator()`.
 
 The DTOs are immutable snapshots and do not expose `FriendUtils`, `PartyUtils`,
 database objects, or mutable core collections.

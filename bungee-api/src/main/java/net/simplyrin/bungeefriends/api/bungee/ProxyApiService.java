@@ -57,14 +57,24 @@ final class ProxyApiService {
         if (owner == null) return new Page<>(Collections.<PartyMember>emptyList(), offset, limit, 0);
         List<String> ids = new ArrayList<>();
         ids.add(owner.toString());
-        ids.addAll(party(owner).getParties());
+        List<String> partyIds = party(owner).getParties();
+        List<String> moderators = new ArrayList<>();
+        for (String id : party(owner).getModerators()) if (partyIds.contains(id)) moderators.add(id);
+        ids.addAll(moderators);
+        for (String id : partyIds) if (!moderators.contains(id)) ids.add(id);
         int start = start(offset, limit, ids.size()), end = Math.min(ids.size(), start + limit);
         List<PartyMember> result = new ArrayList<>();
-        for (int i = start; i < end; i++) result.add(member(UUID.fromString(ids.get(i)), i == 0));
+        for (int i = start; i < end; i++) {
+            UUID id = UUID.fromString(ids.get(i));
+            result.add(member(id, i == 0, moderators.contains(id.toString())));
+        }
         return new Page<>(result, offset, limit, ids.size());
     }
     boolean inParty(UUID player) { return party(player).isJoinedParty(); }
     boolean leader(UUID player) { try { return party(player).isPartyOwner(); } catch (Exception e) { return false; } }
+    boolean moderator(UUID player) {
+        try { return party(player).getPartyLeader().isPartyModerator(player); } catch (Exception e) { return false; }
+    }
     boolean isPrivate(UUID player) { UUID owner = owner(player); return owner != null && core.getBoolean("Parties." + owner + ".Private"); }
     UUID owner(UUID player) {
         try { return party(player).getPartyLeader().getUniqueId(); }
@@ -111,7 +121,14 @@ final class ProxyApiService {
         if (status == null) throw new IllegalArgumentException("Status is required");
         core.getStatusManager().setStatus(actor, net.simplyrin.bungeefriends.utils.StatusManager.Status.valueOf(status.name()));
     }
-    void invite(UUID actor, UUID target) throws Exception { party(actor).addRequest(target); }
+    void invite(UUID actor, UUID target) throws Exception {
+        PartyUtils actorParty = party(actor);
+        PartyUtils leader = actorParty.isJoinedParty() ? actorParty.getPartyLeader() : actorParty;
+        if (!leader.getUniqueId().equals(actor) && !leader.isPartyModerator(actor)
+                && !core.getBoolean("Parties." + leader.getUniqueId() + ".AllInvite"))
+            throw new IllegalStateException("Invite permission denied");
+        leader.addRequest(target);
+    }
     void acceptInvite(UUID actor, UUID leader) throws Exception { party(leader).acceptRequest(actor); }
     void revokeInvite(UUID actor, UUID target) throws Exception {
         if (!ProxyPolicy.canModifyParty(actor, target, owner(actor), true)) throw new IllegalStateException("Party leader required");
@@ -125,12 +142,22 @@ final class ProxyApiService {
     void transfer(UUID actor, UUID target) throws Exception {
         if (!ProxyPolicy.canModifyParty(actor, target, owner(actor), true) || !party(actor).getParties().contains(target.toString()))
             throw new IllegalStateException("Leadership can only transfer to a party member");
-        party(actor).promote(target);
+        party(actor).transferLeadership(target);
     }
+    void promote(UUID actor, UUID target) throws Exception { party(actor).promote(target); }
+    void demote(UUID actor, UUID target) throws Exception { party(actor).demote(target); }
     void disband(UUID actor) { party(actor).disband(); }
     void setPrivate(UUID actor, boolean value) {
         if (!leader(actor)) throw new IllegalStateException("Party leader required");
         core.set("Parties." + actor + ".Private", value);
+        if (!core.isEnabledMySQL()) core.getDataManager().save();
+    }
+    void setMute(UUID actor, boolean value) throws Exception {
+        PartyUtils actorParty = party(actor);
+        PartyUtils owner = actorParty.getPartyLeader();
+        if (!owner.getUniqueId().equals(actor) && !owner.isPartyModerator(actor))
+            throw new IllegalStateException("Party leader or moderator required");
+        core.set("Parties." + owner.getUniqueId() + ".Mute", value);
         if (!core.isEnabledMySQL()) core.getDataManager().save();
     }
     void chat(UUID actor, String message) throws Exception {
@@ -144,9 +171,9 @@ final class ProxyApiService {
         if (!friend(viewer).isFriend(target)) throw new IllegalStateException("Target is not a friend");
     }
     private PartyUtils party(UUID uuid) { return core.getPartyManager().getPlayer(uuid); }
-    private PartyMember member(UUID uuid, boolean leader) {
+    private PartyMember member(UUID uuid, boolean leader, boolean moderator) {
         FriendUtils info = friend(uuid);
-        return new PartyMember(uuid, info.getName(), info.getDisplayName(), info.getPlayer() != null, leader);
+        return new PartyMember(uuid, info.getName(), info.getDisplayName(), info.getPlayer() != null, leader, moderator);
     }
     private static int start(int offset, int limit, int total) {
         if (offset < 0 || limit < 1 || limit > 100) throw new IllegalArgumentException("Page limit must be between 1 and 100");

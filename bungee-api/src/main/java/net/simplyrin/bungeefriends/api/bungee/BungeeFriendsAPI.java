@@ -59,6 +59,7 @@ public final class BungeeFriendsAPI implements FriendQueryApi, PartyQueryApi, Pl
 	@Override public CompletableFuture<Page<PartyMember>> members(UUID id, int offset, int limit) { return submit(() -> service.partyMembers(id, offset, limit)); }
 	@Override public CompletableFuture<Boolean> isMember(UUID id) { return submit(() -> service.inParty(id)); }
 	@Override public CompletableFuture<Boolean> isLeader(UUID id) { return submit(() -> service.leader(id)); }
+	@Override public CompletableFuture<Boolean> isModerator(UUID id) { return submit(() -> service.moderator(id)); }
 	@Override public CompletableFuture<Boolean> isPrivate(UUID id) { return submit(() -> service.isPrivate(id)); }
 	@Override public CompletableFuture<UUID> owner(UUID id) { return submit(() -> service.owner(id)); }
 	@Override public CompletableFuture<PlayerStatus> status(UUID id) { return submit(() -> service.status(id)); }
@@ -80,7 +81,10 @@ public final class BungeeFriendsAPI implements FriendQueryApi, PartyQueryApi, Pl
 	@Override public CompletableFuture<Void> leave(UUID actor) { return action(() -> service.leave(actor)); }
 	@Override public CompletableFuture<Void> kick(UUID actor, UUID target) { return action(() -> service.kick(actor, target)); }
 	@Override public CompletableFuture<Void> transferLeadership(UUID actor, UUID target) { return action(() -> service.transfer(actor, target)); }
+	@Override public CompletableFuture<Void> promoteModerator(UUID actor, UUID target) { return action(() -> service.promote(actor, target)); }
+	@Override public CompletableFuture<Void> demoteModerator(UUID actor, UUID target) { return action(() -> service.demote(actor, target)); }
 	@Override public CompletableFuture<Void> disband(UUID actor) { return action(() -> service.disband(actor)); }
 	@Override public CompletableFuture<Void> setPrivate(UUID actor, boolean value) { return action(() -> service.setPrivate(actor, value)); }
+	@Override public CompletableFuture<Void> setMute(UUID actor, boolean value) { return action(() -> service.setMute(actor, value)); }
 	@Override public CompletableFuture<Void> chat(UUID actor, String message) { return action(() -> service.chat(actor, message)); }
 }
