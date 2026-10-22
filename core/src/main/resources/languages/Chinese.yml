@@ -142,6 +142,20 @@ Prefix:
   Current: "&e%targetDisplayName% &e的前缀是 '%prefix%&e'"
   To: "&e已将 %targetDisplayName% &e的前缀设置为 '%prefix%&e'"
   TooLong: "&c前缀不能超过 %maxLength% 个字符。"
+Nickname:
+  Usage: "&cUsage: /friend nickname <friend> [nickname]"
+  MustBeFriends: "&cThat player is not on your friends list."
+  TooLong: "&cThe nickname must be at most %maxLength% characters and contain no line breaks."
+  Set: "&a%targetDisplayName% &anow has the nickname %nickname%!"
+  Cleared: "&a%targetDisplayName% &ano longer has a nickname!"
+Best:
+  Usage: "&cUsage: /friend best <friend>"
+  MustBeFriends: "&cThat player is not on your friends list."
+  Enabled: "&a%targetDisplayName% &ais now a best friend!"
+  Disabled: "&a%targetDisplayName% &ais no longer a best friend!"
+Notifications:
+  Enabled: "&aEnabled friend join/leave notifications!"
+  Disabled: "&cDisabled friend join/leave notifications!"
 Requests:
   Empty: "&7没有待处理的好友请求。"
   Entry: "&e%name% &7于 %time% 发送了好友请求"
@@ -205,6 +219,9 @@ Reload:
   AliasCommand: "&aReconfigured alias command."
   Lang: "&aReloaded language files."
 Help:
+  Nickname: "&e/friend nickname <friend> [nickname] &7- &bSet a private friend nickname"
+  Best: "&e/friend best <friend> &7- &bToggle a best friend"
+  Notifications: "&e/friend notifications &7- &bToggle friend notifications"
   Command: "&e好友指令:"
   Help: "&e/friend help &7- &b显示此帮助"
   Lang: "&e/friend lang <语言> &7- &b更改显示语言"

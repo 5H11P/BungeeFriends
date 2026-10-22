@@ -2,6 +2,7 @@ package net.simplyrin.bungeefriends;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -453,6 +454,77 @@ public class Main extends Plugin {
 		}
 	}
 
+	public String getFriendNickname(UUID viewer, UUID target) {
+		if (this.isEnabledMySQL) return this.mySQLManager.getEditor().getFriendNickname(viewer, target);
+		synchronized (this.dataManager) {
+			return this.dataManager.getConfig().getString("Player." + viewer + ".FriendNickname." + target, "");
+		}
+	}
+
+	public void setFriendNickname(UUID viewer, UUID target, String nickname) {
+		if (this.isEnabledMySQL) this.mySQLManager.getEditor().setFriendNickname(viewer, target, nickname);
+		else {
+			synchronized (this.dataManager) {
+				this.dataManager.getConfig().set("Player." + viewer + ".FriendNickname." + target, nickname);
+				this.dataManager.save();
+			}
+		}
+	}
+
+	public void clearFriendNickname(UUID viewer, UUID target) {
+		if (this.isEnabledMySQL) this.mySQLManager.getEditor().clearFriendNickname(viewer, target);
+		else {
+			synchronized (this.dataManager) {
+				this.dataManager.getConfig().set("Player." + viewer + ".FriendNickname." + target, null);
+				this.dataManager.save();
+			}
+		}
+	}
+
+	public boolean isBestFriend(UUID viewer, UUID target) {
+		if (this.isEnabledMySQL) return this.mySQLManager.getEditor().isBestFriend(viewer, target);
+		synchronized (this.dataManager) {
+			return this.dataManager.getConfig().getStringList("Player." + viewer + ".BestFriends")
+					.contains(target.toString());
+		}
+	}
+
+	public void setBestFriend(UUID viewer, UUID target, boolean best) {
+		if (this.isEnabledMySQL) this.mySQLManager.getEditor().setBestFriend(viewer, target, best);
+		else {
+			synchronized (this.dataManager) {
+				List<String> values = new ArrayList<>(this.dataManager.getConfig().getStringList("Player." + viewer + ".BestFriends"));
+				String value = target.toString();
+				if (best && !values.contains(value)) values.add(value);
+				if (!best) values.remove(value);
+				this.dataManager.getConfig().set("Player." + viewer + ".BestFriends", values);
+				this.dataManager.save();
+			}
+		}
+	}
+
+	public boolean areFriendNotificationsEnabled(UUID player) {
+		if (this.isEnabledMySQL) {
+			String value = this.getString("Player." + player + ".FriendNotifications");
+			return value == null || value.isEmpty() ? true : Boolean.parseBoolean(value);
+		}
+		synchronized (this.dataManager) {
+			return this.dataManager.getConfig().getBoolean("Player." + player + ".FriendNotifications", true);
+		}
+	}
+
+	public void setFriendNotificationsEnabled(UUID player, boolean enabled) {
+		this.set("Player." + player + ".FriendNotifications", enabled);
+		if (!this.isEnabledMySQL) this.dataManager.save();
+	}
+
+	public void clearFriendPersonalization(UUID first, UUID second) {
+		this.clearFriendNickname(first, second);
+		this.clearFriendNickname(second, first);
+		this.setBestFriend(first, second, false);
+		this.setBestFriend(second, first, false);
+	}
+
 	public void changeFriendRequest(UUID requester, UUID target, boolean add) {
 		long now = System.currentTimeMillis();
 		if (this.isEnabledMySQL) {
@@ -709,7 +781,7 @@ public class Main extends Plugin {
 		String overridePath = "Messages." + messageId.name();
 		Boolean override = hyphen.contains(overridePath) ? Boolean.valueOf(hyphen.getBoolean(overridePath)) : null;
 		return MessageFrame.shouldFrame(false, categoryEnabled, override);
- 	}
+	}
 
 	public void infoFramed(UUID uuid, String message, MessageFrame.MessageId messageId) {
 		if (uuid == null) return;

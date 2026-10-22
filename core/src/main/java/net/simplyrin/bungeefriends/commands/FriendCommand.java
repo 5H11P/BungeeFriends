@@ -3,6 +3,7 @@ package net.simplyrin.bungeefriends.commands;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -58,7 +59,7 @@ public class FriendCommand extends Command implements TabExecutor {
 		if (!this.plugin.getBoolean("Plugin.Enable-Tab-Complete") || args == null || args.length == 0) return list;
 		String input = args[args.length - 1] == null ? "" : args[args.length - 1].toLowerCase(Locale.ROOT);
 		if (args.length == 1) {
-			String[] commands = {"add", "remove", "removeall", "accept", "deny", "requests", "note", "list", "lang", "language", "ignore", "toggle", "help"};
+			String[] commands = {"add", "remove", "removeall", "accept", "deny", "requests", "note", "nickname", "notifications", "best", "list", "lang", "language", "ignore", "toggle", "help"};
 			for (String command : commands) addIfMatches(list, command, input);
 			if (sender.hasPermission(Permissions.FORCE_ADD) || sender.hasPermission(Permissions.ADMIN)) addIfMatches(list, "force-add", input);
 			if (sender.hasPermission(Permissions.ADMIN)) {
@@ -82,6 +83,8 @@ public class FriendCommand extends Command implements TabExecutor {
 				&& (args[1].equalsIgnoreCase("add") || args[1].equalsIgnoreCase("remove"))) {
 			return playerMatches(sender, input);
 		} else if (command.equals("note") && args.length == 2) {
+			return playerMatches(sender, input);
+		} else if ((command.equals("nickname") || command.equals("best")) && args.length == 2) {
 			return playerMatches(sender, input);
 		} else if (command.equals("note") && args.length == 3) {
 			addIfMatches(list, "reset", input);
@@ -309,7 +312,75 @@ public class FriendCommand extends Command implements TabExecutor {
 				return;
 			}
 
+			if (args[0].equalsIgnoreCase("nickname")) {
+				if (args.length < 2) {
+					this.plugin.info(player, langUtils.getString("Nickname.Usage"));
+					return;
+				}
+				UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[1]);
+				if (target == null) {
+					this.plugin.infoFramed(player, langUtils.format("Cant-Find", "name", args[1]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
+					return;
+				}
+				FriendUtils targetFriends = this.plugin.getFriendManager().getPlayer(target);
+				if (!myFriends.isFriend(target)) {
+					this.plugin.info(player, langUtils.getString("Nickname.MustBeFriends"));
+					return;
+				}
+				String nickname = args.length > 2 ? String.join(" ", Arrays.copyOfRange(args, 2, args.length)).trim() : "";
+				if (nickname.length() > 255 || nickname.indexOf('\n') >= 0 || nickname.indexOf('\r') >= 0
+						|| nickname.chars().anyMatch(Character::isISOControl)) {
+					this.plugin.info(player, langUtils.format("Nickname.TooLong", "maxLength", "255"));
+					return;
+				}
+				String original = targetFriends.getName();
+				boolean clear = nickname.isEmpty() || (original != null && nickname.equalsIgnoreCase(original));
+				if (clear) {
+					this.plugin.clearFriendNickname(player.getUniqueId(), target);
+					this.plugin.infoFramed(player, langUtils.format("Nickname.Cleared", "targetDisplayName", targetFriends.getDisplayName()), MessageFrame.MessageId.FRIEND_NICKNAME_CLEARED);
+				} else {
+					this.plugin.setFriendNickname(player.getUniqueId(), target, nickname);
+					this.plugin.infoFramed(player, langUtils.format("Nickname.Set", "targetDisplayName", targetFriends.getDisplayName(), "nickname", nickname), MessageFrame.MessageId.FRIEND_NICKNAME_SET);
+				}
+				return;
+			}
+
+			if (args[0].equalsIgnoreCase("best")) {
+				if (args.length < 2) {
+					this.plugin.info(player, langUtils.getString("Best.Usage"));
+					return;
+				}
+				UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[1]);
+				if (target == null) {
+					this.plugin.infoFramed(player, langUtils.format("Cant-Find", "name", args[1]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
+					return;
+				}
+				FriendUtils targetFriends = this.plugin.getFriendManager().getPlayer(target);
+				if (!myFriends.isFriend(target)) {
+					this.plugin.info(player, langUtils.getString("Best.MustBeFriends"));
+					return;
+				}
+				boolean best = !this.plugin.isBestFriend(player.getUniqueId(), target);
+				this.plugin.setBestFriend(player.getUniqueId(), target, best);
+				this.plugin.infoFramed(player, langUtils.format(best ? "Best.Enabled" : "Best.Disabled",
+						"targetDisplayName", targetFriends.getDisplayName()), best ? MessageFrame.MessageId.FRIEND_BEST_ENABLED : MessageFrame.MessageId.FRIEND_BEST_DISABLED);
+				return;
+			}
+
+			if (args[0].equalsIgnoreCase("notifications")) {
+				boolean enabled = !this.plugin.areFriendNotificationsEnabled(player.getUniqueId());
+				this.plugin.setFriendNotificationsEnabled(player.getUniqueId(), enabled);
+				this.plugin.infoFramed(player, langUtils.getString("Notifications." + (enabled ? "Enabled" : "Disabled")),
+						enabled ? MessageFrame.MessageId.FRIEND_NOTIFICATIONS_ENABLED : MessageFrame.MessageId.FRIEND_NOTIFICATIONS_DISABLED);
+				return;
+			}
+
 			if (args[0].equalsIgnoreCase("list")) {
+				this.renderFriendList(player, myFriends, langUtils, args);
+				return;
+			}
+
+			if (args[0].equalsIgnoreCase("legacy-list")) {
 				List<String> list = myFriends.getFriends();
 
 				if (list.size() == 0) {
@@ -636,6 +707,9 @@ public class FriendCommand extends Command implements TabExecutor {
 		this.plugin.info(player, langUtils.getString("Help.List"));
 		this.plugin.info(player, langUtils.getString("Help.Requests"));
 		this.plugin.info(player, langUtils.getString("Help.Note-Description"));
+		this.plugin.info(player, langUtils.getString("Help.Nickname"));
+		this.plugin.info(player, langUtils.getString("Help.Best"));
+		this.plugin.info(player, langUtils.getString("Help.Notifications"));
 		this.plugin.info(player, langUtils.getString("Help.Ignore"));
 		this.plugin.info(player, langUtils.getString("Help.Toggle"));
 		if (player.hasPermission(Permissions.ADMIN)) {
@@ -647,6 +721,111 @@ public class FriendCommand extends Command implements TabExecutor {
 			this.plugin.info(player, langUtils.getString("Help.Force-Add"));
 		}
 		this.plugin.infoFrame(player, MessageFrame.MessageId.FRIEND_HELP);
+	}
+
+	private void renderFriendList(ProxiedPlayer player, FriendUtils myFriends, LanguageUtils langUtils, String[] args) {
+		List<String> friends = myFriends.getFriends();
+		if (friends.isEmpty()) {
+			this.plugin.infoFramed(player, langUtils.getString("List.Empty"), MessageFrame.MessageId.FRIEND_LIST_EMPTY);
+			return;
+		}
+		boolean colorOnly = this.plugin.getConfigManager().getFriendListConfig().getBoolean("Display-Only-Prefix-Color", false);
+		List<FriendListEntry> entries = new ArrayList<>();
+		for (int index = 0; index < friends.size(); index++) {
+			UUID targetId = UUID.fromString(friends.get(index));
+			FriendUtils targetFriends = this.plugin.getFriendManager().getPlayer(targetId);
+			ProxiedPlayer target = this.plugin.getProxy().getPlayer(targetId);
+			boolean online = target != null && (!this.plugin.getBoolean("Plugin.Enable-Status")
+					|| this.plugin.getStatusManager().getStatus(targetId) != net.simplyrin.bungeefriends.utils.StatusManager.Status.APPEAR_OFFLINE);
+			String nickname = this.plugin.getFriendNickname(player.getUniqueId(), targetId);
+			boolean nicked = nickname != null && !nickname.trim().isEmpty();
+			String prefix = colorOnly ? targetFriends.getPrefixColor() : targetFriends.getPrefix();
+			String name = nicked ? nickname.trim() + "*" : targetFriends.getName();
+			entries.add(new FriendListEntry(targetId, target, prefix, name, online,
+					this.priorityRank(targetFriends), this.plugin.isBestFriend(player.getUniqueId(), targetId), index));
+		}
+		Collections.sort(entries, Comparator.comparing(FriendListEntry::isBest).reversed()
+				.thenComparing(Comparator.comparing(FriendListEntry::isOnline).reversed())
+				.thenComparingInt(FriendListEntry::getPriority)
+				.thenComparingInt(FriendListEntry::getIndex));
+		List<TextComponent> all = new ArrayList<>();
+		for (FriendListEntry entry : entries) all.add(this.friendListLine(player, entry, langUtils));
+		int page = 1;
+		if (args.length > 1) {
+			try { page = Math.max(1, Integer.parseInt(args[1])); }
+			catch (NumberFormatException ignored) { }
+		}
+		List<List<TextComponent>> divide = this.divide(all, 7);
+		page = Math.min(page, divide.size());
+		this.plugin.infoFrame(player, MessageFrame.MessageId.FRIEND_LIST_PAGE);
+		for (TextComponent line : MessageBuilder.splitLines(
+				PaginationMessage.build(langUtils, langUtils.getString("List.Page"), "/friend list ", page, divide.size()))) player.sendMessage(line);
+		for (TextComponent message : divide.get(page - 1))
+			for (TextComponent line : MessageBuilder.splitLines(message)) player.sendMessage(line);
+		this.plugin.infoFrame(player, MessageFrame.MessageId.FRIEND_LIST_PAGE);
+	}
+
+	private int priorityRank(FriendUtils friend) {
+		String prefix = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', friend.getPrefix())).trim();
+		List<Priority.Item> priorities = this.plugin.getPriority().getPriorities();
+		for (int index = 0; index < priorities.size(); index++)
+			if (priorities.get(index).getNoColorPrefix().equals(prefix)) return index;
+		return priorities.size();
+	}
+
+	private TextComponent friendListLine(ProxiedPlayer viewer, FriendListEntry entry, LanguageUtils lang) {
+		boolean visible = entry.online && entry.target != null && entry.target.getServer() != null && entry.target.getServer().getInfo() != null;
+		String server = visible ? this.plugin.getServerName(entry.target.getServer().getInfo().getName()) : lang.getString("List.Unknown");
+		String status = lang.getString("List.Unknown");
+		String lineKey = "List.Offline";
+		if (visible) {
+			net.simplyrin.bungeefriends.utils.StatusManager.Status state = this.plugin.getStatusManager().getStatus(entry.id);
+			lineKey = state == net.simplyrin.bungeefriends.utils.StatusManager.Status.ONLINE ? "List.Online" : "List.Status." + state.getKey();
+			status = lang.format("Status.ChatBar." + state.getKey(), "targetDisplayName", "").trim();
+		}
+		String lastOnline = visible ? lang.getString("List.Now") : this.formatTime(this.plugin.getString("Player." + entry.id + ".LastOnline"), lang);
+		String lastOnlineAgo = visible ? lang.getString("List.Now") : this.timeAgo(this.plugin.getString("Player." + entry.id + ".LastOnline"), lang);
+		String displayName = entry.prefix + entry.name;
+		String note = this.normalizeNote(this.plugin.getFriendCustomPrefix(viewer.getUniqueId(), entry.id));
+		String hoverKey = visible ? (note.isEmpty() ? "List.Hover-Online" : "List.Hover-Online-With-Note")
+				: (note.isEmpty() ? "List.Hover-Offline" : "List.Hover-Offline-With-Note");
+		String hover = lang.format(hoverKey, "targetDisplayName", displayName, "note", note,
+				"targetUUID", entry.id.toString(), "status", status, "server", server,
+				"friendSince", this.formatTime(this.plugin.getFriendSince(viewer.getUniqueId(), entry.id), lang),
+				"lastOnlineAgo", lastOnlineAgo, "lastOnline", lastOnline);
+		String marker = "\u0000";
+		String line = lang.format(lineKey, "targetDisplayName", marker, "server", server);
+		int markerIndex = line.indexOf(marker);
+		TextComponent result = MessageBuilder.get(line.substring(0, markerIndex));
+		TextComponent prefix = MessageBuilder.get(entry.prefix);
+		TextComponent name = MessageBuilder.get(entry.name);
+		name.setBold(entry.best);
+		name.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,
+				new net.md_5.bungee.api.chat.ComponentBuilder(ChatColor.translateAlternateColorCodes('&', hover)).create()));
+		result.addExtra(prefix);
+		result.addExtra(name);
+		result.addExtra(MessageBuilder.get(line.substring(markerIndex + marker.length())));
+		return result;
+	}
+
+	private static final class FriendListEntry {
+		private final UUID id;
+		private final ProxiedPlayer target;
+		private final String prefix;
+		private final String name;
+		private final boolean online;
+		private final int priority;
+		private final boolean best;
+		private final int index;
+		FriendListEntry(UUID id, ProxiedPlayer target, String prefix, String name, boolean online,
+				int priority, boolean best, int index) {
+			this.id = id; this.target = target; this.prefix = prefix; this.name = name;
+			this.online = online; this.priority = priority; this.best = best; this.index = index;
+		}
+		boolean isOnline() { return online; }
+		boolean isBest() { return best; }
+		int getPriority() { return priority; }
+		int getIndex() { return index; }
 	}
 
 	private TextComponent friendListLine(ProxiedPlayer viewer, ProxiedPlayer target, LanguageUtils lang, String displayName) {

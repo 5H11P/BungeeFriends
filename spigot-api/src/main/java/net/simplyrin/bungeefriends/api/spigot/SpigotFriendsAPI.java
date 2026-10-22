@@ -87,6 +87,15 @@ public final class SpigotFriendsAPI implements FriendQueryApi, PartyQueryApi, Pl
 	public CompletableFuture<Boolean> areFriends(Player player, UUID target) {
 		return map(query(player, "areFriends", id(target)), SpigotFriendsAPI::booleanValue);
 	}
+	public CompletableFuture<String> friendNickname(Player player, UUID target) {
+		return map(query(player, "friendNickname", id(target)), SpigotFriendsAPI::single);
+	}
+	public CompletableFuture<Boolean> isBestFriend(Player player, UUID target) {
+		return map(query(player, "isBestFriend", id(target)), SpigotFriendsAPI::booleanValue);
+	}
+	public CompletableFuture<Boolean> areFriendNotificationsEnabled(Player player) {
+		return map(query(player, "areFriendNotificationsEnabled"), SpigotFriendsAPI::booleanValue);
+	}
 	public CompletableFuture<Boolean> isRequestEnabled(Player player) {
 		return map(query(player, "isRequestEnabled"), SpigotFriendsAPI::booleanValue);
 	}
@@ -124,6 +133,9 @@ public final class SpigotFriendsAPI implements FriendQueryApi, PartyQueryApi, Pl
 	public CompletableFuture<Void> ignore(Player actor, UUID target) { return action(actor, "ignore", id(target)); }
 	public CompletableFuture<Void> unignore(Player actor, UUID target) { return action(actor, "unignore", id(target)); }
 	public CompletableFuture<Void> setFriendRequestsEnabled(Player actor, boolean enabled) { return action(actor, "setRequestEnabled", Boolean.toString(enabled)); }
+	public CompletableFuture<Void> setFriendNickname(Player actor, UUID target, String nickname) { return action(actor, "setFriendNickname", id(target), nickname == null ? "" : nickname); }
+	public CompletableFuture<Void> setBestFriend(Player actor, UUID target, boolean best) { return action(actor, "setBestFriend", id(target), Boolean.toString(best)); }
+	public CompletableFuture<Void> setFriendNotificationsEnabled(Player actor, boolean enabled) { return action(actor, "setFriendNotificationsEnabled", Boolean.toString(enabled)); }
 	public CompletableFuture<Void> setPartyInviteEnabled(Player actor, boolean enabled) { return action(actor, "setPartyInviteEnabled", Boolean.toString(enabled)); }
 	public CompletableFuture<Void> setStatus(Player actor, PlayerStatus status) {
 		if (status == null) throw new IllegalArgumentException("Status is required");
@@ -152,6 +164,15 @@ public final class SpigotFriendsAPI implements FriendQueryApi, PartyQueryApi, Pl
 	}
 	@Override public CompletableFuture<Boolean> areFriends(UUID actor, UUID target) {
 		return map(query(actor, "areFriends", id(target)), SpigotFriendsAPI::booleanValue);
+	}
+	@Override public CompletableFuture<String> friendNickname(UUID actor, UUID target) {
+		return map(query(actor, "friendNickname", id(target)), SpigotFriendsAPI::single);
+	}
+	@Override public CompletableFuture<Boolean> isBestFriend(UUID actor, UUID target) {
+		return map(query(actor, "isBestFriend", id(target)), SpigotFriendsAPI::booleanValue);
+	}
+	@Override public CompletableFuture<Boolean> areFriendNotificationsEnabled(UUID actor) {
+		return map(query(actor, "areFriendNotificationsEnabled"), SpigotFriendsAPI::booleanValue);
 	}
 	@Override public CompletableFuture<Boolean> isRequestEnabled(UUID actor) {
 		return map(query(actor, "isRequestEnabled"), SpigotFriendsAPI::booleanValue);
@@ -186,6 +207,9 @@ public final class SpigotFriendsAPI implements FriendQueryApi, PartyQueryApi, Pl
 	@Override public CompletableFuture<Void> ignore(UUID actor, UUID target) { return action(actor, "ignore", id(target)); }
 	@Override public CompletableFuture<Void> unignore(UUID actor, UUID target) { return action(actor, "unignore", id(target)); }
 	@Override public CompletableFuture<Void> setRequestEnabled(UUID actor, boolean enabled) { return action(actor, "setRequestEnabled", Boolean.toString(enabled)); }
+	@Override public CompletableFuture<Void> setFriendNickname(UUID actor, UUID target, String nickname) { return action(actor, "setFriendNickname", id(target), nickname == null ? "" : nickname); }
+	@Override public CompletableFuture<Void> setBestFriend(UUID actor, UUID target, boolean best) { return action(actor, "setBestFriend", id(target), Boolean.toString(best)); }
+	@Override public CompletableFuture<Void> setFriendNotificationsEnabled(UUID actor, boolean enabled) { return action(actor, "setFriendNotificationsEnabled", Boolean.toString(enabled)); }
 	@Override public CompletableFuture<Void> setPartyInviteEnabled(UUID actor, boolean enabled) { return action(actor, "setPartyInviteEnabled", Boolean.toString(enabled)); }
 	@Override public CompletableFuture<Void> setStatus(UUID actor, PlayerStatus status) {
 		if (status == null) throw new IllegalArgumentException("Status is required");

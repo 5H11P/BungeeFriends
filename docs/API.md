@@ -112,6 +112,9 @@ six interfaces, so code can depend on a narrow interface when appropriate.
 CompletableFuture<Page<Friend>> friends(UUID playerId, int offset, int limit);
 CompletableFuture<Page<UUID>> friendIds(UUID playerId, int offset, int limit);
 CompletableFuture<Boolean> areFriends(UUID first, UUID second);
+CompletableFuture<String> friendNickname(UUID viewer, UUID target);
+CompletableFuture<Boolean> isBestFriend(UUID viewer, UUID target);
+CompletableFuture<Boolean> areFriendNotificationsEnabled(UUID playerId);
 CompletableFuture<Boolean> isRequestEnabled(UUID playerId);
 CompletableFuture<Page<UUID>> ignoredPlayers(UUID playerId, int offset, int limit);
 ```
@@ -151,6 +154,9 @@ CompletableFuture<Void> removeFriend(UUID actor, UUID target);
 CompletableFuture<Void> ignore(UUID actor, UUID target);
 CompletableFuture<Void> unignore(UUID actor, UUID target);
 CompletableFuture<Void> setRequestEnabled(UUID actor, boolean enabled);
+CompletableFuture<Void> setFriendNickname(UUID actor, UUID target, String nickname);
+CompletableFuture<Void> setBestFriend(UUID actor, UUID target, boolean best);
+CompletableFuture<Void> setFriendNotificationsEnabled(UUID actor, boolean enabled);
 ```
 
 These methods modify friend requests, friend relationships, the ignore list, or
@@ -193,6 +199,9 @@ CompletableFuture<Void> setPartyInviteEnabled(UUID actor, boolean enabled);
 | Friend list | `friends(Player, offset, limit)` |
 | Friend IDs | `friendIds(Player, offset, limit)` |
 | Friend check | `areFriends(Player, targetUuid)` |
+| Private nickname | `friendNickname(Player, targetUuid)` / `setFriendNickname(Player, targetUuid, nickname)` |
+| Best friend | `isBestFriend(Player, targetUuid)` / `setBestFriend(Player, targetUuid, best)` |
+| Friend notifications | `areFriendNotificationsEnabled(Player)` / `setFriendNotificationsEnabled(Player, enabled)` |
 | Friend request preference | `isRequestEnabled(Player)` / `setFriendRequestsEnabled(Player, enabled)` |
 | Party invite preference | `isPartyInviteEnabled(Player)` / `setPartyInviteEnabled(Player, enabled)` |
 | Status | `status(Player)` / `setStatus(Player, PlayerStatus)` |
@@ -226,6 +235,10 @@ The item list is an immutable defensive copy. `hasNext()` is based on
 
 `Friend` contains `getUniqueId()`, `getName()`, `getDisplayName()`,
 `getPrefix()`, and `isOnline()`.
+
+`Friend.getDisplayName()` is resolved for the requesting player. It includes that
+player's private nickname and a trailing `*` when one is configured; the
+original `getName()` remains unchanged.
 
 `PartyMember` contains `getUniqueId()`, `getName()`, `getDisplayName()`,
 `isOnline()`, and `isLeader()`.

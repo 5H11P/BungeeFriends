@@ -47,7 +47,8 @@ public class EventListener implements Listener {
 
 		for (ProxiedPlayer target : this.plugin.getProxy().getPlayers()) {
 			if (!player.equals(target)) {
-				if (!hidden && myFriends.getFriends().contains(target.getUniqueId().toString())) {
+				if (!hidden && this.plugin.areFriendNotificationsEnabled(target.getUniqueId())
+						&& myFriends.getFriends().contains(target.getUniqueId().toString())) {
 					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(target);
 					this.plugin.info(target, targetLangUtils.format("Friends.Join", "displayName", myFriends.getDisplayNameFor(target.getUniqueId())));
 				}
@@ -75,7 +76,8 @@ public class EventListener implements Listener {
 
 		for (ProxiedPlayer target : this.plugin.getProxy().getPlayers()) {
 			if (!player.equals(target)) {
-				if (!hidden && myFriends.getFriends().contains(target.getUniqueId().toString())) {
+				if (!hidden && this.plugin.areFriendNotificationsEnabled(target.getUniqueId())
+						&& myFriends.getFriends().contains(target.getUniqueId().toString())) {
 					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(target);
 					this.plugin.info(target, targetLangUtils.format("Friends.Quit", "displayName", myFriends.getDisplayNameFor(target.getUniqueId())));
 				}
@@ -155,7 +157,8 @@ public class EventListener implements Listener {
 				&& (!this.plugin.getBoolean("Plugin.Enable-Status") || this.plugin.getStatusManager().getStatus(player.getUniqueId())
 						!= net.simplyrin.bungeefriends.utils.StatusManager.Status.APPEAR_OFFLINE)) {
 			for (String friends : myFriends.getFriends()) {
-				if (this.plugin.getBoolean("Plugin.Enable-Server-Switch-Notifier")) {
+				if (this.plugin.getBoolean("Plugin.Enable-Server-Switch-Notifier")
+						&& this.plugin.areFriendNotificationsEnabled(UUID.fromString(friends))) {
 					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(friends);
 
 					String message = targetLangUtils.format("Friends.Server-Move",

@@ -97,9 +97,11 @@ public class FriendManager {
 			return this.getPrefix() + this.getName();
 		}
 
-		// Keep the viewer-aware method for API compatibility; private notes belong in friend-list hovers.
+		// Resolve private nickname data only for the viewer requesting this display name.
 		public String getDisplayNameFor(UUID viewer) {
-			return this.getDisplayName();
+			String nickname = plugin.getFriendNickname(viewer, this.uuid);
+			if (nickname == null || nickname.trim().isEmpty()) return this.getDisplayName();
+			return this.getPrefix() + nickname.trim() + "*";
 		}
 
 		public String getPrefixColor() {
@@ -338,6 +340,7 @@ public class FriendManager {
 					plugin.getDataManager().save();
 				}
 			}
+			plugin.clearFriendPersonalization(this.uuid, uuid);
 			return this;
 			}
 		}

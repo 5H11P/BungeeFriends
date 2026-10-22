@@ -23,6 +23,16 @@ final class ProxyApiService {
 
     List<String> friendIds(UUID player) { return new ArrayList<>(friend(player).getFriends()); }
     boolean areFriends(UUID first, UUID second) { return friend(first).isFriend(second); }
+    String friendNickname(UUID viewer, UUID target) {
+        requireFriend(viewer, target);
+        String value = core.getFriendNickname(viewer, target);
+        return value == null ? "" : value;
+    }
+    boolean isBestFriend(UUID viewer, UUID target) {
+        requireFriend(viewer, target);
+        return core.isBestFriend(viewer, target);
+    }
+    boolean friendNotificationsEnabled(UUID player) { return core.areFriendNotificationsEnabled(player); }
     boolean friendRequestsEnabled(UUID player) { return friend(player).isEnabledReceiveRequest(); }
     boolean partyInvitesEnabled(UUID player) { return party(player).isEnabledReceiveRequest(); }
     PlayerStatus status(UUID player) { return PlayerStatus.valueOf(core.getStatusManager().getStatus(player).name()); }
@@ -75,6 +85,21 @@ final class ProxyApiService {
         friend(requester).removeRequest(actor);
     }
     void removeFriend(UUID actor, UUID target) throws Exception { friend(actor).remove(target); }
+    void setFriendNickname(UUID actor, UUID target, String nickname) {
+        requireFriend(actor, target);
+        if (nickname == null) nickname = "";
+        nickname = nickname.trim();
+        if (nickname.length() > 255 || nickname.chars().anyMatch(Character::isISOControl))
+            throw new IllegalArgumentException("Nickname must be at most 255 characters and contain no control characters");
+        FriendUtils targetInfo = friend(target);
+        if (nickname.isEmpty() || nickname.equalsIgnoreCase(targetInfo.getName())) core.clearFriendNickname(actor, target);
+        else core.setFriendNickname(actor, target, nickname);
+    }
+    void setBestFriend(UUID actor, UUID target, boolean best) {
+        requireFriend(actor, target);
+        core.setBestFriend(actor, target, best);
+    }
+    void setFriendNotificationsEnabled(UUID actor, boolean enabled) { core.setFriendNotificationsEnabled(actor, enabled); }
     void ignore(UUID actor, UUID target) throws Exception { friend(actor).addIgnore(target); }
     void unignore(UUID actor, UUID target) throws Exception { friend(actor).removeIgnore(target); }
     void setFriendRequests(UUID actor, boolean enabled) {
@@ -115,6 +140,9 @@ final class ProxyApiService {
     }
 
     private FriendUtils friend(UUID uuid) { return core.getFriendManager().getPlayer(uuid); }
+    private void requireFriend(UUID viewer, UUID target) {
+        if (!friend(viewer).isFriend(target)) throw new IllegalStateException("Target is not a friend");
+    }
     private PartyUtils party(UUID uuid) { return core.getPartyManager().getPlayer(uuid); }
     private PartyMember member(UUID uuid, boolean leader) {
         FriendUtils info = friend(uuid);

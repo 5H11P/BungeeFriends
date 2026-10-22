@@ -164,6 +164,9 @@ public final class BungeeFriendsAPIBungee extends Plugin implements Listener {
 				return success(request, boundedPage(request, uuidPage(api.friendIds(actor), page), 1));
 			}
 			case "areFriends": requireArgs(request, 1); return success(request, Boolean.toString(api.areFriends(actor, UUID.fromString(request.values.get(0)))));
+			case "friendNickname": requireArgs(request, 1); return success(request, api.friendNickname(actor, UUID.fromString(request.values.get(0))));
+			case "isBestFriend": requireArgs(request, 1); return success(request, Boolean.toString(api.isBestFriend(actor, UUID.fromString(request.values.get(0)))));
+			case "areFriendNotificationsEnabled": requireArgs(request, 0); return success(request, Boolean.toString(api.friendNotificationsEnabled(actor)));
 			case "isRequestEnabled": requireArgs(request, 0); return success(request, Boolean.toString(api.friendRequestsEnabled(actor)));
 			case "isPartyInviteEnabled": requireArgs(request, 0); return success(request, Boolean.toString(api.partyInvitesEnabled(actor)));
 			case "status": requireArgs(request, 0); return success(request, api.status(actor).name());
@@ -187,6 +190,9 @@ public final class BungeeFriendsAPIBungee extends Plugin implements Listener {
 			case "ignore": requireArgs(request, 1); api.ignore(actor, UUID.fromString(request.values.get(0))); return successEmpty(request);
 			case "unignore": requireArgs(request, 1); api.unignore(actor, UUID.fromString(request.values.get(0))); return successEmpty(request);
 			case "setRequestEnabled": requireArgs(request, 1); api.setFriendRequests(actor, parseBoolean(request.values.get(0))); return successEmpty(request);
+			case "setFriendNickname": requireArgs(request, 2); api.setFriendNickname(actor, UUID.fromString(request.values.get(0)), request.values.get(1)); return successEmpty(request);
+			case "setBestFriend": requireArgs(request, 2); api.setBestFriend(actor, UUID.fromString(request.values.get(0)), parseBoolean(request.values.get(1))); return successEmpty(request);
+			case "setFriendNotificationsEnabled": requireArgs(request, 1); api.setFriendNotificationsEnabled(actor, parseBoolean(request.values.get(0))); return successEmpty(request);
 			case "setPartyInviteEnabled": requireArgs(request, 1); api.setPartyInvites(actor, parseBoolean(request.values.get(0))); return successEmpty(request);
 			case "setStatus": {
 				requireArgs(request, 1);

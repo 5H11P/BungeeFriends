@@ -49,6 +49,9 @@ public final class BungeeFriendsAPI implements FriendQueryApi, PartyQueryApi, Pl
 		return submit(() -> { java.util.List<UUID> ids = new java.util.ArrayList<>(); for (String value : service.friendIds(id)) ids.add(UUID.fromString(value)); return page(ids, offset, limit); });
 	}
 	@Override public CompletableFuture<Boolean> areFriends(UUID first, UUID second) { return submit(() -> service.areFriends(first, second)); }
+	@Override public CompletableFuture<String> friendNickname(UUID viewer, UUID target) { return submit(() -> service.friendNickname(viewer, target)); }
+	@Override public CompletableFuture<Boolean> isBestFriend(UUID viewer, UUID target) { return submit(() -> service.isBestFriend(viewer, target)); }
+	@Override public CompletableFuture<Boolean> areFriendNotificationsEnabled(UUID id) { return submit(() -> service.friendNotificationsEnabled(id)); }
 	@Override public CompletableFuture<Boolean> isRequestEnabled(UUID id) { return submit(() -> service.friendRequestsEnabled(id)); }
 	@Override public CompletableFuture<Page<UUID>> ignoredPlayers(UUID id, int offset, int limit) {
 		return submit(() -> { java.util.List<UUID> ids = new java.util.ArrayList<>(); for (String value : service.ignored(id)) ids.add(UUID.fromString(value)); return page(ids, offset, limit); });
@@ -66,6 +69,9 @@ public final class BungeeFriendsAPI implements FriendQueryApi, PartyQueryApi, Pl
 	@Override public CompletableFuture<Void> ignore(UUID actor, UUID target) { return action(() -> service.ignore(actor, target)); }
 	@Override public CompletableFuture<Void> unignore(UUID actor, UUID target) { return action(() -> service.unignore(actor, target)); }
 	@Override public CompletableFuture<Void> setRequestEnabled(UUID actor, boolean enabled) { return action(() -> service.setFriendRequests(actor, enabled)); }
+	@Override public CompletableFuture<Void> setFriendNickname(UUID actor, UUID target, String nickname) { return action(() -> service.setFriendNickname(actor, target, nickname)); }
+	@Override public CompletableFuture<Void> setBestFriend(UUID actor, UUID target, boolean best) { return action(() -> service.setBestFriend(actor, target, best)); }
+	@Override public CompletableFuture<Void> setFriendNotificationsEnabled(UUID actor, boolean enabled) { return action(() -> service.setFriendNotificationsEnabled(actor, enabled)); }
 	@Override public CompletableFuture<Void> setStatus(UUID actor, PlayerStatus status) { return action(() -> service.setStatus(actor, status)); }
 	@Override public CompletableFuture<Void> setPartyInviteEnabled(UUID actor, boolean enabled) { return action(() -> service.setPartyInvites(actor, enabled)); }
 	@Override public CompletableFuture<Void> invite(UUID actor, UUID target) { return action(() -> service.invite(actor, target)); }

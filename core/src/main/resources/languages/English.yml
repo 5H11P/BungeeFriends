@@ -159,6 +159,20 @@ Prefix:
   Current: "&7%targetDisplayName%&e's currently prefix is '%prefix%&e'"
   To: "&7%targetDisplayName%&e's prefix has been changed to '%prefix%&e'"
   TooLong: "&cThe prefix must be at most %maxLength% characters."
+Nickname:
+  Usage: "&cUsage: /friend nickname <friend> [nickname]"
+  MustBeFriends: "&cThat player is not on your friends list."
+  TooLong: "&cThe nickname must be at most %maxLength% characters and contain no line breaks."
+  Set: "&a%targetDisplayName% &anow has the nickname %nickname%!"
+  Cleared: "&a%targetDisplayName% &ano longer has a nickname!"
+Best:
+  Usage: "&cUsage: /friend best <friend>"
+  MustBeFriends: "&cThat player is not on your friends list."
+  Enabled: "&a%targetDisplayName% &ais now a best friend!"
+  Disabled: "&a%targetDisplayName% &ais no longer a best friend!"
+Notifications:
+  Enabled: "&aEnabled friend join/leave notifications!"
+  Disabled: "&cDisabled friend join/leave notifications!"
 Requests:
   Empty: "&7No pending friend requests."
   Entry: "&e%name% &7sent a request at %time%"
@@ -233,6 +247,9 @@ Help:
   Requests: "&e/friend requests &7- &bList pending requests"
   Note: "&e/friend note &7- &bSet a private friend description"
   Note-Description: "&e/friend note &7- &bSet a private description shown in the friend list hover"
+  Nickname: "&e/friend nickname <friend> [nickname] &7- &bSet a private friend nickname"
+  Best: "&e/friend best <friend> &7- &bToggle a best friend"
+  Notifications: "&e/friend notifications &7- &bToggle friend notifications"
   Remove: "&e/friend remove &7- &bRemove a player from your friends"
   RemoveAll: "&e/friend removeall &7- &bRemove all your friends."
   Accept: "&e/friend accept &7- &bAccept a friend request"

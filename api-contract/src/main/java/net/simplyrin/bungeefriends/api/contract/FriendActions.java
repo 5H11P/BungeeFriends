@@ -10,4 +10,7 @@ public interface FriendActions {
     CompletableFuture<Void> ignore(UUID actor, UUID target);
     CompletableFuture<Void> unignore(UUID actor, UUID target);
     CompletableFuture<Void> setRequestEnabled(UUID actor, boolean enabled);
+    CompletableFuture<Void> setFriendNickname(UUID actor, UUID target, String nickname);
+    CompletableFuture<Void> setBestFriend(UUID actor, UUID target, boolean best);
+    CompletableFuture<Void> setFriendNotificationsEnabled(UUID actor, boolean enabled);
 }

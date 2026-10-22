@@ -84,12 +84,17 @@ public class MySQL {
 			createRelation(st, "bungeefriends_friend_requests", "target_uuid");
 			createRelation(st, "bungeefriends_party_members", "member_uuid");
 			createRelation(st, "bungeefriends_party_requests", "invited_uuid");
+			createRelation(st, "bungeefriends_best", "best_uuid");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS bungeefriends_friend_prefix (viewer_uuid varchar(36) NOT NULL, "
 					+ "target_uuid varchar(36) NOT NULL, custom_prefix varchar(255) NOT NULL, "
+					+ "created_at timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (viewer_uuid, target_uuid))");
+			st.executeUpdate("CREATE TABLE IF NOT EXISTS bungeefriends_friend_nickname (viewer_uuid varchar(36) NOT NULL, "
+					+ "target_uuid varchar(36) NOT NULL, nickname varchar(255) NOT NULL, "
 					+ "created_at timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (viewer_uuid, target_uuid))");
 		}
 		ensureIndex(db, DATA, "idx_bungeefriends_data_name", "name");
 		ensureColumn(db, DATA, "status", "varchar(32)");
+		ensureColumn(db, DATA, "friend_notifications", "boolean NOT NULL DEFAULT TRUE");
 		for (String[] relation : RELATIONS) {
 			ensureColumn(db, relation[0], "position_index", "int NOT NULL DEFAULT 0");
 			ensureIndex(db, relation[0], "idx_" + relation[0] + "_target", relation[1]);
@@ -103,7 +108,7 @@ public class MySQL {
 	private static final String[][] RELATIONS = {
 		{"bungeefriends_friends", "friend_uuid"}, {"bungeefriends_ignore", "ignored_uuid"},
 		{"bungeefriends_friend_requests", "target_uuid"}, {"bungeefriends_party_members", "member_uuid"},
-		{"bungeefriends_party_requests", "invited_uuid"}
+		{"bungeefriends_party_requests", "invited_uuid"}, {"bungeefriends_best", "best_uuid"}
 	};
 
 	private void createRelation(Statement st, String table, String target) throws SQLException {
@@ -371,6 +376,69 @@ public class MySQL {
 			deletePrefix(viewer, null);
 		}
 
+		public synchronized String getFriendNickname(UUID viewer, UUID target) {
+			return relationValue("SELECT nickname FROM bungeefriends_friend_nickname WHERE viewer_uuid = ? AND target_uuid = ?",
+					viewer, target);
+		}
+
+		public synchronized void setFriendNickname(UUID viewer, UUID target, String nickname) {
+			try {
+				ensureConnected();
+				try (PreparedStatement ps = connection.prepareStatement("INSERT INTO bungeefriends_friend_nickname"
+						+ " (viewer_uuid, target_uuid, nickname) VALUES (?, ?, ?)"
+						+ " ON DUPLICATE KEY UPDATE nickname = VALUES(nickname)")) {
+					ps.setString(1, viewer.toString());
+					ps.setString(2, target.toString());
+					ps.setString(3, nickname);
+					ps.executeUpdate();
+				}
+			} catch (SQLException e) {
+				throw failure("friend nickname", viewer + "/" + target, e);
+			}
+		}
+
+		public synchronized void clearFriendNickname(UUID viewer, UUID target) {
+			deleteNickname(viewer, target);
+		}
+
+		public synchronized boolean isBestFriend(UUID viewer, UUID target) {
+			try {
+				ensureConnected();
+				try (PreparedStatement ps = connection.prepareStatement("SELECT 1 FROM bungeefriends_best"
+						+ " WHERE owner_uuid = ? AND best_uuid = ?")) {
+					ps.setString(1, viewer.toString());
+					ps.setString(2, target.toString());
+					try (ResultSet rs = ps.executeQuery()) { return rs.next(); }
+				}
+			} catch (SQLException e) {
+				throw failure("best friend read", viewer + "/" + target, e);
+			}
+		}
+
+		public synchronized void setBestFriend(UUID viewer, UUID target, boolean best) {
+			try {
+				ensureConnected();
+				if (best) {
+					try (PreparedStatement ps = connection.prepareStatement("INSERT INTO bungeefriends_best"
+							+ " (owner_uuid, best_uuid, position_index) VALUES (?, ?, 0)"
+							+ " ON DUPLICATE KEY UPDATE best_uuid = VALUES(best_uuid)")) {
+						ps.setString(1, viewer.toString());
+						ps.setString(2, target.toString());
+						ps.executeUpdate();
+					}
+				} else {
+					try (PreparedStatement ps = connection.prepareStatement("DELETE FROM bungeefriends_best"
+							+ " WHERE owner_uuid = ? AND best_uuid = ?")) {
+						ps.setString(1, viewer.toString());
+						ps.setString(2, target.toString());
+						ps.executeUpdate();
+					}
+				}
+			} catch (SQLException e) {
+				throw failure("best friend write", viewer + "/" + target, e);
+			}
+		}
+
 		private void deletePrefix(UUID viewer, UUID target) {
 			try {
 				ensureConnected();
@@ -383,6 +451,21 @@ public class MySQL {
 				}
 			} catch (SQLException e) {
 				throw failure("friend prefix removal", viewer.toString(), e);
+			}
+		}
+
+		private void deleteNickname(UUID viewer, UUID target) {
+			try {
+				ensureConnected();
+				String sql = "DELETE FROM bungeefriends_friend_nickname WHERE viewer_uuid = ?"
+						+ (target == null ? "" : " AND target_uuid = ?");
+				try (PreparedStatement ps = connection.prepareStatement(sql)) {
+					ps.setString(1, viewer.toString());
+					if (target != null) ps.setString(2, target.toString());
+					ps.executeUpdate();
+				}
+			} catch (SQLException e) {
+				throw failure("friend nickname removal", viewer.toString(), e);
 			}
 		}
 
@@ -550,6 +633,7 @@ public class MySQL {
 		case "IgnoreList": if (!party) return relation(owner, "bungeefriends_ignore", "ignored_uuid"); break;
 		case "Requests": return relation(owner, party ? "bungeefriends_party_requests" : "bungeefriends_friend_requests",
 				party ? "invited_uuid" : "target_uuid");
+		case "BestFriends": if (!party) return relation(owner, "bungeefriends_best", "best_uuid"); break;
 		case "Party-List": if (party) return relation(owner, "bungeefriends_party_members", "member_uuid"); break;
 		case "Name": return field(owner, party ? "party_name" : "name", false);
 		case "Language": if (!party) return field(owner, "language", false); break;
@@ -557,6 +641,7 @@ public class MySQL {
 		case "CustomPrefix": if (!party) return field(owner, "custom_prefix", false); break;
 		case "Status": if (!party) return field(owner, "status", false); break;
 		case "Toggle": return field(owner, party ? "party_toggle" : "toggle", true);
+		case "FriendNotifications": if (!party) return field(owner, "friend_notifications", true); break;
 		case "LastOnline": if (!party) return field(owner, "last_online", false); break;
 		case "Currently-Joined-Party": if (party) return field(owner, "party_current", false); break;
 		case "AllInvite": if (party) return field(owner, "party_allinvite", true); break;

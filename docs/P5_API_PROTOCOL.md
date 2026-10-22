@@ -10,6 +10,8 @@ The `bungeefriends:api` channel carries queries and player actions. `bungeefrien
 
 Page responses encode offset, limit, total count, then typed tuple values. The request page argument is `offset,limit`; valid limits are 1 through 100. The protocol retains a 30,000-byte packet ceiling and allows up to 512 values. The Spigot client validates response shape before completing the future.
 
+Friend display names in the `friends` tuple are resolved for the requesting viewer, so a private nickname is returned in the existing five-field tuple without changing its shape. The additional operations are `friendNickname(target)`, `isBestFriend(target)`, and `areFriendNotificationsEnabled()`, plus the actions `setFriendNickname(target, nickname)`, `setBestFriend(target, best)`, and `setFriendNotificationsEnabled(enabled)`.
+
 Cross-server player actions are authenticated by the network carrier UUID; callers cannot specify a different actor. Party state transitions use the existing manager methods and enforce leader/member rules and invitation expiry. Administrative force actions are not exposed. The proxy-side Java API is a trusted in-process plugin interface, so installed proxy plugins must only pass UUIDs for players on whose behalf they are authorized to act.
 
 `executePartyCommand` is separately permissioned (`friends.api.execute-command`), requires the actor to remain party leader and the target to remain an online party member, and checks command labels against both proxy and destination-server allow-lists. Completion reports proxy queue acceptance only. Warp events continue to mean scheduled delivery rather than completed teleportation.

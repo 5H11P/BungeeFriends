@@ -172,6 +172,30 @@ public class MySQLTest {
 	}
 
 	@Test
+	public void privateNicknameBestAndNotificationSettingsSurviveRestart() throws Exception {
+		String database = "friend_personalization_" + UUID.randomUUID().toString().replace("-", "");
+		try (Connection db = open(database)) {
+			MySQL.Editor editor = new MySQL(db).connect();
+			editor.setFriendNickname(UUID.fromString(A), UUID.fromString(B), "CCTV");
+			editor.setBestFriend(UUID.fromString(A), UUID.fromString(B), true);
+			editor.set("Player." + A + ".FriendNotifications", "false");
+			assertEquals("CCTV", editor.getFriendNickname(UUID.fromString(A), UUID.fromString(B)));
+			assertTrue(editor.isBestFriend(UUID.fromString(A), UUID.fromString(B)));
+			assertEquals("false", editor.get("Player." + A + ".FriendNotifications"));
+		}
+		try (Connection db = open(database)) {
+			MySQL.Editor editor = new MySQL(db).connect();
+			assertEquals("CCTV", editor.getFriendNickname(UUID.fromString(A), UUID.fromString(B)));
+			assertTrue(editor.isBestFriend(UUID.fromString(A), UUID.fromString(B)));
+			assertEquals("false", editor.get("Player." + A + ".FriendNotifications"));
+			editor.clearFriendNickname(UUID.fromString(A), UUID.fromString(B));
+			editor.setBestFriend(UUID.fromString(A), UUID.fromString(B), false);
+			assertEquals("", editor.getFriendNickname(UUID.fromString(A), UUID.fromString(B)));
+			assertTrue(!editor.isBestFriend(UUID.fromString(A), UUID.fromString(B)));
+		}
+	}
+
+	@Test
 	public void partyInvitationTimeSurvivesRestart() throws Exception {
 		String database = "party_request_" + UUID.randomUUID().toString().replace("-", "");
 		try (Connection db = open(database)) {
