@@ -139,7 +139,7 @@ public class FriendCommand extends Command implements TabExecutor {
 				if (args.length > 1) {
 					UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[1]);
 					if (target == null) {
-						this.plugin.infoFramed(player, langUtils.getString("Cant-Find").replace("%name", args[1]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
+						this.plugin.infoFramed(player, langUtils.format("Cant-Find", "name", args[1]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
 						return;
 					}
 					FriendUtils targetFriends = this.plugin.getFriendManager().getPlayer(target);
@@ -148,18 +148,18 @@ public class FriendCommand extends Command implements TabExecutor {
 					try {
 						myFriends.remove(target);
 					} catch (NotAddedException e) {
-						this.plugin.infoFramed(player, langUtils.getString("Exceptions.IsntOnYourFriends").replace("%targetDisplayName", targetFriends.getDisplayName()),
+						this.plugin.infoFramed(player, langUtils.format("Exceptions.IsntOnYourFriends", "targetDisplayName", targetFriends.getDisplayName()),
 								MessageFrame.MessageId.FRIEND_REMOVE_NOT_FRIEND);
 						return;
 					} catch (SelfException e) {
 						this.plugin.infoFramed(player, langUtils.getString("Exceptions.Cant-Remove-Yourself"), MessageFrame.MessageId.FRIEND_REMOVE_SELF);
 						return;
 					}
-					this.plugin.infoFramed(player, langUtils.getString("Remove.YourSelf").replace("%targetDisplayName", targetFriends.getDisplayName()),
+					this.plugin.infoFramed(player, langUtils.format("Remove.YourSelf", "targetDisplayName", targetFriends.getDisplayName()),
 							MessageFrame.MessageId.FRIEND_REMOVE_DONE);
 
 					if (this.plugin.getBoolean("Plugin.Enable-Friend-Removal-Notifications")) {
-						this.plugin.infoFramed(target, targetLangUtils.getString("Remove.Target").replace("%displayName", myFriends.getDisplayName()),
+						this.plugin.infoFramed(target, targetLangUtils.format("Remove.Target", "displayName", myFriends.getDisplayName()),
 								MessageFrame.MessageId.FRIEND_REMOVE_TARGET);
 					}
 					return;
@@ -177,7 +177,7 @@ public class FriendCommand extends Command implements TabExecutor {
 							try {
 								myFriends.remove(target);
 							} catch (Exception e) {
-								this.plugin.info(player, langUtils.getString("Remove.All.Failed").replace("%uuid", target.toString()));
+								this.plugin.info(player, langUtils.format("Remove.All.Failed", "uuid", target.toString()));
 							}
 						}
 
@@ -193,7 +193,7 @@ public class FriendCommand extends Command implements TabExecutor {
 				if (args.length > 1) {
 					UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[1]);
 					if (target == null) {
-						this.plugin.infoFramed(player, langUtils.getString("Cant-Find").replace("%name", args[1]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
+						this.plugin.infoFramed(player, langUtils.format("Cant-Find", "name", args[1]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
 						return;
 					}
 					FriendUtils targetFriends = this.plugin.getFriendManager().getPlayer(target);
@@ -207,7 +207,7 @@ public class FriendCommand extends Command implements TabExecutor {
 						if (targetFriends.getRequests().contains(player.getUniqueId().toString())) {
 							try { targetFriends.removeRequest(player); } catch (NotAddedException ignored) { }
 						}
-						this.plugin.infoFramed(player, langUtils.getString("Exceptions.NoInvited").replace("%name", targetFriends.getName()),
+						this.plugin.infoFramed(player, langUtils.format("Exceptions.NoInvited", "name", targetFriends.getName()),
 								MessageFrame.MessageId.FRIEND_ACCEPT_NO_REQUEST);
 						return;
 					}
@@ -219,10 +219,10 @@ public class FriendCommand extends Command implements TabExecutor {
 						return;
 					}
 
-					this.plugin.infoFramed(player, langUtils.getString("Accept.YourSelf").replace("%targetDisplayName", targetFriends.getDisplayName()),
+					this.plugin.infoFramed(player, langUtils.format("Accept.YourSelf", "targetDisplayName", targetFriends.getDisplayName()),
 							MessageFrame.MessageId.FRIEND_ACCEPTED);
 
-					this.plugin.infoFramed(target, targetLangUtils.getString("Accept.Target").replace("%displayName", myFriends.getDisplayName()),
+					this.plugin.infoFramed(target, targetLangUtils.format("Accept.Target", "displayName", myFriends.getDisplayName()),
 							MessageFrame.MessageId.FRIEND_ACCEPT_NOTICE);
 
 					return;
@@ -235,7 +235,7 @@ public class FriendCommand extends Command implements TabExecutor {
 				if (args.length > 1) {
 					UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[1]);
 					if (target == null) {
-						this.plugin.infoFramed(player, langUtils.getString("Cant-Find").replace("%name", args[1]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
+						this.plugin.infoFramed(player, langUtils.format("Cant-Find", "name", args[1]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
 						return;
 					}
 					FriendUtils targetFriends = this.plugin.getFriendManager().getPlayer(target);
@@ -243,12 +243,12 @@ public class FriendCommand extends Command implements TabExecutor {
 					try {
 						targetFriends.removeRequest(player);
 					} catch (NotAddedException e) {
-						this.plugin.infoFramed(player, langUtils.getString("Exceptions.HasntFriend").replace("%name", targetFriends.getName()),
+						this.plugin.infoFramed(player, langUtils.format("Exceptions.HasntFriend", "name", targetFriends.getName()),
 								MessageFrame.MessageId.FRIEND_DENY_NOT_FRIEND);
 						return;
 					}
 
-					this.plugin.infoFramed(player, langUtils.getString("Deny.Declined").replace("%targetDisplayName", targetFriends.getDisplayName()),
+					this.plugin.infoFramed(player, langUtils.format("Deny.Declined", "targetDisplayName", targetFriends.getDisplayName()),
 							MessageFrame.MessageId.FRIEND_DENIED);
 					return;
 				}
@@ -263,9 +263,9 @@ public class FriendCommand extends Command implements TabExecutor {
 				for (UUID requester : requesters) {
 					FriendUtils friend = this.plugin.getFriendManager().getPlayer(requester);
 					String time = this.plugin.getFriendRequestCreatedAt(requester, player.getUniqueId());
-					this.plugin.info(player, langUtils.getString("Requests.Entry")
-							.replace("%name", friend.getDisplayNameFor(player.getUniqueId()))
-							.replace("%time", time == null || time.isEmpty() ? "?" : time));
+					this.plugin.info(player, langUtils.format("Requests.Entry",
+							"name", friend.getDisplayNameFor(player.getUniqueId()),
+							"time", time == null || time.isEmpty() ? "?" : time));
 				}
 				this.plugin.infoFrame(player, MessageFrame.MessageId.FRIEND_REQUESTS_LIST);
 				return;
@@ -290,7 +290,7 @@ public class FriendCommand extends Command implements TabExecutor {
 				}
 				if (args.length == 2) {
 					String note = this.plugin.getFriendCustomPrefix(player.getUniqueId(), target);
-					this.plugin.info(player, langUtils.getString("Note.Current").replace("%prefix", note == null || note.isEmpty() ? "-" : note));
+					this.plugin.info(player, langUtils.format("Note.Current", "prefix", note == null || note.isEmpty() ? "-" : note));
 				} else if (args.length == 3 && args[2].equalsIgnoreCase("reset")) {
 					this.plugin.clearFriendCustomPrefix(player.getUniqueId(), target);
 					this.plugin.info(player, langUtils.getString("Note.Cleared"));
@@ -388,8 +388,13 @@ public class FriendCommand extends Command implements TabExecutor {
 				page = Math.min(page, divide.size());
 
 				this.plugin.infoFrame(player, MessageFrame.MessageId.FRIEND_LIST_PAGE);
-				player.sendMessage(PaginationMessage.build(langUtils, langUtils.getString("List.Page"), "/friend list ", page, divide.size()));
-				for (TextComponent message : divide.get(page - 1)) player.sendMessage(message);
+				for (TextComponent line : MessageBuilder.splitLines(
+						PaginationMessage.build(langUtils, langUtils.getString("List.Page"), "/friend list ", page, divide.size()))) {
+					player.sendMessage(line);
+				}
+				for (TextComponent message : divide.get(page - 1)) {
+					for (TextComponent line : MessageBuilder.splitLines(message)) player.sendMessage(line);
+				}
 
 				this.plugin.infoFrame(player, MessageFrame.MessageId.FRIEND_LIST_PAGE);
 				return;
@@ -398,7 +403,7 @@ public class FriendCommand extends Command implements TabExecutor {
 			if (args[0].equalsIgnoreCase("lang") || args[0].equalsIgnoreCase("language")) {
 				if (args.length > 1 && (args[1].equalsIgnoreCase("english") || args[1].equalsIgnoreCase("chinese"))) {
 					langUtils.setLanguage(args[1].toLowerCase(java.util.Locale.ROOT));
-					this.plugin.info(player, langUtils.getString("Lang.Update").replace("%lang", langUtils.getLanguage()));
+					this.plugin.info(player, langUtils.format("Lang.Update", "lang", langUtils.getLanguage()));
 					return;
 				}
 				this.plugin.info(player, langUtils.getString("Lang.Usage"));
@@ -412,7 +417,7 @@ public class FriendCommand extends Command implements TabExecutor {
 						if (args.length > 2) {
 							UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[2]);
 							if (target == null) {
-								this.plugin.infoFramed(player, langUtils.getString("Cant-Find").replace("%name", args[2]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
+								this.plugin.infoFramed(player, langUtils.format("Cant-Find", "name", args[2]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
 								return;
 							}
 							FriendUtils targetFriends = this.plugin.getFriendManager().getPlayer(target);
@@ -420,12 +425,12 @@ public class FriendCommand extends Command implements TabExecutor {
 							try {
 								myFriends.addIgnore(target);
 							} catch (AlreadyAddedException e) {
-				this.plugin.infoFramed(player, langUtils.getString("Ignore.AlreadyAdded").replace("%targetDisplayName", targetFriends.getDisplayName()),
+				this.plugin.infoFramed(player, langUtils.format("Ignore.AlreadyAdded", "targetDisplayName", targetFriends.getDisplayName()),
 						MessageFrame.MessageId.IGNORE_ALREADY_ADDED);
 								return;
 							}
 
-			this.plugin.infoFramed(player, langUtils.getString("Ignore.Added").replace("%targetDisplayName", targetFriends.getDisplayName()),
+			this.plugin.infoFramed(player, langUtils.format("Ignore.Added", "targetDisplayName", targetFriends.getDisplayName()),
 					MessageFrame.MessageId.IGNORE_ADDED);
 							return;
 						}
@@ -438,7 +443,7 @@ public class FriendCommand extends Command implements TabExecutor {
 						if (args.length > 2) {
 							UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[2]);
 							if (target == null) {
-								this.plugin.infoFramed(player, langUtils.getString("Cant-Find").replace("%name", args[2]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
+								this.plugin.infoFramed(player, langUtils.format("Cant-Find", "name", args[2]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
 								return;
 							}
 							FriendUtils targetFriends = this.plugin.getFriendManager().getPlayer(target);
@@ -446,12 +451,12 @@ public class FriendCommand extends Command implements TabExecutor {
 							try {
 								myFriends.removeIgnore(target);
 							} catch (NotAddedException e) {
-				this.plugin.infoFramed(player, langUtils.getString("Ignore.NotAdded").replace("%targetDisplayName", targetFriends.getDisplayName()),
+				this.plugin.infoFramed(player, langUtils.format("Ignore.NotAdded", "targetDisplayName", targetFriends.getDisplayName()),
 						MessageFrame.MessageId.IGNORE_NOT_ADDED);
 								return;
 							}
 
-			this.plugin.infoFramed(player, langUtils.getString("Ignore.Removed").replace("%targetDisplayName", targetFriends.getDisplayName()),
+			this.plugin.infoFramed(player, langUtils.format("Ignore.Removed", "targetDisplayName", targetFriends.getDisplayName()),
 					MessageFrame.MessageId.IGNORE_NOT_ADDED);
 							return;
 						}
@@ -490,7 +495,7 @@ public class FriendCommand extends Command implements TabExecutor {
 				if (args.length > 1) {
 					UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[1]);
 					if (target == null) {
-						this.plugin.infoFramed(player, langUtils.getString("Cant-Find").replace("%name", args[1]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
+						this.plugin.infoFramed(player, langUtils.format("Cant-Find", "name", args[1]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
 						return;
 					}
 
@@ -507,13 +512,11 @@ public class FriendCommand extends Command implements TabExecutor {
 						return;
 					}
 
-					this.plugin.infoFramed(player, langUtils.getString("Force-Add.YourSelf")
-							.replace("%targetDisplayName", targetFriends.getDisplayName())
-							.replace("%targetDisplayName%", targetFriends.getDisplayName()), MessageFrame.MessageId.FRIEND_FORCE_ADD_SELF);
+					this.plugin.infoFramed(player, langUtils.format("Force-Add.YourSelf",
+							"targetDisplayName", targetFriends.getDisplayName()), MessageFrame.MessageId.FRIEND_FORCE_ADD_SELF);
 
-					this.plugin.infoFramed(target, targetLangUtils.getString("Force-Add.Target")
-							.replace("%displayName", myFriends.getDisplayName())
-							.replace("%displayName%", myFriends.getDisplayName()), MessageFrame.MessageId.FRIEND_FORCE_ADD_TARGET);
+					this.plugin.infoFramed(target, targetLangUtils.format("Force-Add.Target",
+							"displayName", myFriends.getDisplayName()), MessageFrame.MessageId.FRIEND_FORCE_ADD_TARGET);
 					return;
 				}
 
@@ -561,7 +564,7 @@ public class FriendCommand extends Command implements TabExecutor {
 				if (args.length > 1) {
 					UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[1]);
 					if (target == null) {
-						this.plugin.infoFramed(player, langUtils.getString("Cant-Find").replace("%name", args[1]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
+						this.plugin.infoFramed(player, langUtils.format("Cant-Find", "name", args[1]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
 						return;
 					}
 
@@ -578,15 +581,15 @@ public class FriendCommand extends Command implements TabExecutor {
 						}
 						String displayName = targetFriends.getDisplayName();
 						targetFriends.setPrefix(prefix);
-						this.plugin.infoFramed(player, langUtils.getString("Prefix.To")
-								.replace("%targetDisplayName", displayName)
-								.replace("%prefix", ChatColor.translateAlternateColorCodes('&', prefix.trim())), MessageFrame.MessageId.FRIEND_PREFIX_SET);
+						this.plugin.infoFramed(player, langUtils.format("Prefix.To",
+								"targetDisplayName", displayName,
+								"prefix", ChatColor.translateAlternateColorCodes('&', prefix.trim())), MessageFrame.MessageId.FRIEND_PREFIX_SET);
 						return;
 					}
 
-					this.plugin.infoFramed(player, langUtils.getString("Prefix.Current")
-							.replace("%targetDisplayName", targetFriends.getDisplayName())
-							.replace("%prefix", targetFriends.getPrefix().trim()), MessageFrame.MessageId.FRIEND_PREFIX_CURRENT);
+					this.plugin.infoFramed(player, langUtils.format("Prefix.Current",
+							"targetDisplayName", targetFriends.getDisplayName(),
+							"prefix", targetFriends.getPrefix().trim()), MessageFrame.MessageId.FRIEND_PREFIX_CURRENT);
 					return;
 				}
 
@@ -646,21 +649,24 @@ public class FriendCommand extends Command implements TabExecutor {
 		boolean visible = target != null && target.getServer() != null && target.getServer().getInfo() != null;
 		String server = visible ? this.plugin.getServerName(target.getServer().getInfo().getName()) : lang.getString("List.Unknown");
 		String status = lang.getString("List.Unknown");
-		String line = lang.getString("List.Offline");
+		String lineKey = "List.Offline";
 		if (visible) {
 			net.simplyrin.bungeefriends.utils.StatusManager.Status state = this.plugin.getStatusManager().getStatus(targetId);
 			String key = state == net.simplyrin.bungeefriends.utils.StatusManager.Status.ONLINE ? "List.Online" : "List.Status." + state.getKey();
-			line = lang.getString(key);
-			status = lang.getString("Status.ChatBar." + state.getKey()).replace("%targetDisplayName", "").trim();
+			lineKey = key;
+			status = lang.format("Status.ChatBar." + state.getKey(), "targetDisplayName", "").trim();
 		}
 		String lastOnline = visible ? lang.getString("List.Now") : this.formatTime(this.plugin.getString("Player." + targetId + ".LastOnline"), lang);
 		String lastOnlineAgo = visible ? lang.getString("List.Now") : this.timeAgo(this.plugin.getString("Player." + targetId + ".LastOnline"), lang);
-		String hover = lang.getString(visible ? "List.Hover-Online" : "List.Hover-Offline")
-				.replace("%targetDisplayName", displayName).replace("%targetUUID", targetId.toString())
-				.replace("%status", status).replace("%server", server)
-				.replace("%friendSince", this.formatTime(this.plugin.getFriendSince(viewer.getUniqueId(), targetId), lang))
-				.replace("%lastOnlineAgo", lastOnlineAgo).replace("%lastOnline", lastOnline);
-		return MessageBuilder.get(line.replace("%targetDisplayName", displayName).replace("%server", server), null, null, hover, false);
+		String hover = lang.format(visible ? "List.Hover-Online" : "List.Hover-Offline",
+				"targetDisplayName", displayName,
+				"targetUUID", targetId.toString(),
+				"status", status,
+				"server", server,
+				"friendSince", this.formatTime(this.plugin.getFriendSince(viewer.getUniqueId(), targetId), lang),
+				"lastOnlineAgo", lastOnlineAgo,
+				"lastOnline", lastOnline);
+		return MessageBuilder.get(lang.format(lineKey, "targetDisplayName", displayName, "server", server), null, null, hover, false);
 	}
 
 	private String formatTime(String raw, LanguageUtils lang) {
@@ -686,14 +692,14 @@ public class FriendCommand extends Command implements TabExecutor {
 			else if (seconds >= 86400) { unit = "Days"; amount = seconds / 86400; }
 			else if (seconds >= 3600) { unit = "Hours"; amount = seconds / 3600; }
 			else if (seconds >= 60) { unit = "Minutes"; amount = seconds / 60; }
-			return lang.getString("List.TimeAgo." + unit).replace("%time%", String.valueOf(amount));
+			return lang.format("List.TimeAgo." + unit, "time", String.valueOf(amount));
 		} catch (NumberFormatException invalid) { return lang.getString("List.Unknown"); }
 	}
 
 	public void add(ProxiedPlayer player, FriendUtils myFriends, LanguageUtils langUtils, String name) {
 		UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(name);
 		if (target == null) {
-			this.plugin.infoFramed(player, langUtils.getString("Cant-Find").replace("%name", name), MessageFrame.MessageId.PLAYER_NOT_FOUND);
+			this.plugin.infoFramed(player, langUtils.format("Cant-Find", "name", name), MessageFrame.MessageId.PLAYER_NOT_FOUND);
 			return;
 		}
 		FriendUtils targetFriends = this.plugin.getFriendManager().getPlayer(target);
@@ -721,21 +727,18 @@ public class FriendCommand extends Command implements TabExecutor {
 			return;
 		}
 
-		this.plugin.infoFramed(player, langUtils.getString("Add.Sent").replace("%targetDisplayName", targetFriends.getDisplayName()),
+		this.plugin.infoFramed(player, langUtils.format("Add.Sent", "targetDisplayName", targetFriends.getDisplayName()),
 				MessageFrame.MessageId.FRIEND_REQUEST_SENT);
 
-		TextComponent prefix = MessageBuilder.get(this.plugin.getPrefix());
 		TextComponent grayHyphen = MessageBuilder.get("&r &8- &r", null, ChatColor.DARK_GRAY, null, false);
 
 		TextComponent accept = MessageBuilder.get(targetLangUtils.getString("Add.Accept.Prefix"), "/friend accept " + myFriends.getName(), ChatColor.GREEN, targetLangUtils.getString("Add.Accept.Message"), true);
 		TextComponent deny = MessageBuilder.get(targetLangUtils.getString("Add.Deny.Prefix"), "/friend deny " + myFriends.getName(), ChatColor.GREEN, targetLangUtils.getString("Add.Deny.Message"), true);
 		TextComponent ignore = MessageBuilder.get(targetLangUtils.getString("Add.Ignore.Prefix"), "/friend ignore add " + myFriends.getName(), ChatColor.GREEN, targetLangUtils.getString("Add.Ignore.Message"), true);
 
-		this.plugin.infoFramed(target, targetLangUtils.getString("Add.Request.Received").replace("%displayName", myFriends.getDisplayName()),
+		TextComponent received = MessageBuilder.get(targetLangUtils.format("Add.Request.Received", "displayName", myFriends.getDisplayName()));
+		this.plugin.infoFramed(target, MessageBuilder.append(received, accept, grayHyphen, deny, grayHyphen, ignore),
 				MessageFrame.MessageId.FRIEND_REQUEST_RECEIVED);
-		if (targetFriends.getPlayer() != null) {
-			targetFriends.getPlayer().sendMessage(prefix, accept, grayHyphen, deny, grayHyphen, ignore);
-		}
 
 		try {
 			this.plugin.scheduleExpiry("friend:" + myFriends.getUniqueId() + ":" + targetFriends.getUniqueId(), new Runnable() {
@@ -746,9 +749,9 @@ public class FriendCommand extends Command implements TabExecutor {
 					} catch (NotAddedException e) {
 						return;
 					}
-					plugin.infoFramed(player, langUtils.getString("Add.Expired.YourSelf").replace("%targetDisplayName", targetFriends.getDisplayName()),
+					plugin.infoFramed(player, langUtils.format("Add.Expired.YourSelf", "targetDisplayName", targetFriends.getDisplayName()),
 							MessageFrame.MessageId.FRIEND_REQUEST_EXPIRED_SELF);
-					plugin.infoFramed(target, targetLangUtils.getString("Add.Expired.Target").replace("%displayName", myFriends.getDisplayName()),
+					plugin.infoFramed(target, targetLangUtils.format("Add.Expired.Target", "displayName", myFriends.getDisplayName()),
 							MessageFrame.MessageId.FRIEND_REQUEST_EXPIRED_TARGET);
 				}
 			}, 5, TimeUnit.MINUTES);

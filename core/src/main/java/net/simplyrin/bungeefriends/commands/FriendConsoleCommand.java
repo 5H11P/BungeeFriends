@@ -54,7 +54,7 @@ public class FriendConsoleCommand extends Command {
 				if (args.length > 1) {
 					UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[1]);
 					if (target == null) {
-						this.plugin.infoFramedConsole(langUtils.getString("Cant-Find").replace("%name", args[1]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
+						this.plugin.infoFramedConsole(langUtils.format("Cant-Find", "name", args[1]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
 						return;
 					}
 					if (args.length > 2) {
@@ -70,8 +70,8 @@ public class FriendConsoleCommand extends Command {
 						String displayName = targetFriends.getDisplayName();
 						targetFriends.setPrefix(prefix);
 
-						this.plugin.info(langUtils.getString("Prefix.To").replace("%targetDisplayName", displayName)
-								.replace("%prefix", ChatColor.translateAlternateColorCodes('&', prefix.trim())));
+						this.plugin.info(langUtils.format("Prefix.To", "targetDisplayName", displayName,
+								"prefix", ChatColor.translateAlternateColorCodes('&', prefix.trim())));
 						return;
 					}
 				}
@@ -130,7 +130,7 @@ public class FriendConsoleCommand extends Command {
 				if (args.length > 1) {
 					if (availableList.contains(args[1].toLowerCase())) {
 						langUtils.setLanguage(args[1].toLowerCase());
-						this.plugin.infoFramedConsole(langUtils.getString("Lang.Update").replace("%lang", langUtils.getLanguage().replace("/friend", "/friendconsole")),
+						this.plugin.infoFramedConsole(langUtils.format("Lang.Update", "lang", langUtils.getLanguage().replace("/friend", "/friendconsole")),
 								MessageFrame.MessageId.CONSOLE_LANGUAGE);
 						return;
 					}

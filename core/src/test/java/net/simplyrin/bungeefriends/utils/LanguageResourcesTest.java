@@ -8,6 +8,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -122,6 +124,8 @@ public class LanguageResourcesTest {
 			assertTrue(language + " Add.Sent has no newline", config.getString("Add.Sent").contains("\n"));
 			assertTrue(language + " Logout.Leader-Disconnected has no newline", config.getString("Logout.Leader-Disconnected").contains("\n"));
 			assertTrue(language + " Invite.Request.Sent has no newline", config.getString("Invite.Request.Sent").contains("\n"));
+			assertTrue(language + " Add.Accept.Prefix has no leading newline", config.getString("Add.Accept.Prefix").startsWith("\n"));
+			assertTrue(language + " Invite button has no leading newline", config.getString("Invite.Request.Click-here.Here").startsWith("\n"));
 		}
 	}
 
@@ -143,9 +147,53 @@ public class LanguageResourcesTest {
 
 	private Set<String> placeholders(String message) {
 		Set<String> values = new HashSet<>();
-		Matcher matcher = Pattern.compile("%{1,2}[A-Za-z][A-Za-z0-9]*%{0,2}").matcher(message);
+		Matcher matcher = Pattern.compile("%([A-Za-z][A-Za-z0-9]*)%").matcher(message);
 		while (matcher.find()) values.add(matcher.group());
 		return values;
+	}
+
+	@Test
+	public void allBuiltInLanguagePlaceholdersAreCanonicalAndMatch() {
+		Map<String, String> english = values(Config.getConfig(getClass().getResourceAsStream("/languages/English.yml")));
+		Map<String, String> chinese = values(Config.getConfig(getClass().getResourceAsStream("/languages/Chinese.yml")));
+		assertEquals("English and Chinese message keys differ", english.keySet(), chinese.keySet());
+		for (String key : english.keySet()) {
+			assertCanonical(key, english.get(key));
+			assertCanonical(key, chinese.get(key));
+			assertEquals("Placeholders differ for " + key, placeholders(english.get(key)), placeholders(chinese.get(key)));
+		}
+	}
+
+	private Map<String, String> values(Configuration section) {
+		Map<String, String> values = new LinkedHashMap<>();
+		collectValues(section, "", values);
+		return values;
+	}
+
+	private void collectValues(Configuration section, String prefix, Map<String, String> values) {
+		for (String name : section.getKeys()) {
+			String path = prefix + name;
+			Object value = section.get(name);
+			if (value instanceof Configuration) collectValues((Configuration) value, path + ".", values);
+			else if (value instanceof String) values.put(path, (String) value);
+		}
+	}
+
+	private void assertCanonical(String key, String value) {
+		Matcher matcher = Pattern.compile("(?<!%)%{1,2}[A-Za-z][A-Za-z0-9]*%{0,2}").matcher(value);
+		while (matcher.find())
+			assertTrue(key + " contains a non-canonical placeholder: " + matcher.group(),
+				matcher.group().matches("%[A-Za-z][A-Za-z0-9]*%"));
+	}
+
+	@Test
+	public void formatterUsesExactTokensAndSafeReplacementValues() {
+		assertEquals("name=$player\\path", MessageFormatter.replace("name=%name%", MessageFormatter.values("name", "$player\\path")));
+		assertEquals("A/B A/B", MessageFormatter.replace("%name% %name%", MessageFormatter.values("name", "A/B")));
+		assertTrue(MessageFormatter.unresolvedExcept("%message%", new HashSet<>(Arrays.asList("message"))).isEmpty());
+		assertEquals("hello %unknown%", MessageFormatter.replace("hello %message%", MessageFormatter.values("message", "%unknown%")));
+		assertTrue(MessageFormatter.unresolved("legacy %name and %%name%%").contains("%name"));
+		assertEquals("legacy ?", MessageFormatter.maskUnresolved("legacy %name"));
 	}
 
 	@Test

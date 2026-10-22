@@ -29,8 +29,8 @@ public class AllChatCommand extends Command {
 			if (chat == null) return;
 			if (args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("ac"))) {
 				chat.getChannels().remove(player.getUniqueId());
-				plugin.info(player, plugin.getLanguageManager().getPlayer(player).getString("Chat.Update")
-						.replace("%CHANNEL%", plugin.getLanguageManager().getPlayer(player).getString("Chat.Channels.All")));
+				plugin.info(player, plugin.getLanguageManager().getPlayer(player).format("Chat.Update", "channel",
+						plugin.getLanguageManager().getPlayer(player).getString("Chat.Channels.All")));
 				return;
 			}
 			chat.sendGlobal(player, String.join(" ", Arrays.asList(args)));

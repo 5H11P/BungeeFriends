@@ -116,13 +116,13 @@ public class PartyCommand extends Command implements TabExecutor {
 				this.plugin.infoFramed(player, langUtils.getString("Leave.You-Left"), MessageFrame.MessageId.PARTY_LEFT);
 
 				if (myParties.getParties().size() > 0) {
-					this.plugin.infoFramed(partyLeader.getPlayer(), partyLeaderLangUtils.getString("Leave.Player-Left").replace("%displayName", myParties.getDisplayName()),
+					this.plugin.infoFramed(partyLeader.getPlayer(), partyLeaderLangUtils.format("Leave.Player-Left", "displayName", myParties.getDisplayName()),
 							MessageFrame.MessageId.PARTY_PLAYER_LEFT);
 
 					for (String partyPlayerUniqueId : myParties.getParties()) {
 						ProxiedPlayer partyPlayer = this.plugin.getProxy().getPlayer(partyPlayerUniqueId);
 						LanguageUtils partyPlayerLangUtils = this.plugin.getLanguageManager().getPlayer(partyPlayerUniqueId);
-						this.plugin.infoFramed(partyPlayer, partyPlayerLangUtils.getString("Leave.Player-Left").replace("%displayName", myParties.getDisplayName()),
+						this.plugin.infoFramed(partyPlayer, partyPlayerLangUtils.format("Leave.Player-Left", "displayName", myParties.getDisplayName()),
 								MessageFrame.MessageId.PARTY_PLAYER_LEFT);
 					}
 				}
@@ -152,9 +152,9 @@ public class PartyCommand extends Command implements TabExecutor {
 				}
 
 				this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_LIST);
-				this.plugin.info(player, langUtils.getString("List.Party-Header").replace("%size", String.valueOf(parties.size() + 1)));
-				this.plugin.info(player, langUtils.getString("List.Party-Leader").replace("%leader", partyLeader.getDisplayName() + (partyLeader.getPlayer() != null ? " &a●" : " &c●")));
-				this.plugin.info(player, langUtils.getString("List.Party-Members").replace("%members", members.length() == 0 ? langUtils.getString("List.None") : members.toString()));
+				this.plugin.info(player, langUtils.format("List.Party-Header", "size", String.valueOf(parties.size() + 1)));
+				this.plugin.info(player, langUtils.format("List.Party-Leader", "leader", partyLeader.getDisplayName() + (partyLeader.getPlayer() != null ? " &a●" : " &c●")));
+				this.plugin.info(player, langUtils.format("List.Party-Members", "members", members.length() == 0 ? langUtils.getString("List.None") : members.toString()));
 				this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_LIST);
 				return;
 			}
@@ -171,14 +171,14 @@ public class PartyCommand extends Command implements TabExecutor {
 							return;
 						}
 					} catch (NotJoinedException e) {
-						this.plugin.info(player, langUtils.getString(e.getMessage()));
+						this.plugin.info(player, langUtils.formatException(e, "Exceptions.Not-Joined"));
 						return;
 					}
 
 					UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[1]);
 					if (target == null) {
 						this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
-						this.plugin.info(player, langUtils.getString("Cant-Find").replace("%name", args[1]));
+						this.plugin.info(player, langUtils.format("Cant-Find", "name", args[1]));
 						this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
 						return;
 					}
@@ -188,13 +188,13 @@ public class PartyCommand extends Command implements TabExecutor {
 						myParties.remove(target);
 					} catch (NotJoinedException e) {
 						this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
-						this.plugin.info(player, langUtils.getString(e.getMessage()).replace("%targetDisplayname", targetParties.getDisplayName()));
+						this.plugin.info(player, langUtils.formatException(e, "Exceptions.Isnt-In-Your-Party", "targetDisplayName", targetParties.getDisplayName()));
 						this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
 						return;
 					}
 
 					this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
-					this.plugin.info(player, langUtils.getString("Remove-Party.Member-Removed").replace("%targetDisplayName", targetParties.getDisplayName()));
+					this.plugin.info(player, langUtils.format("Remove-Party.Member-Removed", "targetDisplayName", targetParties.getDisplayName()));
 					this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
 
 					if (myParties.getParties().size() > 0) {
@@ -203,7 +203,7 @@ public class PartyCommand extends Command implements TabExecutor {
 							LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(partyPlayerUniqueId);
 
 							this.plugin.infoFrame(partyPlayer, MessageFrame.MessageId.PARTY_BROADCAST);
-							this.plugin.info(partyPlayer, targetLangUtils.getString("Remove-Party.Member-Removed").replace("%targetDisplayName", targetParties.getDisplayName()));
+							this.plugin.info(partyPlayer, targetLangUtils.format("Remove-Party.Member-Removed", "targetDisplayName", targetParties.getDisplayName()));
 							this.plugin.infoFrame(partyPlayer, MessageFrame.MessageId.PARTY_BROADCAST);
 						}
 					}
@@ -211,7 +211,7 @@ public class PartyCommand extends Command implements TabExecutor {
 					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(target);
 
 					this.plugin.infoFrame(target, MessageFrame.MessageId.PARTY_BROADCAST);
-					this.plugin.info(target, targetLangUtils.getString("Remove-Party.Me-Removed").replace("%displayName", myParties.getDisplayName()));
+					this.plugin.info(target, targetLangUtils.format("Remove-Party.Me-Removed", "displayName", myParties.getDisplayName()));
 					this.plugin.infoFrame(target, MessageFrame.MessageId.PARTY_BROADCAST);
 					return;
 				}
@@ -231,7 +231,7 @@ public class PartyCommand extends Command implements TabExecutor {
 					}
 				} catch (NotJoinedException e) {
 					this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
-					this.plugin.info(player, langUtils.getString(e.getMessage()));
+					this.plugin.info(player, langUtils.formatException(e, "Exceptions.Not-Joined"));
 					this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
 					return;
 				}
@@ -240,7 +240,7 @@ public class PartyCommand extends Command implements TabExecutor {
 					UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[1]);
 					if (target == null) {
 						this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
-						this.plugin.info(player, langUtils.getString("Cant-Find").replace("%name", args[1]));
+						this.plugin.info(player, langUtils.format("Cant-Find", "name", args[1]));
 						this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
 						return;
 					}
@@ -250,10 +250,10 @@ public class PartyCommand extends Command implements TabExecutor {
 					try {
 						myParties.promote(uniqueId);
 					} catch (NotJoinedException e) {
-						e.printStackTrace();
 						this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
-						this.plugin.info(player, langUtils.getString(e.getMessage()));
+						this.plugin.info(player, langUtils.formatException(e, "Exceptions.Isnt-In-Your-Party", "targetDisplayName", newPartyLeader.getDisplayName()));
 						this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
+						return;
 					}
 
 					String displayName = myParties.getDisplayName();
@@ -264,13 +264,13 @@ public class PartyCommand extends Command implements TabExecutor {
 						LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(partyPlayerUniqueId);
 
 						this.plugin.infoFrame(targetPlayer.getPlayer(), MessageFrame.MessageId.PARTY_BROADCAST);
-						this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString("Promote.Promoted").replace("%displayName", displayName).replace("%targetDisplayName", newPartyLeader.getDisplayName()));
+						this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.format("Promote.Promoted", "displayName", displayName, "targetDisplayName", newPartyLeader.getDisplayName()));
 						this.plugin.infoFrame(targetPlayer.getPlayer(), MessageFrame.MessageId.PARTY_BROADCAST);
 					}
 
 					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(newPartyLeader.getUniqueId());
 					this.plugin.infoFrame(myParties.getPlayer(), MessageFrame.MessageId.PARTY_BROADCAST);
-					this.plugin.info(myParties.getPlayer(), targetLangUtils.getString("Promote.Promoted").replace("%displayName", displayName).replace("%targetDisplayName", newPartyLeader.getDisplayName()));
+					this.plugin.info(myParties.getPlayer(), targetLangUtils.format("Promote.Promoted", "displayName", displayName, "targetDisplayName", newPartyLeader.getDisplayName()));
 					this.plugin.infoFrame(myParties.getPlayer(), MessageFrame.MessageId.PARTY_BROADCAST);
 					return;
 				}
@@ -291,7 +291,7 @@ public class PartyCommand extends Command implements TabExecutor {
 					UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[1]);
 					if (target == null) {
 						this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
-						this.plugin.info(player, langUtils.getString("Cant-Find").replace("%name", args[1]));
+					this.plugin.info(player, langUtils.format("Cant-Find", "name", args[1]));
 						this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
 						return;
 					}
@@ -323,7 +323,7 @@ public class PartyCommand extends Command implements TabExecutor {
 						LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(partyPlayerUniqueId);
 
 						this.plugin.infoFrame(targetPlayer.getPlayer(), MessageFrame.MessageId.PARTY_BROADCAST);
-						this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString("Hijack.Other").replace("%displayName", myParties.getDisplayName()));
+						this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.format("Hijack.Other", "displayName", myParties.getDisplayName()));
 						this.plugin.infoFrame(targetPlayer.getPlayer(), MessageFrame.MessageId.PARTY_BROADCAST);
 					}
 
@@ -374,7 +374,7 @@ public class PartyCommand extends Command implements TabExecutor {
 				if (!this.plugin.getPartyWarpManager().confirmOrPrompt(player, myParties, langUtils)) return;
 
 				this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
-				this.plugin.info(player, langUtils.getString("Warp.Summon").replace("%displayName", myParties.getDisplayName()));
+				this.plugin.info(player, langUtils.format("Warp.Summon", "displayName", myParties.getDisplayName()));
 				this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
 
 				this.plugin.getPartyWarpManager().startWarp(player, myParties, true);
@@ -386,7 +386,7 @@ public class PartyCommand extends Command implements TabExecutor {
 					UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[1]);
 					if (target == null) {
 						this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
-						this.plugin.info(player, langUtils.getString("Cant-Find").replace("%name", args[1]));
+						this.plugin.info(player, langUtils.format("Cant-Find", "name", args[1]));
 						this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
 						return;
 					}
@@ -394,20 +394,18 @@ public class PartyCommand extends Command implements TabExecutor {
 					try {
 						targetParties.acceptRequest(player.getUniqueId());
 					} catch (Exception e) {
-						String messageKey = e.getMessage();
-						if (messageKey == null) messageKey = "Exceptions.Havent-Received-Invite";
-						this.plugin.info(player, langUtils.getString(messageKey));
+						this.plugin.info(player, langUtils.formatException(e, "Exceptions.Havent-Received-Invite"));
 						return;
 					}
 
 					this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
-					this.plugin.info(player, langUtils.getString("Accept-Party.You-Joined").replace("%targetDisplayName", targetParties.getDisplayName()));
+					this.plugin.info(player, langUtils.format("Accept-Party.You-Joined", "targetDisplayName", targetParties.getDisplayName()));
 					this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
 
 					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(targetParties.getUniqueId());
 
 					this.plugin.infoFrame(targetParties.getPlayer(), MessageFrame.MessageId.PARTY_BROADCAST);
-					this.plugin.info(targetParties.getPlayer(), targetLangUtils.getString("Accept-Party.Joined").replace("%displayName", myParties.getDisplayName()));
+					this.plugin.info(targetParties.getPlayer(), targetLangUtils.format("Accept-Party.Joined", "displayName", myParties.getDisplayName()));
 					this.plugin.infoFrame(targetParties.getPlayer(), MessageFrame.MessageId.PARTY_BROADCAST);
 
 					for (String partyPlayerUniqueId : targetParties.getParties()) {
@@ -415,7 +413,7 @@ public class PartyCommand extends Command implements TabExecutor {
 						targetLangUtils = this.plugin.getLanguageManager().getPlayer(targetPlayer.getUniqueId());
 
 						this.plugin.infoFrame(targetPlayer.getPlayer(), MessageFrame.MessageId.PARTY_BROADCAST);
-						this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.getString("Accept-Party.Joined").replace("%displayName", myParties.getDisplayName()));
+						this.plugin.info(targetPlayer.getPlayer(), targetLangUtils.format("Accept-Party.Joined", "displayName", myParties.getDisplayName()));
 						this.plugin.infoFrame(targetPlayer.getPlayer(), MessageFrame.MessageId.PARTY_BROADCAST);
 					}
 
@@ -444,7 +442,7 @@ public class PartyCommand extends Command implements TabExecutor {
 						return;
 					}
 				} catch (NotJoinedException e) {
-					this.plugin.info(player, langUtils.getString(e.getMessage()));
+					this.plugin.info(player, langUtils.formatException(e, "Exceptions.Not-Joined"));
 					return;
 				}
 				if (args[1].equalsIgnoreCase("private") && !player.hasPermission(Permissions.PARTY_PRIVATE)
@@ -458,8 +456,8 @@ public class PartyCommand extends Command implements TabExecutor {
 				boolean enabled = !this.plugin.getBoolean(key);
 				this.plugin.set(key, enabled);
 				if (!this.plugin.isEnabledMySQL()) this.plugin.getDataManager().save();
-				myParties.broadcast(langUtils.getString("Party-" + field + "." + (enabled ? "Enabled" : "Disabled"))
-						.replace("%displayName", myParties.getDisplayName()));
+				myParties.broadcast(langUtils.format("Party-" + field + "." + (enabled ? "Enabled" : "Disabled"),
+					"displayName", myParties.getDisplayName()));
 				if (field.equals("Mute") && enabled)
 					myParties.broadcast(langUtils.getString("Party-Mute.Restricted-Chat-Info"));
 				return;
@@ -491,13 +489,13 @@ public class PartyCommand extends Command implements TabExecutor {
 					}
 				} catch (NotJoinedException e) {
 					this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
-					this.plugin.info(player, langUtils.getString(e.getMessage()));
+					this.plugin.info(player, langUtils.formatException(e, "Exceptions.Not-Joined"));
 					this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
 					return;
 				}
 
 				this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
-				this.plugin.info(player, langUtils.getString("Disband.Disbanded").replace("%displayName", myParties.getDisplayName()));
+				this.plugin.info(player, langUtils.format("Disband.Disbanded", "displayName", myParties.getDisplayName()));
 				this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
 
 				for (String partyPlayerUniqueId : myParties.getParties()) {
@@ -505,7 +503,7 @@ public class PartyCommand extends Command implements TabExecutor {
 					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(targetPlayer.getUniqueId());
 
 					this.plugin.infoFrame(targetPlayer.getUniqueId(), MessageFrame.MessageId.PARTY_BROADCAST);
-					this.plugin.info(targetPlayer.getUniqueId(), targetLangUtils.getString("Disband.Disbanded").replace("%displayName", myParties.getDisplayName()));
+					this.plugin.info(targetPlayer.getUniqueId(), targetLangUtils.format("Disband.Disbanded", "displayName", myParties.getDisplayName()));
 					this.plugin.infoFrame(targetPlayer.getUniqueId(), MessageFrame.MessageId.PARTY_BROADCAST);
 
 				}
@@ -545,7 +543,7 @@ public class PartyCommand extends Command implements TabExecutor {
 							String displayName = plugin.getFriendManager().getPlayer(uniqueId).getDisplayName();
 
 							this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
-							this.plugin.info(player, langUtils.getString("Remove-Party.Member-Removed").replace("%targetDisplayName", displayName));
+							this.plugin.info(player, langUtils.format("Remove-Party.Member-Removed", "targetDisplayName", displayName));
 							this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
 
 							for (String partyPlayerUniqueId : myParties.getParties()) {
@@ -553,7 +551,7 @@ public class PartyCommand extends Command implements TabExecutor {
 								LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(partyPlayerUniqueId);
 
 								this.plugin.infoFrame(partyPlayer, MessageFrame.MessageId.PARTY_BROADCAST);
-								this.plugin.info(partyPlayer, targetLangUtils.getString("Remove-Party.Member-Removed").replace("%targetDisplayName", displayName));
+								this.plugin.info(partyPlayer, targetLangUtils.format("Remove-Party.Member-Removed", "targetDisplayName", displayName));
 								this.plugin.infoFrame(partyPlayer, MessageFrame.MessageId.PARTY_BROADCAST);
 							}
 							found = true;
@@ -565,7 +563,7 @@ public class PartyCommand extends Command implements TabExecutor {
 					plugin.set("Parties." + myParties.getUniqueId().toString() + ".Currently-Joined-Party", "NONE");
 					plugin.set("Parties." + myParties.getUniqueId().toString() + ".Party-List", new ArrayList<>());
 					this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
-					this.plugin.info(player, langUtils.getString("Disband.Disbanded").replace("%displayName", myParties.getDisplayName()));
+					this.plugin.info(player, langUtils.format("Disband.Disbanded", "displayName", myParties.getDisplayName()));
 					this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
 				}
 				if (!found) {
@@ -658,7 +656,7 @@ public class PartyCommand extends Command implements TabExecutor {
 		UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args);
 		if (target == null) {
 			this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
-			this.plugin.info(player, langUtils.getString("Cant-Find").replace("%name", args));
+			this.plugin.info(player, langUtils.format("Cant-Find", "name", args));
 			this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
 			return;
 		}
@@ -667,7 +665,7 @@ public class PartyCommand extends Command implements TabExecutor {
 
 		if (targetParties.getPlayer() == null) {
 			this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
-			this.plugin.info(player, langUtils.getString("Tell-Command.Offline").replace("%targetDisplayName", targetParties.getDisplayName()));
+			this.plugin.info(player, langUtils.format("Tell-Command.Offline", "targetDisplayName", targetParties.getDisplayName()));
 			this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
 			return;
 		}
@@ -675,36 +673,32 @@ public class PartyCommand extends Command implements TabExecutor {
 		try {
 			invitationParty.addRequest(target);
 		} catch (Exception e) {
-			this.plugin.infoFramed(player, langUtils.getString(e.getMessage()).replace("%targetDisplayName", targetParties.getDisplayName()),
+			this.plugin.infoFramed(player, langUtils.formatException(e, "Exceptions.Havent-Received-Invite", "targetDisplayName", targetParties.getDisplayName()),
 					MessageFrame.MessageId.PARTY_INVITE_ERROR);
 			return;
 		}
 
-		this.plugin.infoFramed(player, langUtils.getString("Invite.Request.Sent")
-				.replace("%displayName", invitationParty.getDisplayName())
-				.replace("%targetDisplayName", targetParties.getDisplayName()), MessageFrame.MessageId.PARTY_INVITE_SENT);
+		this.plugin.infoFramed(player, langUtils.format("Invite.Request.Sent",
+				"displayName", invitationParty.getDisplayName(),
+				"targetDisplayName", targetParties.getDisplayName()), MessageFrame.MessageId.PARTY_INVITE_SENT);
 
 		for (String partyPlayerUniqueId : invitationParty.getParties()) {
 			UUID uniqueId = UUID.fromString(partyPlayerUniqueId);
 			LanguageUtils pLangUtils = this.plugin.getLanguageManager().getPlayer(uniqueId);
-			this.plugin.infoFramed(uniqueId, pLangUtils.getString("Invite.Request.Party-Notice")
-					.replace("%displayName", invitationParty.getDisplayName())
-					.replace("%targetDisplayName", targetParties.getDisplayName()), MessageFrame.MessageId.PARTY_INVITE_NOTICE);
+			this.plugin.infoFramed(uniqueId, pLangUtils.format("Invite.Request.Party-Notice",
+					"displayName", invitationParty.getDisplayName(),
+					"targetDisplayName", targetParties.getDisplayName()), MessageFrame.MessageId.PARTY_INVITE_NOTICE);
 		}
 
-		this.plugin.infoFramed(target, targetLangUtils.getString("Invite.Request.Click-here.Receive").replace("%displayName", invitationParty.getDisplayName()),
-				MessageFrame.MessageId.PARTY_INVITE_RECEIVED);
-		if (targetParties.getPlayer() != null) {
-			TextComponent prefix = MessageBuilder.get(this.plugin.getPrefix());
-
-			String clickHere = targetLangUtils.getString("Invite.Request.Click-here.Here");
-			String leaderName = this.plugin.getString("Parties." + invitationParty.getUniqueId() + ".Name");
-			String clickToRun = targetLangUtils.getString("Invite.Request.Click-here.Command").replace("%name", leaderName);
-
-			TextComponent invite = MessageBuilder.get(clickHere, "/party accept " + leaderName, ChatColor.GOLD, clickToRun, false);
-			TextComponent message = MessageBuilder.get(targetLangUtils.getString("Invite.Request.Click-here.Accept"), "/party accept " + leaderName, ChatColor.YELLOW, clickToRun, false);
-			targetParties.getPlayer().sendMessage(prefix, invite, message);
-		}
+		String clickHere = targetLangUtils.getString("Invite.Request.Click-here.Here");
+		String leaderName = this.plugin.getString("Parties." + invitationParty.getUniqueId() + ".Name");
+		String clickToRun = targetLangUtils.format("Invite.Request.Click-here.Command", "name", leaderName);
+		TextComponent invite = MessageBuilder.get(targetLangUtils.format("Invite.Request.Click-here.Receive",
+				"displayName", invitationParty.getDisplayName()));
+		TextComponent click = MessageBuilder.get(clickHere, "/party accept " + leaderName, ChatColor.GOLD, clickToRun, false);
+		TextComponent accept = MessageBuilder.get(targetLangUtils.getString("Invite.Request.Click-here.Accept"),
+				"/party accept " + leaderName, ChatColor.YELLOW, clickToRun, false);
+		this.plugin.infoFramed(target, MessageBuilder.append(invite, click, accept), MessageFrame.MessageId.PARTY_INVITE_RECEIVED);
 		try {
 			this.plugin.scheduleExpiry("party:" + invitationParty.getUniqueId() + ":" + targetParties.getUniqueId(), () -> {
 
@@ -715,7 +709,7 @@ public class PartyCommand extends Command implements TabExecutor {
 			}
 
 			this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
-			plugin.info(player, langUtils.getString("Invite.Request.Expired.Your-Self").replace("%targetDisplayName", targetParties.getDisplayName()));
+			plugin.info(player, langUtils.format("Invite.Request.Expired.Your-Self", "targetDisplayName", targetParties.getDisplayName()));
 			this.plugin.infoFrame(player, MessageFrame.MessageId.PARTY_BROADCAST);
 
 			if (invitationParty.getParties().size() == 0) {
@@ -725,7 +719,7 @@ public class PartyCommand extends Command implements TabExecutor {
 			}
 
 			this.plugin.infoFrame(target, MessageFrame.MessageId.PARTY_BROADCAST);
-			plugin.info(target, targetLangUtils.getString("Invite.Request.Expired.Target").replace("%displayName", invitationParty.getDisplayName()));
+			plugin.info(target, targetLangUtils.format("Invite.Request.Expired.Target", "displayName", invitationParty.getDisplayName()));
 			this.plugin.infoFrame(target, MessageFrame.MessageId.PARTY_BROADCAST);
 			}, 1, TimeUnit.MINUTES);
 		} catch (IllegalStateException rejected) {

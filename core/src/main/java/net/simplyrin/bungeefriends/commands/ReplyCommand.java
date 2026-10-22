@@ -46,7 +46,7 @@ public class ReplyCommand extends Command {
 
 		UUID targetUniqueId = this.plugin.getReplyTargetMap().get(myFriends.getUniqueId());
 		if (targetUniqueId == null) {
-			this.plugin.infoFramed(player, langUtils.getString("Reply-Command.Target").replace("%targetDisplayName", "&cNone!"),
+			this.plugin.infoFramed(player, langUtils.format("Reply-Command.Target", "targetDisplayName", "&cNone!"),
 					MessageFrame.MessageId.REPLY_TARGET_NONE);
 			return;
 		}
@@ -62,7 +62,7 @@ public class ReplyCommand extends Command {
 
 			if (targetFriends.getPlayer() == null || (this.plugin.getBoolean("Plugin.Enable-Status")
 					&& this.plugin.getStatusManager().getStatus(targetUniqueId) == net.simplyrin.bungeefriends.utils.StatusManager.Status.APPEAR_OFFLINE)) {
-				this.plugin.infoFramed(player, langUtils.getString("Tell-Command.Offline").replace("%targetDisplayName", targetFriends.getDisplayName()),
+				this.plugin.infoFramed(player, langUtils.format("Tell-Command.Offline", "targetDisplayName", targetFriends.getDisplayName()),
 						MessageFrame.MessageId.TELL_OFFLINE);
 				return;
 			}
@@ -72,8 +72,8 @@ public class ReplyCommand extends Command {
 				message = message + args[i] + " ";
 			}
 
-			this.plugin.info(player, langUtils.getString("Tell-Command.YourSelf").replace("%targetDisplayName", targetFriends.getDisplayName()).replace("%message", message));
-			this.plugin.info(targetFriends.getPlayer(), targetLangUtils.getString("Tell-Command.Target").replace("%displayName", myFriends.getDisplayName()).replace("%message", message));
+			this.plugin.info(player, langUtils.format("Tell-Command.YourSelf", "targetDisplayName", targetFriends.getDisplayName(), "message", message));
+			this.plugin.info(targetFriends.getPlayer(), targetLangUtils.format("Tell-Command.Target", "displayName", myFriends.getDisplayName(), "message", message));
 
 			ReplyTargetUtils.recordConversation(this.plugin.getReplyTargetMap(), player.getUniqueId(), targetFriends.getUniqueId());
 			return;
@@ -82,7 +82,7 @@ public class ReplyCommand extends Command {
 		this.plugin.info(player, langUtils.getString("Reply-Command.Usage"));
 		if (targetUniqueId != null) {
 			FriendUtils targetFriends = this.plugin.getFriendManager().getPlayer(targetUniqueId);
-			this.plugin.info(player, langUtils.getString("Reply-Command.Target").replace("%targetDisplayName", targetFriends.getDisplayName()));
+			this.plugin.info(player, langUtils.format("Reply-Command.Target", "targetDisplayName", targetFriends.getDisplayName()));
 		}
 	}
 

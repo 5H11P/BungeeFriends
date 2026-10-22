@@ -27,39 +27,39 @@ Exceptions:
   AlreadySent: "&cYou've already sent a friend request to this person!"
   AlreadyFriend: "&cYou're already friends with this person!"
   Ignored: "&cThat player has added you to their ignored players list!"
-  IsntOnYourFriends: "&c%targetDisplayName &cisn't on your friends list!"
+  IsntOnYourFriends: "&c%targetDisplayName% &cisn't on your friends list!"
   Cant-Add-Yourself: "&cYou can't add yourself as a friend!"
   Cant-Remove-Yourself: "&cYou can not remove yourself!"
-  NoInvited: "&cThat person hasn't invited you to be friends! Try &e/friend add %name"
-  HasntFriend: "&cThat person hasn't invited you to be friends! Try &e/friend add %name"
+  NoInvited: "&cThat person hasn't invited you to be friends! Try &e/friend add %name%"
+  HasntFriend: "&cThat person hasn't invited you to be friends! Try &e/friend add %name%"
   SlotLimitReached: "&cYou have reached the maximum of friends! To add more friends please remove some!"
   RequestDeny: "&cThis player has disabled friend request receipt!"
   Not-Joined: "&cYou are not joined the party!"
   Cant-Invite-Self: "&cYou can't invite yourself to a party!"
-  Disable-Invite: "%targetDisplayName &chas turned off party invitation acceptance."
+  Disable-Invite: "%targetDisplayName% &chas turned off party invitation acceptance."
   Already:
-    In: "%targetDisplayName &cis already in your party!"
+    In: "%targetDisplayName% &cis already in your party!"
     Joined: "&cThis player is already joined the party!"
-    Invited: "&cYou have already invited %targetDisplayName&c!"
+    Invited: "&cYou have already invited %targetDisplayName%&c!"
   Havent-Received-Invite: "&cYou haven't been invited to a party, or the invitation has expired!"
   Cant-Invite-Yourself: "&cYou can't invite yourself to a party!"
   Cant-Kick-Yourself: "&cYou can't remove yourself! Use /party disband instead!"
-  Isnt-In-Your-Party: "%targetDisplayName &cisn't in your party! Invite them first!"
+  Isnt-In-Your-Party: "%targetDisplayName% &cisn't in your party! Invite them first!"
 
 # Commands
 No-Joined-The-Party: "&cYou must be in a party to use this command!"
-Cant-Find: "&cCan't find a player by the name of '%name'"
+Cant-Find: "&cCan't find a player by the name of '%name%'"
 
 Friends:
-  Join: "&8[&a+&8] &7%%displayName%% &ejoined."
-  Quit: "&8[&c-&8] &7%%displayName%% &eleft."
-  Server-Move: "&8[&6@&8] &7%%displayName%% &emoved to &a%%server%%&e."
+  Join: "&8[&a+&8] &7%displayName% &ejoined."
+  Quit: "&8[&c-&8] &7%displayName% &eleft."
+  Server-Move: "&8[&6@&8] &7%displayName% &emoved to &a%server%&e."
 
 Add:
   Usage: "&cUsage: /friend add <player>"
-  Sent: "&eYou sent a friend request to %targetDisplayName&e!\n&eThey have 5 minutes to accept it!"
+  Sent: "&eYou sent a friend request to %targetDisplayName%&e!\n&eThey have 5 minutes to accept it!"
   Accept:
-    Prefix: "&a&l[ACCEPT]&r"
+    Prefix: "\n&a&l[ACCEPT]&r"
     Message: "&bClick to accept the friend request"
   Deny:
     Prefix: "&c&l[DENY]&r"
@@ -68,40 +68,40 @@ Add:
     Prefix: "&7&l[IGNORE]"
     Message: "&bClick to block all future friend requests."
   Request:
-    Received: "&eFriend request from %displayName&e!"
+    Received: "&eFriend request from %displayName%&e!"
   Expired:
-    YourSelf: "&eYour friend request to %targetDisplayName &ehas expired."
-    Target: "&eThe friend request from %displayName &ehas expired."
+    YourSelf: "&eYour friend request to %targetDisplayName% &ehas expired."
+    Target: "&eThe friend request from %displayName% &ehas expired."
 
 
 Remove:
   Usage: "&cUsage: /friend remove <player>"
-  YourSelf: "&eYou removed %targetDisplayName &efrom your friends list!"
-  Target: "&e%displayName &eremoved you from their friends list!"
+  YourSelf: "&eYou removed %targetDisplayName% &efrom your friends list!"
+  Target: "&e%displayName% &eremoved you from their friends list!"
   All:
     Confirm: "&eAre you sure you want to delete all your friends? To delete it, enter &c'/f removeall confirm'&e."
-    Failed: "&eFailed removing: %uuid"
+    Failed: "&eFailed removing: %uuid%"
     Done: "&eDeleted all my friends."
 
 Accept:
   Usage: "&cUsage: /friend accept <player>"
-  YourSelf: "&aYou are now friends with %targetDisplayName"
-  Target: "&aYou are now friends with %displayName"
+  YourSelf: "&aYou are now friends with %targetDisplayName%"
+  Target: "&aYou are now friends with %displayName%"
 
 Deny:
   Usage: "&cUsage: /friend deny <player>"
-  Declined: "&eDeclined %targetDisplayName&e's friend request!"
+  Declined: "&eDeclined %targetDisplayName%&e's friend request!"
 
 List:
   Empty: "&eYou don't have any friends yet!\n&eAdd some with /friend add <player>"
-  Online: "&e%targetDisplayName &eis in a %server Server."
+  Online: "&e%targetDisplayName% &eis in a %server% Server."
   Status:
-    Away: "&e%targetDisplayName &eis away &7- &e%server"
-    Busy: "&e%targetDisplayName &cis busy &7- &e%server"
-    AppearOffline: "&e%targetDisplayName &7is offline"
-  Offline: "&e%targetDisplayName &cis currently offline"
-  Hover-Online: "&eFriend: %targetDisplayName\n&7Status: &f%status\n&7Server: &f%server\n&7Friends since: &f%friendSince\n&7Last online: &f%lastOnline\n&7Last seen: &f%lastOnlineAgo"
-  Hover-Offline: "&eFriend: %targetDisplayName\n&7UUID: &f%targetUUID\n&7Friends since: &f%friendSince\n&7Last online: &f%lastOnline\n&7Last seen: &f%lastOnlineAgo"
+    Away: "&e%targetDisplayName% &eis away &7- &e%server%"
+    Busy: "&e%targetDisplayName% &cis busy &7- &e%server%"
+    AppearOffline: "&e%targetDisplayName% &7is offline"
+  Offline: "&e%targetDisplayName% &cis currently offline"
+  Hover-Online: "&eFriend: %targetDisplayName%\n&7Status: &f%status%\n&7Server: &f%server%\n&7Friends since: &f%friendSince%\n&7Last online: &f%lastOnline%\n&7Last seen: &f%lastOnlineAgo%"
+  Hover-Offline: "&eFriend: %targetDisplayName%\n&7UUID: &f%targetUUID%\n&7Friends since: &f%friendSince%\n&7Last online: &f%lastOnline%\n&7Last seen: &f%lastOnlineAgo%"
   Unknown: "Unknown"
   Now: "Online now"
   None: "No other members"
@@ -112,16 +112,16 @@ List:
     Days: "%time% days ago"
     Months: "%time% months ago"
     Years: "%time% years ago"
-  Page: "%%previousPage%% &6Friends (Page %%currentPage%% of %%maxPage%%) %%nextPage%%"
-  Party-List: "&aParty members (%size):"
-  Party-Header: "&6Party members (%size)"
-  Party-Leader: "&eLeader: %leader"
-  Party-Members: "&eMembers: %members"
+  Page: "%previousPage% &6Friends (Page %currentPage% of %maxPage%) %nextPage%"
+  Party-List: "&aParty members (%size%):"
+  Party-Header: "&6Party members (%size%)"
+  Party-Leader: "&eLeader: %leader%"
+  Party-Members: "&eMembers: %members%"
 
 Lang:
   Usage: "&cInvalid usage! '/friend lang <language>'"
   Available: "&bCurrently available languages:"
-  Update: "&aSelected language: &e%lang&a!"
+  Update: "&aSelected language: &e%lang%&a!"
 
 Ignore:
   Usage:
@@ -129,9 +129,9 @@ Ignore:
     Add: "&cInvalid usage! '/friend ignore add <player>'"
     Remove: "&cInvalid usage! '/friend ignore add <player>'"
   Empty: "&eYou don't have any ignores yet!\n&eAdd some with /friend ignore add <player>"
-  Added: "&aAdded %targetDisplayName &ato your ignore list."
+  Added: "&aAdded %targetDisplayName% &ato your ignore list."
   AlreadyAdded: "&cYou've already ignored that player! &b/ignore remove Player &cto unignore them!"
-  Removed: "&aRemoved %targetDisplayName &afrom your ignore list."
+  Removed: "&aRemoved %targetDisplayName% &afrom your ignore list."
   NotAdded: "&cYou aren't ignoring that player! &b/ignore add Player &cto ignore!"
 
 Block:
@@ -142,27 +142,27 @@ Block:
   List: "&e/block list [page] &7- &bList blocked players"
   Remove: "&e/block remove <player> &7- &bUnblock a player"
   Remove-All: "&e/block removeall &7- &bUnblock everyone"
-  List-Page: "&6Blocked players (page %%currentPage%% of %%maxPage%%)"
-  List-Format: "&d%index. &e%targetDisplayName"
+  List-Page: "%previousPage% &6Blocked players (page %currentPage% of %maxPage%) %nextPage%"
+  List-Format: "&d%index%. &e%targetDisplayName%"
   RemoveAll-Done: "&aAll players have been unblocked."
   Self: "&cYou cannot block yourself."
 
 Force-Add:
   Usage: "&cUsage: /friend force-add <player>"
-  YourSelf: "&aYou are now friends with %targetDisplayName &c&l[FORCE]"
-  Target: "&aYou are now friends with %displayName &c&l[FORCE]"
+  YourSelf: "&aYou are now friends with %targetDisplayName% &c&l[FORCE]"
+  Target: "&aYou are now friends with %displayName% &c&l[FORCE]"
 
 Prefix:
   Usage: "&cUsage: /friend prefix <player> <prefix>"
-  Current: "&7%targetDisplayName&e's currently prefix is '%prefix&e'"
-  To: "&7%targetDisplayName&e's prefix has been changed to '%prefix&e'"
+  Current: "&7%targetDisplayName%&e's currently prefix is '%prefix%&e'"
+  To: "&7%targetDisplayName%&e's prefix has been changed to '%prefix%&e'"
 Requests:
   Empty: "&7No pending friend requests."
-  Entry: "&e%name &7sent a request at %time"
+  Entry: "&e%name% &7sent a request at %time%"
 Note:
   Usage: "&cUsage: /friend note <friend> [prefix|reset]"
   MustBeFriends: "&cThat player is not on your friends list."
-  Current: "&eYour note prefix: &f%prefix"
+  Current: "&eYour note prefix: &f%prefix%"
   Updated: "&aFriend note updated."
   Cleared: "&aFriend note cleared."
   Confirm: "&eUse /friend note resetall confirm to clear all notes."
@@ -170,20 +170,20 @@ Note:
 Pagination:
   Previous: "&aPrevious"
   Next: "&aNext"
-  Previous-Hover: "&eGo to page %%previousPage%%"
-  Next-Hover: "&eGo to page %%nextPage%%"
+  Previous-Hover: "&eCurrent page: %currentPage%, go to page %previousPage%"
+  Next-Hover: "&eCurrent page: %currentPage%, go to page %nextPage%"
 Party-Mute:
-  Enabled: "&e%displayName enabled party chat mute."
-  Disabled: "&e%displayName disabled party chat mute."
+  Enabled: "&e%displayName% enabled party chat mute."
+  Disabled: "&e%displayName% disabled party chat mute."
   Restricted-Chat-Info: "&eOnly the party leader can send party messages while muted."
   Send-Denied: "&cParty chat is muted. You cannot send party messages right now."
 Party-AllInvite:
-  Enabled: "&e%displayName enabled invitations for all members."
-  Disabled: "&e%displayName restricted invitations to the leader."
+  Enabled: "&e%displayName% enabled invitations for all members."
+  Disabled: "&e%displayName% restricted invitations to the leader."
   No-Invite-Permission: "&cOnly the party leader can invite players."
 Party-Private:
-  Enabled: "&e%displayName enabled private party mode."
-  Disabled: "&e%displayName disabled private party mode."
+  Enabled: "&e%displayName% enabled private party mode."
+  Disabled: "&e%displayName% disabled private party mode."
   No-Permission: "&cYou cannot change private party mode."
 Party-Setting:
   Usage: "&cUsage: /party setting <allinvite|mute|private>"
@@ -194,15 +194,15 @@ Toggle:
 
 Status:
   ActionBar:
-    Online: "&e%targetDisplayName &ais online"
-    Away: "&e%targetDisplayName &eis away"
-    Busy: "&e%targetDisplayName &cis busy"
-    AppearOffline: "&e%targetDisplayName &7is appearing offline"
+    Online: "&e%targetDisplayName% &ais online"
+    Away: "&e%targetDisplayName% &eis away"
+    Busy: "&e%targetDisplayName% &cis busy"
+    AppearOffline: "&e%targetDisplayName% &7is appearing offline"
   ChatBar:
-    Online: "&e%targetDisplayName &ais online"
-    Away: "&e%targetDisplayName &eis away"
-    Busy: "&e%targetDisplayName &cis busy"
-    AppearOffline: "&e%targetDisplayName &7is appearing offline"
+    Online: "&e%targetDisplayName% &ais online"
+    Away: "&e%targetDisplayName% &eis away"
+    Busy: "&e%targetDisplayName% &cis busy"
+    AppearOffline: "&e%targetDisplayName% &7is appearing offline"
 Status-Command:
   Usage: "&cUsage: /status <online|away|busy|appear offline>"
   Disabled: "&cStatus is disabled."
@@ -235,23 +235,23 @@ Help:
 # Tell Command
 Tell-Command:
   Usage: "&cUsage: /tell <player> <message>"
-  YourSelf: "&dTo: %targetDisplayName&7: %message"
-  Target: "&dFrom: %displayName&7: %message"
-  MustBeFriends: "&cYou must be friends with %targetDisplayName!"
-  Offline: "&c%targetDisplayName &cis not online!"
+  YourSelf: "&dTo: %targetDisplayName%&7: %message%"
+  Target: "&dFrom: %displayName%&7: %message%"
+  MustBeFriends: "&cYou must be friends with %targetDisplayName%!"
+  Offline: "&c%targetDisplayName% &cis not online!"
   CantSend: "&cYou can't send a message to yourself!"
   AppearOffline-CantSend: "&cYou cannot send private messages while appearing offline."
 
 # Reply Command
 Reply-Command:
   Usage: "&cUsage: /reply <message>"
-  Target: "&cReply target: %targetDisplayName"
+  Target: "&cReply target: %targetDisplayName%"
 
 Chat:
   Usage: "&cUsage: /chat <default|party|staff|admin>"
   ChatUsage: "&cUsage: /partychat <message>"
   No-Permission: "&cYou cannot use that chat channel."
-  Update: "&aYou are now in the %CHANNEL% &achannel"
+  Update: "&aYou are now in the %channel% &achannel"
   NeedInAParty: "&cYou need to be in a party to chat."
   Channels:
     All: "&6All"
@@ -263,26 +263,26 @@ Invite:
   Usage: "&cInvalid usage! '/party invite <player>'"
   All-Left: "&eThe party was disbanded because all invites have expired and all members have left."
   Request:
-    Sent: "%displayName &einvited %targetDisplayName &eto the party!\n&eThey have 60 seconds to accept it!"
-    Party-Notice: "%displayName &einvited %targetDisplayName &eto the party!"
+    Sent: "%displayName% &einvited %targetDisplayName% &eto the party!\n&eThey have 60 seconds to accept it!"
+    Party-Notice: "%displayName% &einvited %targetDisplayName% &eto the party!"
     Click-here:
-      Here: "&6Click here "
+      Here: "\n&6Click here "
       Accept: "&eto join! You have 60 seconds to accept."
-      Command: "Click to run\n/party accept %name"
-      Receive: "%displayName &ehas invited you to join their party!"
+      Command: "Click to run\n/party accept %name%"
+      Receive: "%displayName% &ehas invited you to join their party!"
     Expired:
-      Your-Self: "&eThe party invite to %targetDisplayName &ehas expired."
-      Target: "&eThe party invite from %displayName &ehas expired."
+      Your-Self: "&eThe party invite to %targetDisplayName% &ehas expired."
+      Target: "&eThe party invite from %displayName% &ehas expired."
 
 Leave:
   You-Left: "&aYou left the party!"
-  Player-Left: "%displayName &eleft the party."
+  Player-Left: "%displayName% &eleft the party."
   NeedDisband: "&cThe party leader needs to disband the party!" 
 
 Remove-Party: # and Kick
   Usage: "&cInvalid usage! '/party remove <player>'"
-  Member-Removed: "%targetDisplayName &ahas been removed from your party!"
-  Me-Removed: "&eYou have been kicked from the party by %displayName&e!"
+  Member-Removed: "%targetDisplayName% &ahas been removed from your party!"
+  Me-Removed: "&eYou have been kicked from the party by %displayName%&e!"
 
 KickOffline:
   AllOnline: "&cThere are no offline players to remove."
@@ -292,13 +292,13 @@ Warp:
   Disabled: "&cParty warp is disabled."
   No-Server: "&cYour current server is unavailable."
   Blocked: "&cParty warp is not available on this server."
-  Summon: "&eThe party leader %displayName &esummoned you to their server."
+  Summon: "&eThe party leader %displayName% &esummoned you to their server."
   Sending: "&aSending you to %server%&a."
 
 Accept-Party:
   Usage: "&cInvalid usage! '/party accept <player>'"
-  You-Joined: "&aYou joined %targetDisplayName&a's party!"
-  Joined: "%displayName &ajoined the party!"
+  You-Joined: "&aYou joined %targetDisplayName%&a's party!"
+  Joined: "%displayName% &ajoined the party!"
 
 Toggle-Party:
   Disabled: "&eParty invitation acceptance has been &cDisabled&e."
@@ -306,27 +306,27 @@ Toggle-Party:
 
 Disband:
   Must-Leader: "&cYou must be the Party Leader to use that command!"
-  Disbanded: "%displayName &ehas disbanded the party!"
+  Disbanded: "%displayName% &ehas disbanded the party!"
 
 Promote:
   Usage: "&cInvalid usage! '/party promote <player>'"
-  Promoted: "%displayName &ehas promoted %targetDisplayName &eto party leader!"
+  Promoted: "%displayName% &ehas promoted %targetDisplayName% &eto party leader!"
 
 Hijack:
   Failed: "&cCould not take over this party. Leave your current party first."
   Usage: "&cInvalid usage! /party hijack <player>"
   PlayerNotJoined: "&cThis player has no party."
   You: "&cYou hijacked the party."
-  Other: "%displayName &chas hijacked the party!"
+  Other: "%displayName% &chas hijacked the party!"
 
 Logout:
-  Leader-Disconnected: "%displayName &ehas logged out the server.\n&eAn online member will become leader after %duration%."
+  Leader-Disconnected: "%displayName% &ehas logged out the server.\n&eAn online member will become leader after %duration%."
   Disband-When-Empty: "&eIf no members are online, the party will disband after %duration%."
-  Become: "%displayName &ehas become the party leader."
+  Become: "%displayName% &ehas become the party leader."
 Party-Connection:
-  Offline: "%displayName &edisconnected and will be removed in %duration% unless they return."
-  Offline-No-Auto-Kick: "%displayName &edisconnected from the party."
-  Rejoin: "%displayName &areconnected to the party."
+  Offline: "%displayName% &edisconnected and will be removed in %duration% unless they return."
+  Offline-No-Auto-Kick: "%displayName% &edisconnected from the party."
+  Rejoin: "%displayName% &areconnected to the party."
 
 Help-Party:
   Setting: "&e/party setting &7- &bChange party settings"

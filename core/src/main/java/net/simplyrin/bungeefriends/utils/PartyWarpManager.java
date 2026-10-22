@@ -50,10 +50,10 @@ public class PartyWarpManager {
 				System.currentTimeMillis() + TickDuration.toMillis(timeoutTicks)));
 		Set<String> servers = new HashSet<>();
 		for (String entry : gameMembers) servers.add(plugin.getServerName(entry.substring(entry.indexOf('@') + 1)));
-		plugin.infoFramed(leader, language.getString("Warp.Confirm")
-				.replace("%count%", String.valueOf(gameMembers.size()))
-				.replace("%servers%", String.join(", ", servers))
-				.replace("%duration%", TickDuration.format(timeoutTicks, language)), MessageFrame.MessageId.WARP_CONFIRM);
+		plugin.infoFramed(leader, language.format("Warp.Confirm",
+				"count", String.valueOf(gameMembers.size()),
+				"servers", String.join(", ", servers),
+				"duration", TickDuration.format(timeoutTicks, language)), MessageFrame.MessageId.WARP_CONFIRM);
 		return false;
 	}
 
@@ -130,10 +130,10 @@ public class PartyWarpManager {
 				|| !plugin.getStringList("Parties." + leaderId + ".Party-List").contains(memberId.toString())) return;
 		LanguageUtils language = plugin.getLanguageManager().getPlayer(member);
 		if (manual) {
-			plugin.infoFramed(member, language.getString("Warp.Summon")
-					.replace("%displayName", plugin.getFriendManager().getPlayer(leader).getDisplayName()), MessageFrame.MessageId.WARP_SUMMON);
+			plugin.infoFramed(member, language.format("Warp.Summon", "displayName",
+					plugin.getFriendManager().getPlayer(leader).getDisplayName()), MessageFrame.MessageId.WARP_SUMMON);
 		} else {
-			plugin.infoFramed(member, language.getString("Warp.Sending").replace("%server%", plugin.getServerName(destination)),
+			plugin.infoFramed(member, language.format("Warp.Sending", "server", plugin.getServerName(destination)),
 					MessageFrame.MessageId.WARP_SENDING);
 		}
 		member.connect(leader.getServer().getInfo());

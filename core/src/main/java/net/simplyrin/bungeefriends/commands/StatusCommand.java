@@ -54,7 +54,7 @@ public class StatusCommand extends Command implements TabExecutor {
 		}
 		plugin.getStatusManager().setStatus(player.getUniqueId(), status);
 		String displayName = plugin.getFriendManager().getPlayer(player).getDisplayName();
-		plugin.info(player, language.getString("Status.ChatBar." + status.getKey()).replace("%targetDisplayName", displayName));
+		plugin.info(player, language.format("Status.ChatBar." + status.getKey(), "targetDisplayName", displayName));
 		sendActionBar(player, language, status, displayName);
 		cancel(player.getUniqueId());
 		if (status == Status.ONLINE) return;
@@ -74,10 +74,10 @@ public class StatusCommand extends Command implements TabExecutor {
 	}
 
 	private void sendActionBar(ProxiedPlayer player, LanguageUtils language, Status status, String displayName) {
-		String message = language.getString("Status.ActionBar." + status.getKey());
+		String message = language.format("Status.ActionBar." + status.getKey(), "targetDisplayName", displayName);
 		if (message == null || message.isEmpty() || "false".equalsIgnoreCase(message)) return;
 		player.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
-				ChatColor.translateAlternateColorCodes('&', message.replace("%targetDisplayName", displayName))));
+			ChatColor.translateAlternateColorCodes('&', message)));
 	}
 
 	public void cancel(UUID uuid) {

@@ -23,36 +23,36 @@ Exceptions:
   AlreadySent: "&c你已经向这位玩家送出了好友请求！"
   AlreadyFriend: "&c你与这位玩家已经成为好友！"
   Ignored: "&c那位玩家已将你置入他们的屏蔽列表中！"
-  IsntOnYourFriends: "&c%targetDisplayName &c不在你的好友列表中！"
+  IsntOnYourFriends: "&c%targetDisplayName% &c不在你的好友列表中！"
   Cant-Add-Yourself: "&c你不能添加自己为好友！"
   Cant-Remove-Yourself: "&c你不能移除自己！"
-  NoInvited: "&c那位玩家没有向你发送好友请求！ 请使用 &e/friend add %name &c添加好友！"
-  HasntFriend: "&c那位玩家没有向你发送好友请求！ 请使用 &e/friend add %name &c添加好友！"
+  NoInvited: "&c那位玩家没有向你发送好友请求！ 请使用 &e/friend add %name% &c添加好友！"
+  HasntFriend: "&c那位玩家没有向你发送好友请求！ 请使用 &e/friend add %name% &c添加好友！"
   SlotLimitReached: "&c好友数量已达上限！ 请先删除一些再继续添加！"
   RequestDeny: "&c这位玩家关闭了好友请求接收功能！"
   Not-Joined: "&c你没有加入组队！"
   Cant-Invite-Self: "&c你不能邀请自己加入组队！"
-  Disable-Invite: "%targetDisplayName &c关闭了组队邀请接收功能."
+  Disable-Invite: "%targetDisplayName% &c关闭了组队邀请接收功能."
   Already:
-    In: "%targetDisplayName &c已经在你的组队里了！"
+    In: "%targetDisplayName% &c已经在你的组队里了！"
     Joined: "&c这个玩家已经加入了其他组队！"
-    Invited: "&c你已经邀请了 %targetDisplayName&c！"
+    Invited: "&c你已经邀请了 %targetDisplayName%&c！"
   Havent-Received-Invite: "&c你没有被邀请加入该组队, 或者邀请已经过期！"
   Cant-Invite-Yourself: "&c你不能邀请自己加入组队！"
   Cant-Kick-Yourself: "&c你不能踢出自己！请使用 /party disband 解散组队！"
-  Isnt-In-Your-Party: "%targetDisplayName &c不在你的组队中！ 请先邀请他们！"
+  Isnt-In-Your-Party: "%targetDisplayName% &c不在你的组队中！ 请先邀请他们！"
 #Commands
 No-Joined-The-Party: "&c你必须在组队中才能使用该指令！"
-Cant-Find: "&c无法找到名为 '%name' &c的玩家！"
+Cant-Find: "&c无法找到名为 '%name%' &c的玩家！"
 Friends:
-  Join: "&7%%displayName%% &e已上线."
-  Quit: "&7%%displayName%% &e已离线."
-  Server-Move: "&&7%%displayName%% &e移动到了 &a%%server%%&e."
+  Join: "&7%displayName% &e已上线."
+  Quit: "&7%displayName% &e已离线."
+  Server-Move: "&7%displayName% &e移动到了 &a%server%&e."
 Add:
   Usage: "&c用法: /friend add <玩家>"
-  Sent: "&e你向 %targetDisplayName &e发出了好友请求！\n&e他们有5分钟接受请求！"
+  Sent: "&e你向 %targetDisplayName% &e发出了好友请求！\n&e他们有5分钟接受请求！"
   Accept:
-    Prefix: "&a&l[接受]&r"
+    Prefix: "\n&a&l[接受]&r"
     Message: "&b点击接受好友请求"
   Deny:
     Prefix: "&c&l[拒绝]&r"
@@ -61,35 +61,35 @@ Add:
     Prefix: "&7&l[忽略]"
     Message: "&b点击屏蔽将来所有来自该玩家的好友请求"
   Request:
-    Received: "&e来自 %displayName &e的好友请求！"
+    Received: "&e来自 %displayName% &e的好友请求！"
   Expired:
-    YourSelf: "&e向 %targetDisplayName &e发出的好友请求已失效."
-    Target: "&e来自 %displayName &e的好友请求已失效."
+    YourSelf: "&e向 %targetDisplayName% &e发出的好友请求已失效."
+    Target: "&e来自 %displayName% &e的好友请求已失效."
 Remove:
   Usage: "&c用法: /friend remove <玩家>"
-  YourSelf: "&e你从好友列表中移除了 %targetDisplayName&e！"
-  Target: "&e%displayName &e从他们的好友列表中移除了你！"
+  YourSelf: "&e你从好友列表中移除了 %targetDisplayName%&e！"
+  Target: "&e%displayName% &e从他们的好友列表中移除了你！"
   All:
     Confirm: "&e您确定要删除所有好友吗? 输入 &c/f removeall confirm &e以确认删除."
-    Failed: "&e无法移除: %uuid"
+    Failed: "&e无法移除: %uuid%"
     Done: "&e已将所有好友删除."
 Accept:
   Usage: "&c用法: /friend accept <玩家>"
-  YourSelf: "&a你现在与 %targetDisplayName &a成为了好友"
-  Target: "&a你现在与 %displayName &a成为了好友"
+  YourSelf: "&a你现在与 %targetDisplayName% &a成为了好友"
+  Target: "&a你现在与 %displayName% &a成为了好友"
 Deny:
   Usage: "&c用法: /friend deny <玩家>"
-  Declined: "&e你拒绝了 %targetDisplayName &e的好友请求！"
+  Declined: "&e你拒绝了 %targetDisplayName% &e的好友请求！"
 List:
   Empty: "&e你还没有任何好友！\n&e使用 /friend add <玩家> 来添加好友"
-  Online: "&e%targetDisplayName &e在 %server 服务器."
+  Online: "&e%targetDisplayName% &e在 %server% 服务器."
   Status:
-    Away: "&e%targetDisplayName &e离开 &7- &e%server"
-    Busy: "&e%targetDisplayName &c忙碌 &7- &e%server"
-    AppearOffline: "&e%targetDisplayName &7隐身"
-  Offline: "&e%targetDisplayName &c此时离线"
-  Hover-Online: "&e好友: %targetDisplayName\n&7状态: &a%status\n&7服务器: &f%server\n&7添加时间: &f%friendSince\n&7最后上线: &f%lastOnline\n&7距今: &f%lastOnlineAgo"
-  Hover-Offline: "&e好友: %targetDisplayName\n&7状态: &c离线\n&7UUID: &f%targetUUID\n&7添加时间: &f%friendSince\n&7最后上线: &f%lastOnline\n&7距今: &f%lastOnlineAgo"
+    Away: "&e%targetDisplayName% &e离开 &7- &e%server%"
+    Busy: "&e%targetDisplayName% &c忙碌 &7- &e%server%"
+    AppearOffline: "&e%targetDisplayName% &7隐身"
+  Offline: "&e%targetDisplayName% &c此时离线"
+  Hover-Online: "&e好友: %targetDisplayName%\n&7状态: &a%status%\n&7服务器: &f%server%\n&7添加时间: &f%friendSince%\n&7最后上线: &f%lastOnline%\n&7距今: &f%lastOnlineAgo%"
+  Hover-Offline: "&e好友: %targetDisplayName%\n&7状态: &c离线\n&7UUID: &f%targetUUID%\n&7添加时间: &f%friendSince%\n&7最后上线: &f%lastOnline%\n&7距今: &f%lastOnlineAgo%"
   Unknown: "未知"
   Now: "当前在线"
   None: "暂无其他成员"
@@ -100,24 +100,24 @@ List:
     Days: "%time%天前"
     Months: "%time%个月前"
     Years: "%time%年前"
-  Page: "%%previousPage%% &6好友列表 (页数 %%currentPage%% / %%maxPage%%) %%nextPage%%"
-  Party-List: "&a组队成员 (%size):"
-  Party-Header: "&6队伍成员 (%size)"
-  Party-Leader: "&e队长: %leader"
-  Party-Members: "&e队员: %members"
+  Page: "%previousPage% &6好友列表 (页数 %currentPage% / %maxPage%) %nextPage%"
+  Party-List: "&a组队成员 (%size%):"
+  Party-Header: "&6队伍成员 (%size%)"
+  Party-Leader: "&e队长: %leader%"
+  Party-Members: "&e队员: %members%"
 Lang:
   Usage: "&c用法: /friend lang <语言>"
   Available: "&b可用语言:"
-  Update: "&a当前语言: &e%lang"
+  Update: "&a当前语言: &e%lang%"
 Ignore:
   Usage:
     Main: "&c用法: /friend ignore <add | remove | list>"
     Add: "&c用法: /friend ignore add <玩家>"
     Remove: "&c用法: /friend ignore add <玩家>"
   Empty: "&e你还没有屏蔽任何玩家！\n&e使用 /friend ignore add <玩家> 屏蔽玩家"
-  Added: "&a已将 %targetDisplayName &a加入到你的屏蔽列表."
+  Added: "&a已将 %targetDisplayName% &a加入到你的屏蔽列表."
   AlreadyAdded: "&c你已经屏蔽那位玩家了！ 使用 &b/ignore remove Player &c取消屏蔽！"
-  Removed: "&a已将 %targetDisplayName &a从你的屏蔽列表移除."
+  Removed: "&a已将 %targetDisplayName% &a从你的屏蔽列表移除."
   NotAdded: "&c你没有在屏蔽那位玩家！ 使用 &b/ignore add Player &c屏蔽玩家！"
 Block:
   Command: "&a屏蔽命令："
@@ -127,25 +127,25 @@ Block:
   List: "&e/block list [页数] &7- &b列出你屏蔽的玩家。"
   Remove: "&e/block remove <玩家> &7- &b解除屏蔽一名玩家。"
   Remove-All: "&e/block removeall &7- &b解除屏蔽所有玩家。"
-  List-Page: "%%previousPage%% &6屏蔽列表 (页数 %%currentPage%% / %%maxPage%%) %%nextPage%%"
-  List-Format: "&d%index. &e%targetDisplayName"
+  List-Page: "%previousPage% &6屏蔽列表 (页数 %currentPage% / %maxPage%) %nextPage%"
+  List-Format: "&d%index%. &e%targetDisplayName%"
   RemoveAll-Done: "&a已解除屏蔽所有玩家。"
   Self: "&c不能屏蔽自己。"
 Force-Add:
   Usage: "&c用法: /friend force-add <玩家>"
-  YourSelf: "&a你现在与 %targetDisplayName &a成为了好友 &c&l[强制添加]"
-  Target: "&a你现在与 %displayName &a成为了好友 &c&l[强制添加]"
+  YourSelf: "&a你现在与 %targetDisplayName% &a成为了好友 &c&l[强制添加]"
+  Target: "&a你现在与 %displayName% &a成为了好友 &c&l[强制添加]"
 Prefix:
   Usage: "&c用法: /friend prefix <好友> [<备注前缀>|reset] 或 /friend prefix resetall"
-  Current: "&e你为 %targetDisplayName &e设置的备注前缀是 '%prefix&e'"
-  To: "&e你已将 %targetDisplayName &e的备注前缀设置为 '%prefix&e'"
+  Current: "&e你为 %targetDisplayName% &e设置的备注前缀是 '%prefix%&e'"
+  To: "&e你已将 %targetDisplayName% &e的备注前缀设置为 '%prefix%&e'"
 Requests:
   Empty: "&7没有待处理的好友请求。"
-  Entry: "&e%name &7于 %time 发送了好友请求"
+  Entry: "&e%name% &7于 %time% 发送了好友请求"
 Note:
   Usage: "&c用法: /friend note <好友> [前缀|reset]"
   MustBeFriends: "&c该玩家不在你的好友列表中。"
-  Current: "&e你的私有备注前缀: &f%prefix"
+  Current: "&e你的私有备注前缀: &f%prefix%"
   Updated: "&a已更新好友备注。"
   Cleared: "&a已清除好友备注。"
   Confirm: "&e输入 /friend note resetall confirm 清除全部备注。"
@@ -153,20 +153,20 @@ Note:
 Pagination:
   Previous: "&a« 上一页"
   Next: "&a下一页 »"
-  Previous-Hover: "&e当前第 %%currentPage%% 页，点击查看第 %%previousPage%% 页"
-  Next-Hover: "&e当前第 %%currentPage%% 页，点击查看第 %%nextPage%% 页"
+  Previous-Hover: "&e当前第 %currentPage% 页，点击查看第 %previousPage% 页"
+  Next-Hover: "&e当前第 %currentPage% 页，点击查看第 %nextPage% 页"
 Party-Mute:
-  Enabled: "%displayName &e启用了&c全员禁言"
-  Disabled: "%displayName &e禁用了&a全员禁言"
+  Enabled: "%displayName% &e启用了&c全员禁言"
+  Disabled: "%displayName% &e禁用了&a全员禁言"
   Restricted-Chat-Info: "&e现在只有组队管理员和队长可以在聊天中发言。"
   Send-Denied: "&c组队已被禁言！你无法在组队聊天中发送消息。"
 Party-AllInvite:
-  Enabled: "%displayName &e启用了&aAll Invite"
-  Disabled: "%displayName &e禁用了&cAll Invite"
+  Enabled: "%displayName% &e启用了&aAll Invite"
+  Disabled: "%displayName% &e禁用了&cAll Invite"
   No-Invite-Permission: "&c你无权邀请其他玩家。"
 Party-Private:
-  Enabled: "%displayName &e启用了&aPrivate Game"
-  Disabled: "%displayName &e禁用了&cPrivate Game"
+  Enabled: "%displayName% &e启用了&aPrivate Game"
+  Disabled: "%displayName% &e禁用了&cPrivate Game"
   No-Permission: "&c你没有权限切换Private Game模式。"
 Party-Setting:
   Usage: "&c用法: /party setting <allinvite|mute|private>"
@@ -175,15 +175,15 @@ Toggle:
   Disabled: "&e你&c关闭&e了好友请求接收功能."
 Status:
   ActionBar:
-    Online: "&e%targetDisplayName &a当前处于在线状态"
-    Away: "&e%targetDisplayName &e当前处于离开状态"
-    Busy: "&e%targetDisplayName &c当前处于忙碌状态"
-    AppearOffline: "&e%targetDisplayName &7当前处于隐身状态"
+    Online: "&e%targetDisplayName% &a当前处于在线状态"
+    Away: "&e%targetDisplayName% &e当前处于离开状态"
+    Busy: "&e%targetDisplayName% &c当前处于忙碌状态"
+    AppearOffline: "&e%targetDisplayName% &7当前处于隐身状态"
   ChatBar:
-    Online: "&e%targetDisplayName &a当前处于在线状态"
-    Away: "&e%targetDisplayName &e当前处于离开状态"
-    Busy: "&e%targetDisplayName &c当前处于忙碌状态"
-    AppearOffline: "&e%targetDisplayName &7当前处于隐身状态"
+    Online: "&e%targetDisplayName% &a当前处于在线状态"
+    Away: "&e%targetDisplayName% &e当前处于离开状态"
+    Busy: "&e%targetDisplayName% &c当前处于忙碌状态"
+    AppearOffline: "&e%targetDisplayName% &7当前处于隐身状态"
 Status-Command:
   Usage: "&c用法: /status <online|away|busy|appear offline>"
   Disabled: "&c状态功能当前已关闭。"
@@ -213,21 +213,21 @@ Help:
 #Tell Command
 Tell-Command:
   Usage: "&c用法: /tell <玩家> <消息>"
-  YourSelf: "&d发至: %targetDisplayName&7: %message"
-  Target: "&d来自: %displayName&7: %message"
-  MustBeFriends: "&c你与 %targetDisplayName &c必须先成为好友！"
-  Offline: "&c%targetDisplayName &c当前离线！"
+  YourSelf: "&d发至: %targetDisplayName%&7: %message%"
+  Target: "&d来自: %displayName%&7: %message%"
+  MustBeFriends: "&c你与 %targetDisplayName% &c必须先成为好友！"
+  Offline: "&c%targetDisplayName% &c当前离线！"
   CantSend: "&c你不能给自己发送消息"
   AppearOffline-CantSend: "&c你当前处于隐身状态，无法使用私信。"
 #Reply Command
 Reply-Command:
   Usage: '&c用法: /reply <消息>'
-  Target: '&c回复目标: %targetDisplayName'
+  Target: '&c回复目标: %targetDisplayName%'
 Chat:
   Usage: '&c用法: /chat 频道'
   ChatUsage: '&c用法: /partychat <消息> 或 /pc <消息>'
   No-Permission: "&c你无权使用该聊天频道。"
-  Update: '&a你现在处于 %CHANNEL% &a频道'
+  Update: '&a你现在处于 %channel% &a频道'
   NeedInAParty: "&c你需要进入组队才能聊天."
   Channels:
     All: '&6全体'
@@ -238,24 +238,24 @@ Invite:
   Usage: "&c无效指令！ 用法: '/party invite <玩家>'"
   All-Left: "&e该组队被解散, 因为所有邀请已到期, 所有成员已离开."
   Request:
-    Sent: "%displayName &e邀请了 %targetDisplayName &e加入组队！\n&e他们有60秒同意该邀请！"
-    Party-Notice: "%displayName &e邀请了 %targetDisplayName &e加入组队！"
+    Sent: "%displayName% &e邀请了 %targetDisplayName% &e加入组队！\n&e他们有60秒同意该邀请！"
+    Party-Notice: "%displayName% &e邀请了 %targetDisplayName% &e加入组队！"
     Click-here:
-      Here: "&6点击此处 "
+      Here: "\n&6点击此处 "
       Accept: "&e加入，你有60秒时间接受."
-      Command: "点击执行\n/party accept %name"
-      Receive: "%displayName &e邀请你加入他们的组队！"
+      Command: "点击执行\n/party accept %name%"
+      Receive: "%displayName% &e邀请你加入他们的组队！"
     Expired:
-      Your-Self: "&e向 %targetDisplayName &e发出的组队邀请已过期."
-      Target: "&e来自 %displayName &e的组队邀请已过期."
+      Your-Self: "&e向 %targetDisplayName% &e发出的组队邀请已过期."
+      Target: "&e来自 %displayName% &e的组队邀请已过期."
 Leave:
   You-Left: "&a你离开了组队！"
-  Player-Left: "%displayName &e离开了组队."
+  Player-Left: "%displayName% &e离开了组队."
   NeedDisband: "&cThe party leader needs to disband the party！"
 Remove-Party:  #and Kick
   Usage: "&c无效指令！ 用法: '/party remove <玩家>'"
-  Member-Removed: "%targetDisplayName &a已经从你的组队中踢出！"
-  Me-Removed: "&e你被 %displayName &e踢出了组队！"
+  Member-Removed: "%targetDisplayName% &a已经从你的组队中踢出！"
+  Me-Removed: "&e你被 %displayName% &e踢出了组队！"
 KickOffline:
   AllOnline: "&cThere are no offline players to remove."
 Warp:
@@ -263,35 +263,35 @@ Warp:
   Disabled: "&c组队传送已关闭。"
   No-Server: "&c当前服务器不可用。"
   Blocked: "&c此服务器不允许组队传送。"
-  Summon: "&e队长 %displayName &e传送你到他所在的服务器."
+  Summon: "&e队长 %displayName% &e传送你到他所在的服务器."
   Sending: "&aSending you to %server%&a."
 Accept-Party:
   Usage: "&c无效指令！ 用法: '/party accept <玩家>'"
-  You-Joined: "&a你加入了 %targetDisplayName&a的组队！"
-  Joined: "%displayName &a加入了组队！"
+  You-Joined: "&a你加入了 %targetDisplayName%&a的组队！"
+  Joined: "%displayName% &a加入了组队！"
 Toggle-Party:
   Disabled: "&e组队邀请现已&c关闭&e."
   Enabled: "&e组队邀请现已&a开启&e."
 Disband:
   Must-Leader: "&c你必须成为队长才能使用此命令！"
-  Disbanded: "%displayName &e解散了组队！"
+  Disbanded: "%displayName% &e解散了组队！"
 Promote:
   Usage: "&c无效指令！ '/party promote <player>'"
-  Promoted: "%displayName &e将 %targetDisplayName &e提升为队长！"
+  Promoted: "%displayName% &e将 %targetDisplayName% &e提升为队长！"
 Hijack:
   Failed: "&c无法接管该队伍。请先退出当前队伍。"
   Usage: "&c无效指令！ /party hijack <player>"
   PlayerNotJoined: "&c该玩家没有组队."
   You: "&c你劫持了这个队伍."
-  Other: "%displayName &c劫持了你的队伍！"
+  Other: "%displayName% &c劫持了你的队伍！"
 Logout:
-  Leader-Disconnected: "%displayName &e离开了服务器。\n&e%duration%后，随机一名队伍成员将成为队长。"
+  Leader-Disconnected: "%displayName% &e离开了服务器。\n&e%duration%后，随机一名队伍成员将成为队长。"
   Disband-When-Empty: "&e如果没有其他成员，队伍将在%duration%后解散。"
-  Become: "%displayName &e成为了队长."
+  Become: "%displayName% &e成为了队长."
 Party-Connection:
-  Offline: "%displayName&e已断开连接，若&c%duration%&e内未重新连接则移出组队。"
-  Offline-No-Auto-Kick: "%displayName &e已断开连接。"
-  Rejoin: "%displayName&e重新连接。"
+  Offline: "%displayName%&e已断开连接，若&c%duration%&e内未重新连接则移出组队。"
+  Offline-No-Auto-Kick: "%displayName% &e已断开连接。"
+  Rejoin: "%displayName%&e重新连接。"
 Help-Party:
   Setting: "&e/party setting &7- &b更改组队设置"
   Command: "&a组队命令:"

@@ -49,16 +49,16 @@ public class EventListener implements Listener {
 			if (!player.equals(target)) {
 				if (!hidden && myFriends.getFriends().contains(target.getUniqueId().toString())) {
 					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(target);
-					this.plugin.info(target, targetLangUtils.getString("Friends.Join").replace("%%displayName%%", myFriends.getDisplayNameFor(target.getUniqueId())));
+					this.plugin.info(target, targetLangUtils.format("Friends.Join", "displayName", myFriends.getDisplayNameFor(target.getUniqueId())));
 				}
 			}
 		}
 		for (UUID requester : this.plugin.getPendingFriendRequesters(player.getUniqueId())) {
 			FriendUtils requesterFriends = this.plugin.getFriendManager().getPlayer(requester);
 			String createdAt = this.plugin.getFriendRequestCreatedAt(requester, player.getUniqueId());
-			this.plugin.info(player, this.plugin.getLanguageManager().getPlayer(player).getString("Requests.Entry")
-					.replace("%name", requesterFriends.getDisplayNameFor(player.getUniqueId()))
-					.replace("%time", createdAt == null || createdAt.isEmpty() ? "?" : createdAt));
+				this.plugin.info(player, this.plugin.getLanguageManager().getPlayer(player).format("Requests.Entry",
+					"name", requesterFriends.getDisplayNameFor(player.getUniqueId()),
+					"time", createdAt == null || createdAt.isEmpty() ? "?" : createdAt));
 		}
 	}
 
@@ -77,7 +77,7 @@ public class EventListener implements Listener {
 			if (!player.equals(target)) {
 				if (!hidden && myFriends.getFriends().contains(target.getUniqueId().toString())) {
 					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(target);
-					this.plugin.info(target, targetLangUtils.getString("Friends.Quit").replace("%%displayName%%", myFriends.getDisplayNameFor(target.getUniqueId())));
+					this.plugin.info(target, targetLangUtils.format("Friends.Quit", "displayName", myFriends.getDisplayNameFor(target.getUniqueId())));
 				}
 			}
 		}
@@ -158,10 +158,8 @@ public class EventListener implements Listener {
 				if (this.plugin.getBoolean("Plugin.Enable-Server-Switch-Notifier")) {
 					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(friends);
 
-					String message = targetLangUtils.getString("Friends.Server-Move");
-
-					message = message.replace("%%displayName%%", myFriends.getDisplayNameFor(UUID.fromString(friends)));
-					message = message.replace("%%server%%", server);
+					String message = targetLangUtils.format("Friends.Server-Move",
+						"displayName", myFriends.getDisplayNameFor(UUID.fromString(friends)), "server", server);
 
 					this.plugin.info(UUID.fromString(friends), message);
 				}

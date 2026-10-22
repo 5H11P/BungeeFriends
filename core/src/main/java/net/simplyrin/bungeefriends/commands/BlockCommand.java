@@ -17,6 +17,7 @@ import net.simplyrin.bungeefriends.messages.Messages;
 import net.simplyrin.bungeefriends.tools.ThreadPool;
 import net.simplyrin.bungeefriends.utils.FriendManager.FriendUtils;
 import net.simplyrin.bungeefriends.utils.LanguageManager.LanguageUtils;
+import net.simplyrin.bungeefriends.utils.MessageBuilder;
 import net.simplyrin.bungeefriends.utils.PaginationMessage;
 
 public class BlockCommand extends Command implements TabExecutor {
@@ -57,12 +58,15 @@ public class BlockCommand extends Command implements TabExecutor {
 			int total = (blocked.size() + 7) / 8;
 			page = Math.max(1, Math.min(page, total));
 			plugin.infoFrame(player, MessageFrame.MessageId.BLOCK_LIST_PAGE);
-			player.sendMessage(PaginationMessage.build(language, language.getString("Block.List-Page"), "/block list ", page, total));
+			for (net.md_5.bungee.api.chat.TextComponent line : MessageBuilder.splitLines(
+					PaginationMessage.build(language, language.getString("Block.List-Page"), "/block list ", page, total))) {
+				player.sendMessage(line);
+			}
 			for (int index = (page - 1) * 8; index < Math.min(page * 8, blocked.size()); index++) {
 				FriendUtils target = plugin.getFriendManager().getPlayer(UUID.fromString(blocked.get(index)));
-				plugin.info(player, language.getString("Block.List-Format")
-						.replace("%index", String.valueOf(index + 1))
-						.replace("%targetDisplayName", target.getDisplayName()));
+				plugin.info(player, language.format("Block.List-Format",
+						"index", index + 1,
+						"targetDisplayName", target.getDisplayName()));
 			}
 			plugin.infoFrame(player, MessageFrame.MessageId.BLOCK_LIST_PAGE);
 			return;
@@ -76,7 +80,7 @@ public class BlockCommand extends Command implements TabExecutor {
 			return;
 		}
 		if (!"add".equals(action) && !"remove".equals(action)) {
-			String unknownArgument = language.getString("Block.Unknown-Argument").replace("%argument%", args[0]);
+			String unknownArgument = language.format("Block.Unknown-Argument", "argument", args[0]);
 			plugin.infoFramed(player, buildUnknownArgumentMessage(unknownArgument, buildHelp(language)), MessageFrame.MessageId.BLOCK_COMMAND);
 			return;
 		}
@@ -87,7 +91,7 @@ public class BlockCommand extends Command implements TabExecutor {
 		}
 		UUID targetId = plugin.getPlayerManager().getPlayerUniqueId(args[1]);
 		if (targetId == null) {
-			plugin.infoFramed(player, language.getString("Cant-Find").replace("%name", args[1]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
+			plugin.infoFramed(player, language.format("Cant-Find", "name", args[1]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
 			return;
 		}
 		if (targetId.equals(player.getUniqueId())) {
@@ -98,8 +102,8 @@ public class BlockCommand extends Command implements TabExecutor {
 		try {
 			if ("add".equals(action)) friends.addIgnore(targetId);
 			else friends.removeIgnore(targetId);
-			plugin.infoFramed(player, language.getString("Ignore." + ("add".equals(action) ? "Added" : "Removed"))
-					.replace("%targetDisplayName", target.getDisplayName()),
+			plugin.infoFramed(player, language.format("Ignore." + ("add".equals(action) ? "Added" : "Removed"),
+					"targetDisplayName", target.getDisplayName()),
 					"add".equals(action) ? MessageFrame.MessageId.IGNORE_ADDED : MessageFrame.MessageId.IGNORE_NOT_ADDED);
 		} catch (AlreadyAddedException e) {
 			plugin.infoFramed(player, language.getString("Ignore.AlreadyAdded"), MessageFrame.MessageId.IGNORE_ALREADY_ADDED);

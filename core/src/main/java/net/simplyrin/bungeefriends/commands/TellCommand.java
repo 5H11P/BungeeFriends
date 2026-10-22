@@ -73,7 +73,7 @@ public class TellCommand extends Command implements TabExecutor {
 			}
 			UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[0]);
 			if (target == null) {
-				this.plugin.infoFramed(player, langUtils.getString("Cant-Find").replace("%name", args[0]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
+				this.plugin.infoFramed(player, langUtils.format("Cant-Find", "name", args[0]), MessageFrame.MessageId.PLAYER_NOT_FOUND);
 				return;
 			}
 			if (player.getUniqueId().equals(target)) {
@@ -85,14 +85,14 @@ public class TellCommand extends Command implements TabExecutor {
 
 			if (!(myFriends.isFriend(targetFriends.getUniqueId()) || player.hasPermission(Permissions.ADMIN)
 					|| player.hasPermission(Permissions.TELL_BYPASS))) {
-				this.plugin.infoFramed(player, langUtils.getString("Tell-Command.MustBeFriends").replace("%targetDisplayName", targetFriends.getDisplayName()),
+				this.plugin.infoFramed(player, langUtils.format("Tell-Command.MustBeFriends", "targetDisplayName", targetFriends.getDisplayName()),
 						MessageFrame.MessageId.TELL_MUST_BE_FRIENDS);
 				return;
 			}
 
 			if (targetFriends.getPlayer() == null || (this.plugin.getBoolean("Plugin.Enable-Status")
 					&& this.plugin.getStatusManager().getStatus(target) == net.simplyrin.bungeefriends.utils.StatusManager.Status.APPEAR_OFFLINE)) {
-				this.plugin.infoFramed(player, langUtils.getString("Tell-Command.Offline").replace("%targetDisplayName", targetFriends.getDisplayName()),
+				this.plugin.infoFramed(player, langUtils.format("Tell-Command.Offline", "targetDisplayName", targetFriends.getDisplayName()),
 						MessageFrame.MessageId.TELL_OFFLINE);
 				return;
 			}
@@ -104,8 +104,8 @@ public class TellCommand extends Command implements TabExecutor {
 				}
 				message = message.trim();
 
-				this.plugin.info(player, langUtils.getString("Tell-Command.YourSelf").replace("%targetDisplayName", targetFriends.getDisplayName()).replace("%message", message));
-				this.plugin.info(targetFriends.getPlayer(), targetLangUtils.getString("Tell-Command.Target").replace("%displayName", myFriends.getDisplayName()).replace("%message", message));
+				this.plugin.info(player, langUtils.format("Tell-Command.YourSelf", "targetDisplayName", targetFriends.getDisplayName(), "message", message));
+				this.plugin.info(targetFriends.getPlayer(), targetLangUtils.format("Tell-Command.Target", "displayName", myFriends.getDisplayName(), "message", message));
 
 				ReplyTargetUtils.recordConversation(this.plugin.getReplyTargetMap(), player.getUniqueId(), targetFriends.getUniqueId());
 				return;

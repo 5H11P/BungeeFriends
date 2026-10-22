@@ -642,7 +642,9 @@ public class Main extends Plugin {
 
 	@SuppressWarnings("deprecation")
 	public void info(String args) {
-		this.getProxy().getConsole().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&cBungeeFriends&7] &r" + args));
+		for (String line : MessageBuilder.splitLines(args)) {
+			this.getProxy().getConsole().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7[&cBungeeFriends&7] &r" + line));
+		}
 	}
 
 	public void info(String player, String args) {
@@ -657,7 +659,9 @@ public class Main extends Plugin {
 		if (player == null || args == null || args.equals("")) {
 			return;
 		}
-		player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getPrefix() + args));
+		for (String line : MessageBuilder.splitLines(args)) {
+			player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getPrefix() + line));
+		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -665,16 +669,13 @@ public class Main extends Plugin {
 		if (uuid == null || args == null || args.equals("")) {
 			return;
 		}
-		ProxiedPlayer player = this.getProxy().getPlayer(uuid);
-		if (player != null) {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getPrefix() + args));
-		}
+		this.info(this.getProxy().getPlayer(uuid), args);
 	}
 
 	public void infoFramed(ProxiedPlayer player, String message, MessageFrame.MessageId messageId) {
 		if (player == null || message == null || message.isEmpty() || messageId == null) return;
 		this.infoFrame(player, messageId);
-		for (String line : message.split("\\n", -1)) this.info(player, line);
+		this.info(player, message);
 		this.infoFrame(player, messageId);
 	}
 
@@ -697,7 +698,7 @@ public class Main extends Plugin {
 	public void infoFramedConsole(String message, MessageFrame.MessageId messageId) {
 		if (message == null || message.isEmpty()) return;
 		this.infoFrameConsole(messageId);
-		for (String line : message.split("\\n", -1)) this.info(line);
+		this.info(message);
 		this.infoFrameConsole(messageId);
 	}
 
@@ -720,18 +721,25 @@ public class Main extends Plugin {
 		this.infoFramed(this.getProxy().getPlayer(uuid), message, messageId);
 	}
 
+	public void infoFramed(UUID uuid, TextComponent message, MessageFrame.MessageId messageId) {
+		if (uuid == null) return;
+		this.infoFramed(this.getProxy().getPlayer(uuid), message, messageId);
+	}
+
 	public void infoFramed(ProxiedPlayer player, TextComponent message, MessageFrame.MessageId messageId) {
-		if (player == null || message == null || message.getText().isEmpty() || messageId == null) return;
+		if (player == null || message == null || message.toPlainText().isEmpty() || messageId == null) return;
 		this.infoFrame(player, messageId);
 		this.info(player, message);
 		this.infoFrame(player, messageId);
 	}
 
 	public void info(ProxiedPlayer player, TextComponent args) {
-		if (player == null || args == null || args.getText().equals("")) {
+		if (player == null || args == null || args.toPlainText().equals("")) {
 			return;
 		}
-		player.sendMessage(MessageBuilder.get(this.getPrefix()), args);
+		for (TextComponent line : MessageBuilder.splitLines(args)) {
+			player.sendMessage(MessageBuilder.get(this.getPrefix()), line);
+		}
 	}
 
 }

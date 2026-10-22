@@ -71,7 +71,7 @@ public class ChatCommand extends Command {
 			if (args[0].equalsIgnoreCase("all") || args[0].equalsIgnoreCase("a") || args[0].equalsIgnoreCase("default")) {
 				this.channels.remove(player.getUniqueId());
 				this.plugin.infoFrame(player, MessageFrame.MessageId.CHAT_COMMAND_MESSAGES);
-				this.plugin.info(player, langUtils.getString("Chat.Update").replace("%CHANNEL%", langUtils.getString("Chat.Channels.All")));
+				this.plugin.info(player, langUtils.format("Chat.Update", "channel", langUtils.getString("Chat.Channels.All")));
 				this.plugin.infoFrame(player, MessageFrame.MessageId.CHAT_COMMAND_MESSAGES);
 				return;
 			}
@@ -83,7 +83,7 @@ public class ChatCommand extends Command {
 				}
 				this.channels.put(player.getUniqueId(), Channel.PARTY);
 				this.plugin.infoFrame(player, MessageFrame.MessageId.CHAT_COMMAND_MESSAGES);
-				this.plugin.info(player, langUtils.getString("Chat.Update").replace("%CHANNEL%", langUtils.getString("Chat.Channels.Party")));
+				this.plugin.info(player, langUtils.format("Chat.Update", "channel", langUtils.getString("Chat.Channels.Party")));
 				this.plugin.infoFrame(player, MessageFrame.MessageId.CHAT_COMMAND_MESSAGES);
 				return;
 			}
@@ -94,7 +94,7 @@ public class ChatCommand extends Command {
 				}
 				this.channels.put(player.getUniqueId(), Channel.STAFF);
 				this.plugin.infoFrame(player, MessageFrame.MessageId.CHAT_COMMAND_MESSAGES);
-				this.plugin.info(player, langUtils.getString("Chat.Update").replace("%CHANNEL%", langUtils.getString("Chat.Channels.Staff")));
+				this.plugin.info(player, langUtils.format("Chat.Update", "channel", langUtils.getString("Chat.Channels.Staff")));
 				this.plugin.infoFrame(player, MessageFrame.MessageId.CHAT_COMMAND_MESSAGES);
 				return;
 			}
@@ -104,7 +104,7 @@ public class ChatCommand extends Command {
 					return;
 				}
 				this.channels.put(player.getUniqueId(), Channel.ADMIN);
-				this.plugin.infoFramed(player, langUtils.getString("Chat.Update").replace("%CHANNEL%", langUtils.getString("Chat.Channels.Admin")),
+				this.plugin.infoFramed(player, langUtils.format("Chat.Update", "channel", langUtils.getString("Chat.Channels.Admin")),
 						MessageFrame.MessageId.CHAT_UPDATED);
 				return;
 			}

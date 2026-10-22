@@ -175,12 +175,12 @@ public class PartyListener implements Listener {
 				LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(partyPlayerUniqueId);
 
 				if (targetPlayer.getPlayer() == null) continue;
-				String message = targetLangUtils.getString("Logout.Leader-Disconnected")
-						.replace("%displayName", myParties.getDisplayName())
-						.replace("%duration%", TickDuration.format(disbandTicks, targetLangUtils));
+				String message = targetLangUtils.format("Logout.Leader-Disconnected",
+						"displayName", myParties.getDisplayName(),
+						"duration", TickDuration.format(disbandTicks, targetLangUtils));
 				if (myParties.getOnlinePlayers() <= 1)
-					message += "\n" + targetLangUtils.getString("Logout.Disband-When-Empty")
-							.replace("%duration%", TickDuration.format(disbandTicks, targetLangUtils));
+					message += "\n" + targetLangUtils.format("Logout.Disband-When-Empty",
+							"duration", TickDuration.format(disbandTicks, targetLangUtils));
 				this.plugin.infoFramed(targetPlayer.getPlayer(), message, MessageFrame.MessageId.PARTY_LOGOUT_LEADER_DISCONNECTED);
 			}
 
@@ -208,12 +208,12 @@ public class PartyListener implements Listener {
 						PartyUtils targetPlayer = this.plugin.getPartyManager().getPlayer(partyPlayerUniqueId);
 						LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(partyPlayerUniqueId);
 
-						this.plugin.infoFramed(targetPlayer.getPlayer(), targetLangUtils.getString("Logout.Become").replace("%displayName", newParties.getDisplayName()),
+						this.plugin.infoFramed(targetPlayer.getPlayer(), targetLangUtils.format("Logout.Become", "displayName", newParties.getDisplayName()),
 								MessageFrame.MessageId.PARTY_LEADER_CHANGED);
 					}
 
 					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(uniqueId);
-					this.plugin.infoFramed(newParties.getPlayer(), targetLangUtils.getString("Logout.Become").replace("%displayName", newParties.getDisplayName()),
+					this.plugin.infoFramed(newParties.getPlayer(), targetLangUtils.format("Logout.Become", "displayName", newParties.getDisplayName()),
 							MessageFrame.MessageId.PARTY_LEADER_CHANGED);
 				} catch (NotJoinedException e) {
 				}
@@ -222,7 +222,7 @@ public class PartyListener implements Listener {
 					PartyUtils targetPlayer = this.plugin.getPartyManager().getPlayer(partyPlayerUniqueId);
 					LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(partyPlayerUniqueId);
 
-					this.plugin.infoFramed(targetPlayer.getPlayer(), targetLangUtils.getString("Disband.Disbanded").replace("%displayName", myParties.getDisplayName()),
+					this.plugin.infoFramed(targetPlayer.getPlayer(), targetLangUtils.format("Disband.Disbanded", "displayName", myParties.getDisplayName()),
 							MessageFrame.MessageId.PARTY_DISBANDED);
 
 				}
@@ -243,9 +243,9 @@ public class PartyListener implements Listener {
 			UUID recipientId = UUID.fromString(recipient);
 			if (recipientId.equals(playerId) || this.plugin.getProxy().getPlayer(recipientId) == null) continue;
 			LanguageUtils language = this.plugin.getLanguageManager().getPlayer(recipientId);
-			this.plugin.infoFramed(recipientId, language.getString(key)
-					.replace("%displayName", this.plugin.getFriendManager().getPlayer(playerId).getDisplayNameFor(recipientId))
-					.replace("%duration%", TickDuration.format(
+			this.plugin.infoFramed(recipientId, language.format(key,
+					"displayName", this.plugin.getFriendManager().getPlayer(playerId).getDisplayNameFor(recipientId),
+					"duration", TickDuration.format(
 							this.plugin.getConfigManager().getConfig().getInt("Plugin.Party.Offline-Member-Kick-Delay-Ticks", 6000), language)), messageId);
 		}
 	}
@@ -270,8 +270,8 @@ public class PartyListener implements Listener {
 					UUID recipientId = UUID.fromString(recipient);
 					if (this.plugin.getProxy().getPlayer(recipientId) != null) {
 						LanguageUtils language = this.plugin.getLanguageManager().getPlayer(recipientId);
-						this.plugin.infoFramed(recipientId, language.getString("Remove-Party.Member-Removed")
-								.replace("%targetDisplayName", this.plugin.getFriendManager().getPlayer(playerId).getDisplayNameFor(recipientId)),
+						this.plugin.infoFramed(recipientId, language.format("Remove-Party.Member-Removed",
+								"targetDisplayName", this.plugin.getFriendManager().getPlayer(playerId).getDisplayNameFor(recipientId)),
 								MessageFrame.MessageId.PARTY_MEMBER_REMOVED);
 					}
 				}

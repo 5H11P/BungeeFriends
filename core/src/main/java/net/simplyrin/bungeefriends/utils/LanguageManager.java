@@ -3,6 +3,7 @@ package net.simplyrin.bungeefriends.utils;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import com.google.common.base.Charsets;
@@ -140,6 +141,10 @@ public class LanguageManager {
 		}
 
 		public String getString(String configKey) {
+			if (configKey == null || configKey.isEmpty()) {
+				plugin.getLogger().warning("Requested an empty language key");
+				return latestEnglishConfig == null ? "" : latestEnglishConfig.getString("No-Permission", "");
+			}
 			if (configKey.equals("Hyphen") && !plugin.getConfigManager().getHyphenConfig().getBoolean("Enable", true)) {
 				return "";
 			}
@@ -152,7 +157,46 @@ public class LanguageManager {
 			}
 
 			Configuration bundled = "Chinese".equalsIgnoreCase(this.getLanguage()) ? latestChineseConfig : latestEnglishConfig;
-			return resolveMessage(configMap.get(this.getLanguage().toLowerCase()), bundled, latestEnglishConfig, configKey);
+			String message = resolveMessage(configMap.get(this.getLanguage().toLowerCase()), bundled, latestEnglishConfig, configKey);
+			return message == null ? "" : message;
+		}
+
+		public String format(String configKey, Object... entries) {
+			return format(configKey, MessageFormatter.values(entries));
+		}
+
+		public String format(String configKey, Map<String, ?> values) {
+			String selected = getString(configKey);
+			Set<String> allowed = values == null ? null : values.keySet();
+			Set<String> unresolved = MessageFormatter.unresolvedExcept(selected, allowed);
+			if (!unresolved.isEmpty()) {
+				plugin.getLogger().warning("Unresolved language placeholders for " + getLanguage() + "." + configKey + ": " + unresolved);
+				String english = latestEnglishConfig == null ? "" : latestEnglishConfig.getString(configKey, "");
+				selected = english;
+				unresolved = MessageFormatter.unresolvedExcept(selected, allowed);
+				if (!unresolved.isEmpty()) {
+					plugin.getLogger().severe("Built-in English message still has unresolved placeholders for " + configKey + ": " + unresolved);
+					selected = MessageFormatter.maskUnresolved(selected);
+				}
+			}
+			return MessageFormatter.replace(selected, values);
+		}
+
+		public String formatException(Exception error, String fallbackKey, Object... entries) {
+			String key = error == null ? null : error.getMessage();
+			if (key == null || key.isEmpty() || getString(key).isEmpty()) {
+				plugin.getLogger().warning("Invalid language key on exception; using " + fallbackKey);
+				key = fallbackKey;
+			}
+			return format(key, entries);
+		}
+
+		public String replace(String template, Object... entries) {
+			return MessageFormatter.replace(template, MessageFormatter.values(entries));
+		}
+
+		public String getBuiltInEnglish(String configKey) {
+			return latestEnglishConfig == null ? "" : latestEnglishConfig.getString(configKey, "");
 		}
 
 		public File getLanguagesFolder() {
