@@ -1,7 +1,6 @@
 package net.simplyrin.bungeefriends.utils;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,7 +10,6 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.cacheddata.CachedMetaData;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.config.Configuration;
 import net.simplyrin.bungeefriends.Main;
 import net.simplyrin.bungeefriends.exceptions.AlreadyAddedException;
 import net.simplyrin.bungeefriends.exceptions.FailedAddingException;
@@ -173,26 +171,6 @@ public class FriendManager {
 				if (prefix != null) {
 					plugin.set("Player." + this.uuid.toString() + ".Prefix", prefix);
 					return this.buildPrefix(prefix);
-				}
-			}
-
-			if (player != null) {
-				Configuration section = null;
-				try {
-					section = plugin.getPrefixManager().getConfig().getSection("List");
-				} catch (Exception e) {
-				}
-				if (section != null) {
-					Collection<String> collection = section.getKeys();
-					for (String list : collection) {
-						String prefix = plugin.getPrefixManager().getConfig().getString("List." + list + ".Prefix");
-						String permission = plugin.getPrefixManager().getConfig().getString("List." + list + ".Permission");
-
-						if (player.hasPermission(permission) ) {
-							plugin.set("Player." + this.uuid.toString() + ".Prefix", prefix);
-							return this.buildPrefix(prefix);
-						}
-					}
 				}
 			}
 

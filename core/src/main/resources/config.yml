@@ -23,7 +23,6 @@ Plugin:
   Enable-Tab-Complete: true
   Enable-Bungee-Parties: true
   Enable-Status: true
-  Enable-Legacy-Prefix-YML: false
   # Length limits are 1-255 characters to fit the database columns.
   Friend:
     Max-Note-Length: 255

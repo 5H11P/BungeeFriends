@@ -47,7 +47,6 @@ import net.simplyrin.bungeefriends.utils.MySQLManager;
 import net.simplyrin.bungeefriends.utils.PartyManager;
 import net.simplyrin.bungeefriends.utils.PartyWarpManager;
 import net.simplyrin.bungeefriends.utils.PlayerManager;
-import net.simplyrin.bungeefriends.utils.PrefixManager;
 import net.simplyrin.bungeefriends.utils.StatusManager;
 
 /**
@@ -62,7 +61,6 @@ public class Main extends Plugin {
 
 	private ConfigManager configManager;
 	private DataManager dataManager;
-	private PrefixManager prefixManager;
 	private PlayerManager playerManager;
 	private FriendManager friendManager;
 	private PartyManager partyManager;
@@ -113,7 +111,6 @@ public class Main extends Plugin {
 		ThreadPool.start();
 		this.configManager = new ConfigManager(this);
 		this.dataManager = new DataManager(this);
-		this.prefixManager = new PrefixManager(this);
 		this.playerManager = new PlayerManager(this);
 		this.friendManager = new FriendManager(this);
 		this.statusManager = new StatusManager(this);

@@ -77,6 +77,7 @@ public class ConfigManagerFeatureTest {
 		assertEquals(9000, config.getInt("Plugin.Party.Disband-Delay-Ticks"));
 		assertEquals(6000, config.getInt("Plugin.Party.Offline-Member-Kick-Delay-Ticks"));
 		assertTrue(config.getBoolean("Plugin.Enable-Friend-Removal-Notifications"));
+		assertFalse(config.contains("Plugin.Enable-Legacy-Prefix-YML"));
 		Configuration friendList = new Configuration();
 		ConfigManager.applyFriendListDefaults(friendList);
 		assertEquals("yyyy-MM-dd HH:mm:ss", friendList.getString("Time-Format"));

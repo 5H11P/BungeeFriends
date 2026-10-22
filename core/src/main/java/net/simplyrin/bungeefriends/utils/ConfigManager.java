@@ -128,7 +128,6 @@ public class ConfigManager {
 		defaultValue(config, "Plugin.Enable-Tab-Complete", true);
 		defaultValue(config, "Plugin.Enable-Bungee-Parties", false);
 		defaultValue(config, "Plugin.Enable-Status", true);
-		defaultValue(config, "Plugin.Enable-Legacy-Prefix-YML", false);
 		defaultValue(config, "Plugin.Enable-Friend-Removal-Notifications", true);
 		defaultValue(config, "Plugin.Friend.Max-Note-Length", 255);
 		defaultValue(config, "Plugin.Friend.Max-Prefix-Length", 255);
