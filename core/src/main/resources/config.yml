@@ -21,9 +21,13 @@ Plugin:
   Enable-Party-Warp: true
   Enable-LuckPerms-API: true
   Enable-Tab-Complete: true
-  Enable-Bungee-Parties: false
+  Enable-Bungee-Parties: true
   Enable-Status: true
   Enable-Legacy-Prefix-YML: false
+  # Length limits are 1-255 characters to fit the database columns.
+  Friend:
+    Max-Note-Length: 255
+    Max-Prefix-Length: 255
   # All duration and interval values use ticks (1 tick = 50 ms).
   Party:
     Max-Size: 10

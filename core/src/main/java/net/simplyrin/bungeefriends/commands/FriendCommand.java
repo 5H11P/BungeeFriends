@@ -273,35 +273,38 @@ public class FriendCommand extends Command implements TabExecutor {
 
 			if (args[0].equalsIgnoreCase("note")) {
 				if (args.length < 2) {
-					this.plugin.info(player, langUtils.getString("Note.Usage"));
+					this.plugin.info(player, langUtils.getString("Note.Description.Usage"));
 					return;
 				}
 				if (args[1].equalsIgnoreCase("resetall")) {
 					if (args.length == 3 && args[2].equalsIgnoreCase("confirm")) {
 						this.plugin.clearAllFriendCustomPrefixes(player.getUniqueId());
-						this.plugin.info(player, langUtils.getString("Note.Cleared"));
-					} else this.plugin.info(player, langUtils.getString("Note.Confirm"));
+						this.plugin.info(player, langUtils.getString("Note.Description.Cleared"));
+					} else this.plugin.info(player, langUtils.getString("Note.Description.Confirm"));
 					return;
 				}
 				UUID target = this.plugin.getPlayerManager().getPlayerUniqueId(args[1]);
 				if (target == null || !myFriends.isFriend(target)) {
-					this.plugin.info(player, langUtils.getString("Note.MustBeFriends"));
+					this.plugin.info(player, langUtils.getString("Note.Description.MustBeFriends"));
 					return;
 				}
 				if (args.length == 2) {
 					String note = this.plugin.getFriendCustomPrefix(player.getUniqueId(), target);
-					this.plugin.info(player, langUtils.format("Note.Current", "prefix", note == null || note.isEmpty() ? "-" : note));
+					String normalizedNote = this.normalizeNote(note);
+					this.plugin.info(player, langUtils.format("Note.Description.Current",
+							"note", normalizedNote.isEmpty() ? "-" : normalizedNote));
 				} else if (args.length == 3 && args[2].equalsIgnoreCase("reset")) {
 					this.plugin.clearFriendCustomPrefix(player.getUniqueId(), target);
-					this.plugin.info(player, langUtils.getString("Note.Cleared"));
+					this.plugin.info(player, langUtils.getString("Note.Description.Cleared"));
 				} else {
 					String note = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
-					if (note.length() > 255) {
-						this.plugin.info(player, langUtils.getString("Note.TooLong"));
+					int maxLength = this.plugin.getConfigManager().getConfig().getInt("Plugin.Friend.Max-Note-Length", 255);
+					if (note.length() > maxLength) {
+						this.plugin.info(player, langUtils.format("Note.Description.TooLong", "maxLength", maxLength));
 						return;
 					}
-					this.plugin.setFriendCustomPrefix(player.getUniqueId(), target, note + " ");
-					this.plugin.info(player, langUtils.getString("Note.Updated"));
+					this.plugin.setFriendCustomPrefix(player.getUniqueId(), target, note);
+					this.plugin.info(player, langUtils.getString("Note.Description.Updated"));
 				}
 				return;
 			}
@@ -334,7 +337,7 @@ public class FriendCommand extends Command implements TabExecutor {
 						prefix = ChatColor.stripColor(prefix).trim();
 
 						if (item.getNoColorPrefix().equals(prefix)) {
-							String displayName = colorOnly ? targetFriends.getPrefixColor() + targetFriends.getName() : targetFriends.getDisplayNameFor(player.getUniqueId());
+							String displayName = colorOnly ? targetFriends.getPrefixColor() + targetFriends.getName() : targetFriends.getDisplayName();
 
 							added.add(uuid);
 
@@ -358,7 +361,7 @@ public class FriendCommand extends Command implements TabExecutor {
 					String prefix = ChatColor.translateAlternateColorCodes('&', targetFriends.getPrefix());
 					prefix = ChatColor.stripColor(prefix);
 
-					String displayName = colorOnly ? targetFriends.getPrefixColor() + targetFriends.getName() : targetFriends.getDisplayNameFor(player.getUniqueId());
+					String displayName = colorOnly ? targetFriends.getPrefixColor() + targetFriends.getName() : targetFriends.getDisplayName();
 
 					added.add(uuid);
 
@@ -575,6 +578,11 @@ public class FriendCommand extends Command implements TabExecutor {
 						for (int i = 2; i < args.length; i++) {
 							prefix += args[i] + " ";
 						}
+						int maxLength = this.plugin.getConfigManager().getConfig().getInt("Plugin.Friend.Max-Prefix-Length", 255);
+						if (prefix.trim().length() > maxLength) {
+							this.plugin.info(player, langUtils.format("Prefix.TooLong", "maxLength", maxLength));
+							return;
+						}
 
 						if (prefix.trim().length() <= 3) {
 							prefix = prefix.trim();
@@ -627,7 +635,7 @@ public class FriendCommand extends Command implements TabExecutor {
 		this.plugin.info(player, langUtils.getString("Help.Deny"));
 		this.plugin.info(player, langUtils.getString("Help.List"));
 		this.plugin.info(player, langUtils.getString("Help.Requests"));
-		this.plugin.info(player, langUtils.getString("Help.Note"));
+		this.plugin.info(player, langUtils.getString("Help.Note-Description"));
 		this.plugin.info(player, langUtils.getString("Help.Ignore"));
 		this.plugin.info(player, langUtils.getString("Help.Toggle"));
 		if (player.hasPermission(Permissions.ADMIN)) {
@@ -658,8 +666,13 @@ public class FriendCommand extends Command implements TabExecutor {
 		}
 		String lastOnline = visible ? lang.getString("List.Now") : this.formatTime(this.plugin.getString("Player." + targetId + ".LastOnline"), lang);
 		String lastOnlineAgo = visible ? lang.getString("List.Now") : this.timeAgo(this.plugin.getString("Player." + targetId + ".LastOnline"), lang);
-		String hover = lang.format(visible ? "List.Hover-Online" : "List.Hover-Offline",
+		String note = this.normalizeNote(this.plugin.getFriendCustomPrefix(viewer.getUniqueId(), targetId));
+		String hoverKey;
+		if (visible) hoverKey = note.isEmpty() ? "List.Hover-Online" : "List.Hover-Online-With-Note";
+		else hoverKey = note.isEmpty() ? "List.Hover-Offline" : "List.Hover-Offline-With-Note";
+		String hover = lang.format(hoverKey,
 				"targetDisplayName", displayName,
+				"note", note,
 				"targetUUID", targetId.toString(),
 				"status", status,
 				"server", server,
@@ -667,6 +680,10 @@ public class FriendCommand extends Command implements TabExecutor {
 				"lastOnlineAgo", lastOnlineAgo,
 				"lastOnline", lastOnline);
 		return MessageBuilder.get(lang.format(lineKey, "targetDisplayName", displayName, "server", server), null, null, hover, false);
+	}
+
+	private String normalizeNote(String note) {
+		return note == null ? "" : note.trim();
 	}
 
 	private String formatTime(String raw, LanguageUtils lang) {

@@ -63,6 +63,11 @@ public class FriendConsoleCommand extends Command {
 						for (int i = 2; i < args.length; i++) {
 							prefix = prefix + args[i] + " ";
 						}
+						int maxLength = this.plugin.getConfigManager().getConfig().getInt("Plugin.Friend.Max-Prefix-Length", 255);
+						if (prefix.trim().length() > maxLength) {
+							this.plugin.info(langUtils.format("Prefix.TooLong", "maxLength", maxLength));
+							return;
+						}
 
 						if (prefix.trim().length() <= 2) {
 							prefix = prefix.trim();

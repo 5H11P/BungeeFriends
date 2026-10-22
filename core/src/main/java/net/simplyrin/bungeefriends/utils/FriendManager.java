@@ -99,9 +99,9 @@ public class FriendManager {
 			return this.getPrefix() + this.getName();
 		}
 
+		// Keep the viewer-aware method for API compatibility; private notes belong in friend-list hovers.
 		public String getDisplayNameFor(UUID viewer) {
-			String personal = plugin.getFriendCustomPrefix(viewer, this.uuid);
-			return (personal == null || personal.isEmpty() ? this.getPrefix() : personal) + this.getName();
+			return this.getDisplayName();
 		}
 
 		public String getPrefixColor() {

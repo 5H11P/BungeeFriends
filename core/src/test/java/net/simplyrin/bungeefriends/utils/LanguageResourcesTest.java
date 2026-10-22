@@ -35,7 +35,9 @@ public class LanguageResourcesTest {
 						"Status-Command.Usage", "Status-Command.Disabled", "Status.ChatBar.Busy",
 						"Status.ActionBar.AppearOffline", "Warp.Blocked", "Warp.No-Server",
 						"Warp.Confirm",
-						"Requests.Entry", "Note.Usage", "Party-Setting.Usage", "Party-Private.No-Permission")) {
+						"Requests.Entry", "Note.Usage", "Note.Description.Usage", "Note.Description.TooLong",
+						"Prefix.TooLong", "Help.Note-Description",
+						"Party-Setting.Usage", "Party-Private.No-Permission")) {
 					assertFalse(language + ": " + key, config.getString(key).isEmpty());
 				}
 				Set<String> keys = new HashSet<>();
@@ -66,7 +68,8 @@ public class LanguageResourcesTest {
 	public void newMessagesAndPlaceholdersMatchAcrossLanguages() {
 		Configuration english = Config.getConfig(getClass().getResourceAsStream("/languages/English.yml"));
 		Configuration chinese = Config.getConfig(getClass().getResourceAsStream("/languages/Chinese.yml"));
-		for (String key : Arrays.asList("List.Hover-Online", "List.Hover-Offline", "List.Now", "List.None",
+		for (String key : Arrays.asList("List.Hover-Online", "List.Hover-Offline", "List.Hover-Online-With-Note",
+				"List.Hover-Offline-With-Note", "List.Now", "List.None",
 				"List.Party-Header", "List.Party-Leader", "List.Party-Members", "List.Page",
 				"Pagination.Previous", "Pagination.Next", "Party-Mute.Restricted-Chat-Info",
 				"Party-Mute.Send-Denied", "Chat.No-Permission", "Chat.Channels.Admin",
@@ -78,6 +81,8 @@ public class LanguageResourcesTest {
 			assertFalse("Chinese: " + key, chinese.getString(key).isEmpty());
 			assertEquals("Placeholders differ for " + key, placeholders(english.getString(key)), placeholders(chinese.getString(key)));
 		}
+		assertTrue(english.getString("List.Hover-Online-With-Note").contains("%note%"));
+		assertTrue(chinese.getString("List.Hover-Online-With-Note").contains("%note%"));
 	}
 
 	@Test

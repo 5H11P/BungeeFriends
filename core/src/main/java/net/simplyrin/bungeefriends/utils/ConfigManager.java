@@ -130,6 +130,8 @@ public class ConfigManager {
 		defaultValue(config, "Plugin.Enable-Status", true);
 		defaultValue(config, "Plugin.Enable-Legacy-Prefix-YML", false);
 		defaultValue(config, "Plugin.Enable-Friend-Removal-Notifications", true);
+		defaultValue(config, "Plugin.Friend.Max-Note-Length", 255);
+		defaultValue(config, "Plugin.Friend.Max-Prefix-Length", 255);
 		defaultValue(config, "Plugin.Party-Warp.Enable-Confirmation", false);
 		defaultValue(config, "Plugin.Party-Warp.Enable-Server-Blocklist", true);
 		defaultValue(config, "Plugin.Party.Max-Size", 10);
@@ -147,6 +149,8 @@ public class ConfigManager {
 		validInt(config, "Plugin.Party.Disband-Delay-Ticks", 6000, 0, invalid);
 		validInt(config, "Plugin.Party.Offline-Member-Kick-Delay-Ticks", 6000, 0, invalid);
 		validInt(config, "Plugin.Party.Max-Size", 10, 2, invalid);
+		validInt(config, "Plugin.Friend.Max-Note-Length", 255, 1, 255, invalid);
+		validInt(config, "Plugin.Friend.Max-Prefix-Length", 255, 1, 255, invalid);
 		validInt(config, "Plugin.LuckPerms.Offline-Prefix-Cache-Ticks", 36000, 0, invalid);
 		validInt(config, "Plugin.LuckPerms.Offline-Prefix-Load-Timeout-Ticks", 40, 1, invalid);
 		validInt(config, "Plugin.Party-Warp.Confirm-Timeout-Ticks", 200, 1, 6000, invalid);

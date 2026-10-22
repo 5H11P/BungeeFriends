@@ -33,6 +33,8 @@ public class ConfigManagerFeatureTest {
 			assertTrue(generated.getBoolean("Plugin.Enable-Aliases./pl"));
 			assertTrue(generated.getBoolean("Plugin.Enable-Aliases./ac"));
 			assertEquals(6000, generated.getInt("Plugin.Party.Disband-Delay-Ticks"));
+			assertEquals(255, generated.getInt("Plugin.Friend.Max-Note-Length"));
+			assertEquals(255, generated.getInt("Plugin.Friend.Max-Prefix-Length"));
 			assertEquals(36000, generated.getInt("Plugin.LuckPerms.Offline-Prefix-Cache-Ticks"));
 			assertEquals(40, generated.getInt("Plugin.LuckPerms.Offline-Prefix-Load-Timeout-Ticks"));
 			Configuration hyphen = ConfigManager.loadOrCreateConfig(folder.resolve("hyphen.yml").toFile(), "hyphen.yml");
@@ -140,12 +142,16 @@ public class ConfigManagerFeatureTest {
 		config.set("Plugin.Party.Offline-Member-Kick-Delay-Ticks", -1);
 		config.set("Plugin.LuckPerms.Offline-Prefix-Cache-Ticks", 4);
 		config.set("Plugin.LuckPerms.Offline-Prefix-Load-Timeout-Ticks", 0);
+		config.set("Plugin.Friend.Max-Note-Length", 300);
+		config.set("Plugin.Friend.Max-Prefix-Length", "bad");
 		List<String> invalid = ConfigManager.applyFeatureDefaults(config);
-		assertEquals(3, invalid.size());
+		assertEquals(5, invalid.size());
 		assertEquals(6000, config.getInt("Plugin.Party.Disband-Delay-Ticks"));
 		assertEquals(6000, config.getInt("Plugin.Party.Offline-Member-Kick-Delay-Ticks"));
 		assertEquals(4, config.getInt("Plugin.LuckPerms.Offline-Prefix-Cache-Ticks"));
 		assertEquals(40, config.getInt("Plugin.LuckPerms.Offline-Prefix-Load-Timeout-Ticks"));
+		assertEquals(255, config.getInt("Plugin.Friend.Max-Note-Length"));
+		assertEquals(255, config.getInt("Plugin.Friend.Max-Prefix-Length"));
 	}
 
 	@Test
