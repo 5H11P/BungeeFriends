@@ -14,7 +14,7 @@
 
 ## 接口约定
 
-原有 `BungeeFriends.getAPI().getFriendUtils(UUID)` 和 `getPartyUtils(UUID)` 继续返回原工具对象；它们对未知 UUID 可创建数据，对未启用组队功能的调用不保证可用。存储读写是同步操作，SQL 失败以 `IllegalStateException` 传播；调用者不能把失败当作空列表。公开工具对象可能访问在线玩家和代理状态，宿主插件应在 Bungee 允许访问玩家状态的上下文调用，不应从 Bukkit 主线程跨端直接调用。跨端公开 API 属 P5 范围。
+3.0.0 中旧的 `BungeeFriends.getAPI()` 可变工具入口已移除。跨端公开接口见 [API 3 使用说明](API.md)；底层存储读写仍由核心管理器同步执行，因此 API 使用有界异步工作线程，调用方不能等待 Future 阻塞代理或 Bukkit 主线程。
 
 `PartyWarpEvent` 是一次已排定传送的代理端事件，包含独立 warp ID、队长、目标服、触发来源和不可修改的成员快照。事件经有界异步池投递；监听器不得假设调用发生在 Bukkit 主线程，也不得把事件视为每位成员已成功切服的确认。队伍在事件投递前被取消时不会投递；成员执行时仍会重新检查在线和队伍关系。
 

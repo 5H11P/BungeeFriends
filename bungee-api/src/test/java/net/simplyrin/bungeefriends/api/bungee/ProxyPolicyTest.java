@@ -38,4 +38,15 @@ public class ProxyPolicyTest {
 		assertFalse(ProxyPolicy.canReadParty(actor, target, owner, UUID.randomUUID(), false));
 		assertTrue(ProxyPolicy.canReadParty(actor, target, owner, UUID.randomUUID(), true));
 	}
+
+	@Test
+	public void partyMutationsRequireLeaderAndProtectSelfKick() {
+		UUID leader = UUID.randomUUID();
+		UUID member = UUID.randomUUID();
+		assertTrue(ProxyPolicy.canModifyParty(leader, member, leader, false));
+		assertFalse(ProxyPolicy.canModifyParty(leader, leader, leader, false));
+		assertTrue(ProxyPolicy.canModifyParty(leader, leader, leader, true));
+		assertFalse(ProxyPolicy.canModifyParty(member, leader, leader, true));
+		assertFalse(ProxyPolicy.canModifyParty(leader, member, UUID.randomUUID(), true));
+	}
 }

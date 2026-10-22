@@ -16,7 +16,7 @@
 
 ## 从修改版迁移
 
-- 停止代理及后端并备份插件配置、YAML 数据与 MySQL 数据库。修改版使用 `net._5h11p.bungeefriends`，本 Fork 保留 `net.simplyrin.bungeefriends`；下游插件必须更新 import 并重新编译。Java 入口仍为 `Main`，原 `BungeeFriends.getAPI()` 不变。
+- 停止代理及后端并备份插件配置、YAML 数据与 MySQL 数据库。双端 API 3.0.0 是破坏兼容升级，所有代理/后端 API JAR 和下游插件必须成套更新并重新编译；旧 `BungeeFriends.getAPI()` 入口已移除。
 - 先保留原数据副本，在隔离环境验证新核心的数据映射。YAML 与 MySQL 模式不会自动互相导入；不要在生产数据目录直接切换存储模式。数据库结构、状态及旧数据边界见 [P3 记录](P3_STORAGE.md) 与 [人工验证清单](P3_P4_MANUAL_VERIFICATION.md)。
 - 修改版 `party-cmd-sender` 的 `commands` 规则可按标签或 `子命令 $args` 形式迁入，但本 Fork 默认清空，需逐条审查。旧版同服直接调度执行、跨服另走请求的路径已统一为代理投递；不迁入旧的自定义消息请求或 `List.of` 调用。
 - API 协议固定为 v1；代理与所有后端一起升级。旧修改版协议/JAR 不与本 Fork 的 v1 混用。插件数据目录名称和 `plugin.yml` 依赖名称以本仓库构建产物为准；分别复核旧配置键和授权节点，切勿仅凭旧文件存在就视为已生效。

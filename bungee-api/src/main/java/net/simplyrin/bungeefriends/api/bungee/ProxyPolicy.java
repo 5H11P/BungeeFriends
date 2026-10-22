@@ -20,4 +20,9 @@ final class ProxyPolicy {
 		return permission && isLeader && targetOnline && commandAllowed && target != null
 				&& !leader.equals(target) && leader.equals(targetOwner);
 	}
+
+	static boolean canModifyParty(UUID actor, UUID target, UUID owner, boolean leaderAction) {
+		return actor != null && target != null && owner != null && actor.equals(owner)
+				&& (leaderAction || !actor.equals(target));
+	}
 }

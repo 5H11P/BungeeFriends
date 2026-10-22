@@ -17,14 +17,13 @@ python scripts/verify_p2_artifacts.py
 
 | 模块 | 产物 | 部署位置 / 当前状态 |
 | --- | --- | --- |
-| `core` | `core/target/BungeeFriends-2.4.jar` | BungeeCord；原版核心源码可编译，未做真实服务器回归。另保留原工程惯用的 `BungeeFriends-2.4-jar-with-dependencies.jar`。不要同时部署两份。 |
-| `bungee-api` | `bungee-api/target/BungeeFriends-BungeeAPI-2.4.jar` | BungeeCord，依赖核心；P5 前仅入口骨架。 |
-| `spigot-api` | `spigot-api/target/BungeeFriend-SpigotAPI-2.4.jar` | Spigot 1.16 系列；P5 前仅入口骨架。 |
-| `examples/spigot-api-example` | `examples/spigot-api-example/target/bungeefriends-spigot-api-example-2.4.jar` | Spigot，依赖 Spigot API；P6 前仅入口骨架。 |
-| `examples/party-cmd-example` | `examples/party-cmd-example/target/bungeefriends-party-cmd-example-2.4.jar` | Spigot，依赖 Spigot API；P6 前仅入口骨架。 |
-| `examples/party-cmd-sender` | `examples/party-cmd-sender/target/bungeefriends-party-cmd-sender-example-2.4.jar` | Spigot，依赖 Spigot API；P6 前仅入口骨架。 |
+| `core` | `core/target/BungeeFriends-3.0.0.jar` | BungeeCord 核心插件。另有 `BungeeFriends-3.0.0-jar-with-dependencies.jar`；不要同时部署两份。 |
+| `bungee-api` | `bungee-api/target/BungeeFriends-BungeeAPI-3.0.0.jar` | BungeeCord API 插件，依赖核心，内置协议和 API 契约类。 |
+| `spigot-api` | `spigot-api/target/BungeeFriend-SpigotAPI-3.0.0.jar` | Spigot 1.16 系列 API 插件，内置协议和 API 契约类。 |
+| `api-contract` | `api-contract/target/BungeeFriends-API-Contract-3.0.0.jar` | 双端接口与 DTO，构建依赖，不单独部署。 |
+三个早期示例模块已从当前仓库移除；旧示例部署记录见 `P6_EXAMPLES.md`，不属于当前 Maven reactor。
 
-Maven 依赖方向：`bungee-api` → `core`；三个示例 → `spigot-api`。Spigot API 通过插件消息与 Bungee 侧通信，Maven 层不依赖核心。核心/服务端 API 模块间的编译依赖均使用 `provided`，许可证由 Fork 根文件原样复制进 JAR。
+Maven 依赖方向：`bungee-api` → `core`、`protocol`、`api-contract`；`spigot-api` → `protocol`、`api-contract`；三个示例 → `spigot-api`。Spigot API 通过插件消息与 Bungee 侧通信。协议和契约类 shade 进双端 API JAR。
 
 ## 与 P1 构建阻塞的关系
 

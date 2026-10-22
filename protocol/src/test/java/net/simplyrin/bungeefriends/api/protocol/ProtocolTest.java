@@ -29,7 +29,7 @@ public class ProtocolTest {
 		assertEquals("areFriends", decoded.operation);
 		assertEquals(Collections.singletonList("Alice"), decoded.values);
 		assertTrue(Protocol.isFresh(decoded, System.currentTimeMillis()));
-		bytes[0] = 2;
+		bytes[0] = 1;
 		try { Protocol.decode(bytes); fail("Expected version rejection"); }
 		catch (IllegalArgumentException expected) { }
 	}

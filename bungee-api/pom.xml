@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent><groupId>net.simplyrin.bungeefriends</groupId><artifactId>BungeeFriends-parent</artifactId><version>2.4</version></parent>
+  <parent><groupId>net.simplyrin.bungeefriends</groupId><artifactId>BungeeFriends-parent</artifactId><version>3.0.0</version></parent>
   <groupId>net.simplyrin.bungeefriends.api</groupId>
   <artifactId>BungeeFriends-BungeeAPI</artifactId>
   <packaging>jar</packaging>
@@ -9,13 +9,14 @@
     <dependency><groupId>junit</groupId><artifactId>junit</artifactId><version>4.13.2</version><scope>test</scope></dependency>
     <dependency><groupId>net.simplyrin.bungeefriends</groupId><artifactId>BungeeFriends</artifactId><version>${project.version}</version><scope>provided</scope></dependency>
     <dependency><groupId>net.simplyrin.bungeefriends.api</groupId><artifactId>BungeeFriends-Protocol</artifactId><version>${project.version}</version><optional>true</optional></dependency>
+    <dependency><groupId>net.simplyrin.bungeefriends.api</groupId><artifactId>BungeeFriends-API-Contract</artifactId><version>${project.version}</version><optional>true</optional></dependency>
     <dependency><groupId>net.md-5</groupId><artifactId>bungeecord-api</artifactId><version>1.15-SNAPSHOT</version><scope>provided</scope></dependency>
   </dependencies>
   <build><plugins><plugin>
     <groupId>org.apache.maven.plugins</groupId><artifactId>maven-shade-plugin</artifactId><version>3.1.0</version>
     <configuration>
       <createDependencyReducedPom>false</createDependencyReducedPom>
-      <artifactSet><includes><include>net.simplyrin.bungeefriends.api:BungeeFriends-Protocol</include></includes></artifactSet>
+      <artifactSet><includes><include>net.simplyrin.bungeefriends.api:BungeeFriends-Protocol</include><include>net.simplyrin.bungeefriends.api:BungeeFriends-API-Contract</include></includes></artifactSet>
     </configuration>
     <executions><execution><phase>package</phase><goals><goal>shade</goal></goals></execution></executions>
   </plugin></plugins><resources>

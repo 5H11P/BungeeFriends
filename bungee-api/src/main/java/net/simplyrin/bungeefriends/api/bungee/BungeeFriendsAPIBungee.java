@@ -22,9 +22,9 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.md_5.bungee.event.EventHandler;
 import net.simplyrin.bungeefriends.Main;
-import net.simplyrin.bungeefriends.api.BungeeFriendsAPI;
-import net.simplyrin.bungeefriends.api.BungeeFriendsAPI.FriendInfo;
-import net.simplyrin.bungeefriends.api.BungeeFriendsAPI.PartyMemberInfo;
+import net.simplyrin.bungeefriends.api.contract.Friend;
+import net.simplyrin.bungeefriends.api.contract.PartyMember;
+import net.simplyrin.bungeefriends.api.contract.Page;
 import net.simplyrin.bungeefriends.api.event.PartyWarpEvent;
 import net.simplyrin.bungeefriends.api.protocol.Protocol;
 import net.simplyrin.bungeefriends.api.protocol.Protocol.Message;
@@ -35,7 +35,7 @@ public final class BungeeFriendsAPIBungee extends Plugin implements Listener {
 	private final ReplayCache replies = new ReplayCache(2048, 60000);
 	private volatile boolean closed;
 	private Main core;
-	private BungeeFriendsAPI api;
+	private ProxyApiService api;
 	private Configuration config;
 
 	@Override
@@ -43,7 +43,8 @@ public final class BungeeFriendsAPIBungee extends Plugin implements Listener {
 		Plugin installed = getProxy().getPluginManager().getPlugin("BungeeFriends");
 		if (!(installed instanceof Main)) throw new IllegalStateException("BungeeFriends core is required");
 		core = (Main) installed;
-		api = BungeeFriendsAPI.getInstance();
+		api = new ProxyApiService(core);
+		BungeeFriendsAPI.enable(api);
 		config = loadConfig();
 		closed = false;
 		getProxy().registerChannel(Protocol.CHANNEL);
@@ -54,6 +55,7 @@ public final class BungeeFriendsAPIBungee extends Plugin implements Listener {
 	@Override
 	public void onDisable() {
 		closed = true;
+		BungeeFriendsAPI.disable();
 		replies.clear();
 		getProxy().getPluginManager().unregisterListeners(this);
 		getProxy().unregisterChannel(Protocol.CHANNEL);
@@ -98,12 +100,49 @@ public final class BungeeFriendsAPIBungee extends Plugin implements Listener {
 		if (state == ReplayCache.State.REPLAY) { send(source, replies.response(request.id)); return; }
 		if (state == ReplayCache.State.PENDING) return;
 		try {
+			UUID actor = request.actor;
+			String sourceName = source.getInfo().getName();
+			String serverName = sourceName;
+			boolean commandPermission = carrier.hasPermission("friends.api.execute-command");
 			ThreadPool.runAsync(() -> {
-				Message response = process(carrier, source, request);
+				Message response = process(actor, commandPermission, request);
 				try { Protocol.encode(response); }
 				catch (IllegalArgumentException e) { response = reply(request, Protocol.ERROR, "Response exceeds protocol limits"); }
-				replies.complete(request.id, response);
-				if (!closed) send(source, response);
+				Message finalResponse = response;
+				getProxy().getScheduler().runAsync(this, () -> {
+					if (closed) return;
+					ProxiedPlayer current = getProxy().getPlayer(actor);
+					if (current == null || current.getServer() == null
+							|| !serverName.equalsIgnoreCase(current.getServer().getInfo().getName())) {
+						replies.complete(request.id, reply(request, Protocol.DENIED, "Request player changed servers"));
+						return;
+					}
+					Server currentServer = current.getServer();
+					Message outgoing = finalResponse;
+					if ("executeCommand".equals(request.operation) && finalResponse.status == Protocol.OK) {
+						UUID targetId;
+						try { targetId = UUID.fromString(request.values.get(0)); }
+						catch (Exception e) { outgoing = reply(request, Protocol.INVALID, "Invalid command target"); targetId = null; }
+						if (targetId == null) {
+							replies.complete(request.id, outgoing);
+							send(currentServer, outgoing);
+							return;
+						}
+						ProxiedPlayer target = getProxy().getPlayer(targetId);
+						if (target == null || target.getServer() == null || !current.hasPermission("friends.api.execute-command")
+								|| !api.leader(actor) || !actor.equals(api.owner(targetId))
+								|| !Protocol.allowedCommand(request.values.get(1), config.getStringList("Allowed-Commands"))) {
+							outgoing = reply(request, Protocol.DENIED, "Command delivery no longer authorized");
+						} else {
+							Message delivery = new Message(Protocol.COMMAND, request.id, actor, "dispatchCommand", Protocol.OK,
+									Arrays.asList(targetId.toString(), request.values.get(1)));
+							if (!target.getServer().getInfo().sendData(Protocol.CHANNEL, Protocol.encode(delivery), false))
+								outgoing = reply(request, Protocol.ERROR, "Target server could not accept delivery");
+						}
+					}
+					replies.complete(request.id, outgoing);
+					send(currentServer, outgoing);
+				});
 			});
 		} catch (RejectedExecutionException e) {
 			Message response = reply(request, Protocol.ERROR, "Proxy is shutting down or busy");
@@ -112,74 +151,69 @@ public final class BungeeFriendsAPIBungee extends Plugin implements Listener {
 		}
 	}
 
-	private Message process(ProxiedPlayer carrier, Server source, Message request) {
+	private Message process(UUID actor, boolean commandPermission, Message request) {
 		try {
-			if (closed || getProxy().getPlayer(request.actor) != carrier || carrier.getServer() == null
-					|| !ProxyPolicy.validSource(request.actor, carrier.getUniqueId(), source.getInfo().getName(),
-						carrier.getServer().getInfo().getName()))
-				return reply(request, Protocol.DENIED, "Player or source server changed");
+			if (closed) return reply(request, Protocol.DENIED, "Proxy API is disabled");
 			switch (request.operation) {
-			case "getFriendList": requireArgs(request, 0); return success(request, api.getFriendList(request.actor));
-			case "getFriendDetailList": requireArgs(request, 0); return success(request, friendDetails(api.getFriendDetailList(request.actor)));
-			case "getFriendDetailListByName": {
-				requireArgs(request, 1);
-				UUID target = findPlayer(request.values.get(0));
-				if (target == null) return reply(request, Protocol.NOT_FOUND, "Unknown player");
-				if (!target.equals(request.actor) && !carrier.hasPermission("friends.api.read-others"))
-					return reply(request, Protocol.DENIED, "Cannot read another player's friends");
-				return success(request, friendDetails(api.getFriendDetailList(target)));
+			case "friends": {
+				PageSpec page = page(request, 1);
+				return success(request, boundedPage(request, friendPage(api.friends(actor, page.offset, page.limit)), 5));
 			}
-			case "getPartyMembers": requireArgs(request, 0); return success(request, api.getPartyMembers(request.actor));
-			case "getPartyMemberDetailList": requireArgs(request, 0); return success(request, partyDetails(api.getPartyMemberDetailList(request.actor)));
-			case "getPartyMemberDetailListByName":
-			case "getPartyMemberDetailListByUUID": {
-				requireArgs(request, 1);
-				UUID target = "getPartyMemberDetailListByUUID".equals(request.operation)
-						? UUID.fromString(request.values.get(0)) : findPlayer(request.values.get(0));
-				if (target == null) return reply(request, Protocol.NOT_FOUND, "Unknown player");
-				UUID owner = api.getOwner(target);
-				if (!ProxyPolicy.canReadParty(request.actor, target, api.getOwner(request.actor), owner,
-						carrier.hasPermission("friends.api.read-others")))
-					return reply(request, Protocol.DENIED, "Cannot read another party");
-				return success(request, partyDetails(api.getPartyMemberDetailList(target)));
+			case "friendIds": {
+				PageSpec page = page(request, 1);
+				return success(request, boundedPage(request, uuidPage(api.friendIds(actor), page), 1));
 			}
-			case "areFriends": {
-				requireArgs(request, 1);
-				UUID target = findPlayer(request.values.get(0));
-				return target == null ? reply(request, Protocol.NOT_FOUND, "Unknown player")
-						: success(request, Boolean.toString(api.areFriends(request.actor, target)));
+			case "areFriends": requireArgs(request, 1); return success(request, Boolean.toString(api.areFriends(actor, UUID.fromString(request.values.get(0)))));
+			case "isRequestEnabled": requireArgs(request, 0); return success(request, Boolean.toString(api.friendRequestsEnabled(actor)));
+			case "isPartyInviteEnabled": requireArgs(request, 0); return success(request, Boolean.toString(api.partyInvitesEnabled(actor)));
+			case "status": requireArgs(request, 0); return success(request, api.status(actor).name());
+			case "ignoredPlayers": {
+				PageSpec page = page(request, 1);
+				return success(request, boundedPage(request, uuidPage(api.ignored(actor), page), 1));
 			}
-			case "isInParty": requireArgs(request, 0); return success(request, Boolean.toString(api.isInParty(request.actor)));
-			case "isPartyLeader": requireArgs(request, 0); return success(request, Boolean.toString(api.isPartyLeader(request.actor)));
-			case "isPartyPrivate": requireArgs(request, 0); return success(request, Boolean.toString(api.isPartyPrivate(request.actor)));
-			case "getOwner": {
-				requireArgs(request, 0);
-				UUID owner = api.getOwner(request.actor);
-				return success(request, owner == null ? "" : owner.toString());
+			case "partyMembers": {
+				PageSpec page = page(request, 1);
+				return success(request, boundedPage(request, partyPage(api.partyMembers(actor, page.offset, page.limit)), 5));
 			}
-			case "addToParty": {
+			case "isPartyMember": requireArgs(request, 0); return success(request, Boolean.toString(api.inParty(actor)));
+			case "isPartyLeader": requireArgs(request, 0); return success(request, Boolean.toString(api.leader(actor)));
+			case "isPartyPrivate": requireArgs(request, 0); return success(request, Boolean.toString(api.isPrivate(actor)));
+			case "partyOwner": { requireArgs(request, 0); UUID owner = api.owner(actor); return success(request, owner == null ? "" : owner.toString()); }
+			case "requestFriend": requireArgs(request, 1); api.requestFriend(actor, UUID.fromString(request.values.get(0))); return successEmpty(request);
+			case "acceptFriend": {
+				requireArgs(request, 1); api.acceptFriend(actor, UUID.fromString(request.values.get(0))); return successEmpty(request);
+			}
+			case "removeFriend": requireArgs(request, 1); api.removeFriend(actor, UUID.fromString(request.values.get(0))); return successEmpty(request);
+			case "ignore": requireArgs(request, 1); api.ignore(actor, UUID.fromString(request.values.get(0))); return successEmpty(request);
+			case "unignore": requireArgs(request, 1); api.unignore(actor, UUID.fromString(request.values.get(0))); return successEmpty(request);
+			case "setRequestEnabled": requireArgs(request, 1); api.setFriendRequests(actor, parseBoolean(request.values.get(0))); return successEmpty(request);
+			case "setPartyInviteEnabled": requireArgs(request, 1); api.setPartyInvites(actor, parseBoolean(request.values.get(0))); return successEmpty(request);
+			case "setStatus": {
 				requireArgs(request, 1);
-				if (!carrier.hasPermission("friends.api.add-to-party") || !api.isPartyLeader(request.actor))
-					return reply(request, Protocol.DENIED, "Party leader permission required");
-				UUID target = findPlayer(request.values.get(0));
-				if (target == null || getProxy().getPlayer(target) == null) return reply(request, Protocol.NOT_FOUND, "Target is offline");
-				api.getPartyUtils(request.actor).add(target);
-				return success(request, "true");
+				try { api.setStatus(actor, net.simplyrin.bungeefriends.api.contract.PlayerStatus.valueOf(request.values.get(0))); }
+				catch (IllegalArgumentException e) { throw new IllegalArgumentException("Unknown status"); }
+				return successEmpty(request);
+			}
+			case "inviteParty": requireArgs(request, 1); api.invite(actor, UUID.fromString(request.values.get(0))); return successEmpty(request);
+			case "acceptPartyInvite": requireArgs(request, 1); api.acceptInvite(actor, UUID.fromString(request.values.get(0))); return successEmpty(request);
+			case "revokePartyInvite": requireArgs(request, 1); api.revokeInvite(actor, UUID.fromString(request.values.get(0))); return successEmpty(request);
+			case "leaveParty": requireArgs(request, 0); api.leave(actor); return successEmpty(request);
+			case "kickPartyMember": requireArgs(request, 1); api.kick(actor, UUID.fromString(request.values.get(0))); return successEmpty(request);
+			case "transferPartyLeadership": requireArgs(request, 1); api.transfer(actor, UUID.fromString(request.values.get(0))); return successEmpty(request);
+			case "disbandParty": requireArgs(request, 0); api.disband(actor); return successEmpty(request);
+			case "setPartyPrivate": requireArgs(request, 1); api.setPrivate(actor, parseBoolean(request.values.get(0))); return successEmpty(request);
+			case "partyChat": {
+				requireArgs(request, 1);
+				api.chat(actor, request.values.get(0));
+				return successEmpty(request);
 			}
 			case "executeCommand": {
 				requireArgs(request, 2);
-				UUID target = findPlayer(request.values.get(0));
-				ProxiedPlayer member = target == null ? null : getProxy().getPlayer(target);
-				if (member == null || member.getServer() == null || !ProxyPolicy.canExecute(request.actor, target,
-						api.getOwner(target), carrier.hasPermission("friends.api.execute-command"),
-						api.isPartyLeader(request.actor), true,
-						Protocol.allowedCommand(request.values.get(1), config.getStringList("Allowed-Commands"))))
+				UUID target = UUID.fromString(request.values.get(0));
+				if (!commandPermission || !api.leader(actor)
+						|| !actor.equals(api.owner(target))
+						|| !Protocol.allowedCommand(request.values.get(1), config.getStringList("Allowed-Commands")))
 					return reply(request, Protocol.DENIED, "Target must be an online member of the leader's party");
-				String command = request.values.get(1);
-				Message delivery = new Message(Protocol.COMMAND, request.id, request.actor, "dispatchCommand", Protocol.OK,
-						Arrays.asList(target.toString(), command));
-					if (!member.getServer().getInfo().sendData(Protocol.CHANNEL, Protocol.encode(delivery), false))
-						return reply(request, Protocol.ERROR, "Target server could not accept delivery");
 				return success(request, "queued");
 			}
 			default: return reply(request, Protocol.UNSUPPORTED, "Unknown operation");
@@ -190,11 +224,6 @@ public final class BungeeFriendsAPIBungee extends Plugin implements Listener {
 			getLogger().warning("API request failed (" + request.operation + "): " + e.getMessage());
 			return reply(request, Protocol.ERROR, "Proxy operation failed");
 		}
-	}
-
-	private UUID findPlayer(String nameOrUuid) {
-		try { return UUID.fromString(nameOrUuid); }
-		catch (IllegalArgumentException ignored) { return core.getPlayerManager().getPlayerUniqueId(nameOrUuid); }
 	}
 
 	private static String fingerprint(String serverName, byte[] bytes) {
@@ -213,21 +242,66 @@ public final class BungeeFriendsAPIBungee extends Plugin implements Listener {
 		if (request.values.size() != expected) throw new IllegalArgumentException("Expected " + expected + " arguments");
 	}
 
-	private static List<String> friendDetails(List<FriendInfo> details) {
+	private static final class PageSpec {
+		final int offset, limit;
+		PageSpec(int offset, int limit) { this.offset = offset; this.limit = limit; }
+	}
+
+	private static PageSpec page(Message request, int expected) {
+		requireArgs(request, expected);
+		String[] parts = request.values.get(0).split(",", -1);
+		if (parts.length != 2) throw new IllegalArgumentException("Page requires offset and limit");
+		try {
+			int offset = Integer.parseInt(parts[0]), limit = Integer.parseInt(parts[1]);
+			if (offset < 0 || limit < 1 || limit > 100) throw new IllegalArgumentException("Page limit must be between 1 and 100");
+			return new PageSpec(offset, limit);
+		} catch (NumberFormatException e) { throw new IllegalArgumentException("Invalid page request", e); }
+	}
+
+	private static List<String> uuidPage(List<String> source, PageSpec page) {
+		int start = Math.min(page.offset, source.size()), end = Math.min(source.size(), start + page.limit);
+		List<String> result = new ArrayList<>();
+		Collections.addAll(result, Integer.toString(page.offset), Integer.toString(page.limit), Integer.toString(source.size()));
+		result.addAll(source.subList(start, end));
+		return result;
+	}
+
+	private static boolean parseBoolean(String value) {
+		if (!"true".equals(value) && !"false".equals(value)) throw new IllegalArgumentException("Expected true or false");
+		return Boolean.parseBoolean(value);
+	}
+
+	private static List<String> friendPage(Page<Friend> page) {
 		List<String> values = new ArrayList<>();
-		for (FriendInfo item : details) Collections.addAll(values, item.getUuid().toString(), item.getName(),
+		Collections.addAll(values, Integer.toString(page.getOffset()), Integer.toString(page.getLimit()), Integer.toString(page.getTotal()));
+		for (Friend item : page.getItems()) Collections.addAll(values, item.getUniqueId().toString(), item.getName(),
 				item.getDisplayName(), item.getPrefix(), Boolean.toString(item.isOnline()));
 		return values;
 	}
 
-	private static List<String> partyDetails(List<PartyMemberInfo> details) {
+	private static List<String> partyPage(Page<PartyMember> page) {
 		List<String> values = new ArrayList<>();
-		for (PartyMemberInfo item : details) Collections.addAll(values, item.getUuid().toString(), item.getName(),
+		Collections.addAll(values, Integer.toString(page.getOffset()), Integer.toString(page.getLimit()), Integer.toString(page.getTotal()));
+		for (PartyMember item : page.getItems()) Collections.addAll(values, item.getUniqueId().toString(), item.getName(),
 				item.getDisplayName(), Boolean.toString(item.isOnline()), Boolean.toString(item.isLeader()));
 		return values;
 	}
 
+	private static List<String> boundedPage(Message request, List<String> values, int tupleSize) {
+		List<String> bounded = new ArrayList<>(values);
+		while (true) {
+			try {
+				Protocol.encode(new Message(Protocol.RESPONSE, request.id, request.actor, request.operation, Protocol.OK, bounded));
+				return bounded;
+			} catch (IllegalArgumentException tooLarge) {
+				if (bounded.size() <= 3) throw tooLarge;
+				for (int i = 0; i < tupleSize; i++) bounded.remove(bounded.size() - 1);
+			}
+		}
+	}
+
 	private static Message success(Message request, String value) { return success(request, Collections.singletonList(value)); }
+	private static Message successEmpty(Message request) { return success(request, Collections.emptyList()); }
 	private static Message success(Message request, List<String> values) {
 		return new Message(Protocol.RESPONSE, request.id, request.actor, request.operation, Protocol.OK, values);
 	}

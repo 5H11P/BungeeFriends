@@ -14,7 +14,7 @@ import java.util.UUID;
 public final class Protocol {
 	public static final String CHANNEL = "bungeefriends:api";
 	public static final String WARP_CHANNEL = "bungeefriends:warp";
-	public static final int VERSION = 1;
+	public static final int VERSION = 2;
 	public static final int MAX_BYTES = 30000;
 	public static final byte REQUEST = 1;
 	public static final byte RESPONSE = 2;
@@ -26,7 +26,7 @@ public final class Protocol {
 	public static final byte NOT_FOUND = 3;
 	public static final byte ERROR = 4;
 	public static final byte UNSUPPORTED = 5;
-	private static final int MAX_VALUES = 256;
+	private static final int MAX_VALUES = 512;
 	private static final int MAX_VALUE_LENGTH = 512;
 
 	private Protocol() { }

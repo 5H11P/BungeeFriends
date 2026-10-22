@@ -163,8 +163,6 @@ public class Main extends Plugin {
 		}
 		this.info("&b&m--------------------------------");
 
-		BungeeFriends.getAPI().setInstance(this);
-
 		new Metrics(this);
 	}
 
