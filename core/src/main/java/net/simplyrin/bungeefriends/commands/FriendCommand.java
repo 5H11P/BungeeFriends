@@ -15,6 +15,7 @@ import java.util.stream.IntStream;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -797,14 +798,23 @@ public class FriendCommand extends Command implements TabExecutor {
 		String line = lang.format(lineKey, "targetDisplayName", marker, "server", server);
 		int markerIndex = line.indexOf(marker);
 		TextComponent result = MessageBuilder.get(line.substring(0, markerIndex));
-		TextComponent prefix = MessageBuilder.get(entry.prefix);
-		TextComponent name = MessageBuilder.get(entry.name);
-		name.setBold(entry.best);
-		name.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,
-				new net.md_5.bungee.api.chat.ComponentBuilder(ChatColor.translateAlternateColorCodes('&', hover)).create()));
-		result.addExtra(prefix);
-		result.addExtra(name);
+		result.addExtra(friendListDisplayName(entry.prefix, entry.name, entry.best, hover));
 		result.addExtra(MessageBuilder.get(line.substring(markerIndex + marker.length())));
+		return result;
+	}
+
+	static TextComponent friendListDisplayName(String prefixText, String nameText, boolean best, String hover) {
+		TextComponent result = new TextComponent();
+		String translatedPrefix = ChatColor.translateAlternateColorCodes('&', prefixText);
+		for (BaseComponent part : TextComponent.fromLegacyText(translatedPrefix)) result.addExtra(part);
+		// Components are siblings, so the IGN must receive the formatting active at the end of the prefix.
+		BaseComponent[] prefixAndMarker = TextComponent.fromLegacyText(translatedPrefix + "X");
+		TextComponent name = MessageBuilder.get(nameText);
+		name.copyFormatting(prefixAndMarker[prefixAndMarker.length - 1]);
+		name.setBold(best);
+		if (hover != null) name.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,
+				new net.md_5.bungee.api.chat.ComponentBuilder(ChatColor.translateAlternateColorCodes('&', hover)).create()));
+		result.addExtra(name);
 		return result;
 	}
 
