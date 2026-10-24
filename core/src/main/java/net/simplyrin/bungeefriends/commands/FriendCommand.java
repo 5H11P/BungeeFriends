@@ -302,7 +302,7 @@ public class FriendCommand extends Command implements TabExecutor {
 					this.plugin.info(player, langUtils.getString("Note.Description.Cleared"));
 				} else {
 					String note = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
-					int maxLength = this.plugin.getConfigManager().getConfig().getInt("Plugin.Friend.Max-Note-Length", 255);
+					int maxLength = this.plugin.getConfigManager().getConfig().getInt("Plugin.Friend.Max-Note-Length", 100);
 					if (note.length() > maxLength) {
 						this.plugin.info(player, langUtils.format("Note.Description.TooLong", "maxLength", maxLength));
 						return;
@@ -329,9 +329,10 @@ public class FriendCommand extends Command implements TabExecutor {
 					return;
 				}
 				String nickname = args.length > 2 ? String.join(" ", Arrays.copyOfRange(args, 2, args.length)).trim() : "";
-				if (nickname.length() > 255 || nickname.indexOf('\n') >= 0 || nickname.indexOf('\r') >= 0
+				int maxLength = this.plugin.getConfigManager().getConfig().getInt("Plugin.Friend.Max-Nickname-Length", 16);
+				if (nickname.length() > maxLength || nickname.indexOf('\n') >= 0 || nickname.indexOf('\r') >= 0
 						|| nickname.chars().anyMatch(Character::isISOControl)) {
-					this.plugin.info(player, langUtils.format("Nickname.TooLong", "maxLength", "255"));
+					this.plugin.info(player, langUtils.format("Nickname.TooLong", "maxLength", maxLength));
 					return;
 				}
 				String original = targetFriends.getName();
@@ -650,7 +651,7 @@ public class FriendCommand extends Command implements TabExecutor {
 						for (int i = 2; i < args.length; i++) {
 							prefix += args[i] + " ";
 						}
-						int maxLength = this.plugin.getConfigManager().getConfig().getInt("Plugin.Friend.Max-Prefix-Length", 255);
+						int maxLength = this.plugin.getConfigManager().getConfig().getInt("Plugin.Friend.Max-Prefix-Length", 16);
 						if (prefix.trim().length() > maxLength) {
 							this.plugin.info(player, langUtils.format("Prefix.TooLong", "maxLength", maxLength));
 							return;
@@ -741,8 +742,9 @@ public class FriendCommand extends Command implements TabExecutor {
 			String nickname = this.plugin.getFriendNickname(player.getUniqueId(), targetId);
 			boolean nicked = nickname != null && !nickname.trim().isEmpty();
 			String prefix = colorOnly ? targetFriends.getPrefixColor() : targetFriends.getPrefix();
-			String name = nicked ? nickname.trim() + "*" : targetFriends.getName();
-			entries.add(new FriendListEntry(targetId, target, prefix, name, online,
+			String originalName = targetFriends.getName();
+			String name = nicked ? nickname.trim() + "*" : originalName;
+			entries.add(new FriendListEntry(targetId, target, prefix, name, originalName, online,
 					this.priorityRank(targetFriends), this.plugin.isBestFriend(player.getUniqueId(), targetId), index));
 		}
 		Collections.sort(entries, Comparator.comparing(FriendListEntry::isBest).reversed()
@@ -790,7 +792,7 @@ public class FriendCommand extends Command implements TabExecutor {
 		String note = this.normalizeNote(this.plugin.getFriendCustomPrefix(viewer.getUniqueId(), entry.id));
 		String hoverKey = visible ? (note.isEmpty() ? "List.Hover-Online" : "List.Hover-Online-With-Note")
 				: (note.isEmpty() ? "List.Hover-Offline" : "List.Hover-Offline-With-Note");
-		String hover = lang.format(hoverKey, "targetDisplayName", displayName, "note", note,
+		String hover = lang.format(hoverKey, "targetDisplayName", displayName, "targetName", entry.originalName, "note", note,
 				"targetUUID", entry.id.toString(), "status", status, "server", server,
 				"friendSince", this.formatTime(this.plugin.getFriendSince(viewer.getUniqueId(), entry.id), lang),
 				"lastOnlineAgo", lastOnlineAgo, "lastOnline", lastOnline);
@@ -823,13 +825,14 @@ public class FriendCommand extends Command implements TabExecutor {
 		private final ProxiedPlayer target;
 		private final String prefix;
 		private final String name;
+		private final String originalName;
 		private final boolean online;
 		private final int priority;
 		private final boolean best;
 		private final int index;
-		FriendListEntry(UUID id, ProxiedPlayer target, String prefix, String name, boolean online,
+		FriendListEntry(UUID id, ProxiedPlayer target, String prefix, String name, String originalName, boolean online,
 				int priority, boolean best, int index) {
-			this.id = id; this.target = target; this.prefix = prefix; this.name = name;
+			this.id = id; this.target = target; this.prefix = prefix; this.name = name; this.originalName = originalName;
 			this.online = online; this.priority = priority; this.best = best; this.index = index;
 		}
 		boolean isOnline() { return online; }
@@ -861,6 +864,7 @@ public class FriendCommand extends Command implements TabExecutor {
 		else hoverKey = note.isEmpty() ? "List.Hover-Offline" : "List.Hover-Offline-With-Note";
 		String hover = lang.format(hoverKey,
 				"targetDisplayName", displayName,
+				"targetName", this.plugin.getFriendManager().getPlayer(targetId).getName(),
 				"note", note,
 				"targetUUID", targetId.toString(),
 				"status", status,

@@ -83,6 +83,15 @@ public class LanguageResourcesTest {
 		}
 		assertTrue(english.getString("List.Hover-Online-With-Note").contains("%note%"));
 		assertTrue(chinese.getString("List.Hover-Online-With-Note").contains("%note%"));
+		for (String key : Arrays.asList("List.Hover-Online", "List.Hover-Offline",
+				"List.Hover-Online-With-Note", "List.Hover-Offline-With-Note")) {
+			assertTrue("English: " + key, english.getString(key).contains("%targetName%"));
+			assertTrue("Chinese: " + key, chinese.getString(key).contains("%targetName%"));
+		}
+		String hover = MessageFormatter.replace(english.getString("List.Hover-Online"),
+				MessageFormatter.values("targetDisplayName", "Nickname*", "targetName", "OriginalIGN"));
+		assertTrue(hover.contains("Friend: Nickname*"));
+		assertTrue(hover.contains("IGN: &fOriginalIGN"));
 	}
 
 	@Test

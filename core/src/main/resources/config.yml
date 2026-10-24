@@ -23,10 +23,11 @@ Plugin:
   Enable-Tab-Complete: true
   Enable-Bungee-Parties: true
   Enable-Status: true
-  # Length limits are 1-255 characters to fit the database columns.
+  # Length limits use Java String.length() (UTF-16 units) and may be set from 1 to 255.
   Friend:
-    Max-Note-Length: 255
-    Max-Prefix-Length: 255
+    Max-Note-Length: 100
+    Max-Nickname-Length: 16
+    Max-Prefix-Length: 16
   # All duration and interval values use ticks (1 tick = 50 ms).
   Party:
     Max-Size: 10

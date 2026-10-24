@@ -33,8 +33,9 @@ public class ConfigManagerFeatureTest {
 			assertTrue(generated.getBoolean("Plugin.Enable-Aliases./pl"));
 			assertTrue(generated.getBoolean("Plugin.Enable-Aliases./ac"));
 			assertEquals(6000, generated.getInt("Plugin.Party.Disband-Delay-Ticks"));
-			assertEquals(255, generated.getInt("Plugin.Friend.Max-Note-Length"));
-			assertEquals(255, generated.getInt("Plugin.Friend.Max-Prefix-Length"));
+			assertEquals(100, generated.getInt("Plugin.Friend.Max-Note-Length"));
+			assertEquals(16, generated.getInt("Plugin.Friend.Max-Nickname-Length"));
+			assertEquals(16, generated.getInt("Plugin.Friend.Max-Prefix-Length"));
 			assertEquals(36000, generated.getInt("Plugin.LuckPerms.Offline-Prefix-Cache-Ticks"));
 			assertEquals(40, generated.getInt("Plugin.LuckPerms.Offline-Prefix-Load-Timeout-Ticks"));
 			Configuration hyphen = ConfigManager.loadOrCreateConfig(folder.resolve("hyphen.yml").toFile(), "hyphen.yml");
@@ -72,9 +73,15 @@ public class ConfigManagerFeatureTest {
 		config.set("Plugin.Party-Kick-Offline-Time", "0");
 		config.set("Plugin.Send-Remove-Target-Message", false);
 		config.set("Plugin.Party.Disband-Delay-Ticks", 9000);
+		config.set("Plugin.Friend.Max-Note-Length", 200);
+		config.set("Plugin.Friend.Max-Nickname-Length", 32);
+		config.set("Plugin.Friend.Max-Prefix-Length", 24);
 
 		assertTrue(ConfigManager.applyFeatureDefaults(config).isEmpty());
 		assertEquals(9000, config.getInt("Plugin.Party.Disband-Delay-Ticks"));
+		assertEquals(200, config.getInt("Plugin.Friend.Max-Note-Length"));
+		assertEquals(32, config.getInt("Plugin.Friend.Max-Nickname-Length"));
+		assertEquals(24, config.getInt("Plugin.Friend.Max-Prefix-Length"));
 		assertEquals(6000, config.getInt("Plugin.Party.Offline-Member-Kick-Delay-Ticks"));
 		assertTrue(config.getBoolean("Plugin.Enable-Friend-Removal-Notifications"));
 		assertFalse(config.contains("Plugin.Enable-Legacy-Prefix-YML"));
@@ -144,15 +151,17 @@ public class ConfigManagerFeatureTest {
 		config.set("Plugin.LuckPerms.Offline-Prefix-Cache-Ticks", 4);
 		config.set("Plugin.LuckPerms.Offline-Prefix-Load-Timeout-Ticks", 0);
 		config.set("Plugin.Friend.Max-Note-Length", 300);
+		config.set("Plugin.Friend.Max-Nickname-Length", 0);
 		config.set("Plugin.Friend.Max-Prefix-Length", "bad");
 		List<String> invalid = ConfigManager.applyFeatureDefaults(config);
-		assertEquals(5, invalid.size());
+		assertEquals(6, invalid.size());
 		assertEquals(6000, config.getInt("Plugin.Party.Disband-Delay-Ticks"));
 		assertEquals(6000, config.getInt("Plugin.Party.Offline-Member-Kick-Delay-Ticks"));
 		assertEquals(4, config.getInt("Plugin.LuckPerms.Offline-Prefix-Cache-Ticks"));
 		assertEquals(40, config.getInt("Plugin.LuckPerms.Offline-Prefix-Load-Timeout-Ticks"));
-		assertEquals(255, config.getInt("Plugin.Friend.Max-Note-Length"));
-		assertEquals(255, config.getInt("Plugin.Friend.Max-Prefix-Length"));
+		assertEquals(100, config.getInt("Plugin.Friend.Max-Note-Length"));
+		assertEquals(16, config.getInt("Plugin.Friend.Max-Nickname-Length"));
+		assertEquals(16, config.getInt("Plugin.Friend.Max-Prefix-Length"));
 	}
 
 	@Test
